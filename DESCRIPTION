@@ -12,7 +12,7 @@ Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.1
 Depends: R (>= 3.5.0)
-Remotes: git::https://gitlab.inf.unibz.it/earth_observation_public/MonalisR.git
+Remotes: git::git@gitlab.inf.unibz.it:earth_observation_public/MonalisR.git
 Imports:
     DBI,
     RMariaDB,
