@@ -1,0 +1,37 @@
+id,name,depth,textFingerprobe,abbrDE,CLAY,SILT,SAND,abbrUSDA,abbrDE-BK94,BWP,BWC
+37,Algund_2,20,Sabbioso debolmente franco,Sl2,6.393606394,30.46953047,63.13686314,SaLo,Su3,BWP20,BWC20
+97,Eyrs,20,Sabbioso franco limoso,Slu,8.9,38.1,53,SaLo,Sl3,BWP20,BWC20
+7,Girlan_1,20,Sabbioso franco,Sl3,8.6,31.5,59.9,SaLo,Sl3,BWP20,BWC20
+179,Glurns,20,mediamente dotato di humus Sabbioso franco,Sl3,12.18781219,58.64135864,29.17082917,SiLo,Uls,BWP20,BWC20
+9,Gries_2,20,Limoso sabbioso,Us,13.81381381,52.15215216,34.03403403,SiLo,Uls,BWP20,BWC20
+52,Lana_6_NEU,20,mediamente dotato di humus Sabbioso franco,Sl3,11.3,35.2,53.5,SaLo,Sl3,BWP20,BWC20
+103,Latsch_1,20,Sabbioso limoso,Su3,4.7,35.7,59.6,SaLo,Su3,BWP20,BWC20
+105,Latsch_3,20,Sabbioso franco,Sl3,12.41241241,37.93793794,49.64964965,Lo,Sl4,BWP20,BWC20
+106,Latsch_4,20,Limoso sabbioso,Us,10.7,75.7,13.6,SiLo,Ut2,BWP20,BWC20
+3,Nals_2,20,Sabbioso limoso,Su3,8,81.5,10.5,Si,Uu,BWP20,BWC20
+169,Neumarkt_Stiermoos,20,Sabbioso limoso,Su3,3.2,50.8,46,SiLo,Us,BWP20,BWC20
+135,Raas,20,Sabbioso franco,Sl3,11.3,29.4,59.3,SaLo,Sl3,BWP20,BWC20
+171,Salurn_1,20,Limoso sabbioso,Us,12.9,52.3,34.8,SiLo,Uls,BWP20,BWC20
+172,Salurn_2,20,Sabbioso limoso,Su3,6.106106106,42.24224224,51.65165165,SaLo,Su4,BWP20,BWC20
+14,Terlan_3,20,Sabbioso limoso,Su3,5.8,57,37.2,SiLo,Us,BWP20,BWC20
+174,Tramin_13er,20,mediamente dotato di humus Limoso sabbioso,Us,13.8,48.2,38,Lo,Slu,BWP20,BWC20
+12,Unterrain_2,20,Sabbioso franco limoso,Slu,11,52.1,36.9,SiLo,Uls,BWP20,BWC20
+176,Vill,20,Sabbioso franco limoso,Slu,14.5,52.9,32.6,SiLo,Uls,BWP20,BWC20
+37,Algund_2,40,Sabbioso debolmente franco,Sl2,5.194805195,26.27372627,68.53146853,SaLo,Su3,BWP40,BWC40
+97,Eyrs,40,Limoso sabbioso,Us,12.08791209,52.04795205,35.86413586,SiLo,Uls,BWP40,BWC40
+7,Girlan_1,40,Sabbioso franco,Sl3,9.6,33.9,56.5,SaLo,Sl3,BWP40,BWC40
+179,Glurns,40,Limoso sabbioso,Us,9.5,56.4,34.1,SiLo,Uls,BWP40,BWC40
+9,Gries_2,40,Sabbioso limoso,Su3,8.6,51.4,40,SiLo,Uls,BWP40,BWC40
+52,Lana_6_NEU,40,Sabbioso franco,Sl3,10.5,38.4,51.1,Lo,Sl3,BWP40,BWC40
+103,Latsch_1,40,Sabbioso limoso,Su3,4.4,26.9,68.7,SaLo,Su3,BWP40,BWC40
+105,Latsch_3,40,Limoso sabbioso,Us,6.906906907,39.43943944,53.65365365,SaLo,Su3,BWP40,BWC40
+106,Latsch_4,40,Limoso sabbioso,Us,12.51251251,68.36836837,19.11911912,SiLo,Ut3,BWP40,BWC40
+3,Nals_2,40,Sabbioso limoso,Su3,6.5,77.6,15.9,SiLo,Us,BWP40,BWC40
+169,Neumarkt_Stiermoos,40,Sabbioso limoso,Su3,4.1,51.5,44.4,SiLo,Us,BWP40,BWC40
+135,Raas,40,Sabbioso franco,Sl3,12.4,28.5,59.1,SaLo,Sl4,BWP40,BWC40
+171,Salurn_1,40,Limoso sabbioso,Us,15.3,55.5,29.2,SiLo,Uls,BWP40,BWC40
+172,Salurn_2,40,Sabbioso limoso,Su3,4.4,36.4,59.2,SaLo,Su3,BWP40,BWC40
+14,Terlan_3,40,Sabbioso limoso,Su3,7.4,60.2,32.4,SiLo,Us,BWP40,BWC40
+174,Tramin_13er,40,mediamente dotato di humus Limoso argilloso,Ut3,24.4,60.6,15,SiLo,Lu,BWP40,BWC40
+12,Unterrain_2,40,Limoso sabbioso,Us,9.390609392,45.15484515,45.45454545,Lo,Slu,BWP40,BWC40
+176,Vill,40,Sabbioso franco limoso,Slu,13.4,49.5,37.1,Lo,Slu,BWP40,BWC40

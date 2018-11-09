@@ -1,0 +1,40 @@
+Package: SBR
+Title: A package to compute water balance in South Tyrol
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Giulio",
+           family = "Genova",
+           role = c("aut", "cre"),
+           email = "Giulio.Genova@eurac.edu")
+Description: What the package does (one paragraph).
+License: What license it uses
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.1.0
+Depends: R (>= 3.5.0)
+Remotes: url::https://gitlab.inf.unibz.it/earth_observation_public/MonalisR
+Imports:
+    DBI,
+    RMariaDB,
+    lubridate,
+    plotly,
+    leaflet,
+    leaflet.extras,
+    rgdal,
+    raster,
+    rgeos,
+    sp,
+    jsonlite,
+    spdplyr,
+    pbapply,
+    httr,
+    geojsonio,
+    tidyverse,
+    stringr,
+    Evapotranspiration,
+    future,
+    future.apply,
+    MonalisR,
+    glue,
+    Rcpp
+LinkingTo: Rcpp
