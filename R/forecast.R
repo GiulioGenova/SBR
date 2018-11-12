@@ -1,4 +1,4 @@
-#' Get data from wheater forecas of province of Bozen sensors.
+#' Get data from wheater forecas of province of Bozen sensors based on lat long locations.
 #'
 #' @export
 #' @importFrom httr GET content
@@ -61,7 +61,9 @@ forecast <- function(long,lat){
     as.tibble
   names(ui) <- c("date","rainFrom","rainTo","temperatureMax","temperatureMin")
   ui$date <- as_date(ui$date,tz="Europe/Berlin")
-
+  ui$rainFrom <- as.numeric(ui$rainFrom)
+  ui$rainTo <- as.numeric(ui$rainTo)
+  colnames(ui)[colnames(ui)=="date"] <- "TimeStamp"
   return(ui)
 
 }
