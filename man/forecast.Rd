@@ -4,7 +4,7 @@
 \alias{forecast}
 \title{Get data from wheater forecas of province of Bozen sensors.}
 \usage{
-forecast()
+forecast(long, lat)
 }
 \description{
 Get data from wheater forecas of province of Bozen sensors.
