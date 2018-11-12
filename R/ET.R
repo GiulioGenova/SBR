@@ -54,7 +54,7 @@ ET <- function(data,
   et0_real<-ET.PenmanMonteith(data = et_real_tot_in,constants = constants,ts = "daily",
                               solar="data",wind = "yes",crop = "short",message = "yes",save.csv = "no")
   #df<-df %>% select(TimeStamp,id)
-  df_ET<-bind_cols(db,ET0=et0_real$ET.Daily)
+  df_ET<-bind_cols(db,ET0=as.numeric(et0_real$ET.Daily))
 
   df_ETc<-df_ET %>% mutate(DOY=yday(TimeStamp),
                            Kc = ifelse(DOY == DOY.ini.A, Kc.ini.A,

@@ -3,7 +3,7 @@
 #' @export
 #' @importFrom httr GET content
 #' @importFrom magrittr %>%
-#' @importFrom lubridate as_date
+#' @importFrom lubridate as_date floor_date
 #' @importFrom tibble as.tibble
 #' @importFrom sp  %over% SpatialPoints spTransform CRS
 #'
@@ -60,10 +60,12 @@ forecast <- function(long,lat){
               ) %>%
     as.tibble
   names(ui) <- c("date","rainFrom","rainTo","temperatureMax","temperatureMin")
-  ui$date <- as_date(ui$date,tz="Europe/Berlin")
+  #ui$date <- as_date(ui$date,tz="Europe/Berlin")
   ui$rainFrom <- as.numeric(ui$rainFrom)
   ui$rainTo <- as.numeric(ui$rainTo)
   colnames(ui)[colnames(ui)=="date"] <- "TimeStamp"
+  ui$TimeStamp <- as_datetime(ui$TimeStamp,tz="Europe/Berlin") %>%
+    floor_date("day")
   return(ui)
 
 }
