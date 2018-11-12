@@ -10,9 +10,9 @@ Description: What the package does (one paragraph).
 License: What license it uses
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1
 Depends: R (>= 3.5.0)
-Remotes: url::https://gitlab.inf.unibz.it/earth_observation_public/MonalisR
+Remotes: github::GiulioGenova/MonalisR
 Imports:
     DBI,
     RMariaDB,
@@ -34,7 +34,8 @@ Imports:
     Evapotranspiration,
     future,
     future.apply,
-    MonalisR,
     glue,
-    Rcpp
+    Rcpp,
+    remotes,
+    MonalisR
 LinkingTo: Rcpp

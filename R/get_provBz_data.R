@@ -14,6 +14,7 @@
 #' @importFrom MonalisR downloadMeteo
 #' @importFrom pbapply pblapply
 
+#remotes::install_gitlab(repo = "earth_observation_public/MonalisR",host = "gitlab.inf.unibz.it")
 
 get_provBz_data<-function(station_sensor,datestart=Sys.Date()-1,dateend=Sys.Date()+1,
                           #sensors=unique(get_provBz_sensors()$Sensor),
