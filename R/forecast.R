@@ -52,14 +52,17 @@ forecast <- function(long,lat){
   #url <- "http://daten.buergernetz.bz.it/services/weather/district/1/bulletin?format=json&lang=en"
   u <- GET(url) %>% content
 
+  l<-sapply(u[[4]], "[", "symbol")
+  l<-sapply(l,"[[", "imageUrl")
   ui <- cbind(sapply(u[[4]], "[[", "date"),
               sapply(u[[4]], "[[", "rainFrom"),
               sapply(u[[4]], "[[", "rainTo"),
               sapply(u[[4]], "[[", "temperatureMax"),
-              sapply(u[[4]], "[[", "temperatureMin")
+              sapply(u[[4]], "[[", "temperatureMin"),
+              l
               ) %>%
     as.tibble
-  names(ui) <- c("date","rainFrom","rainTo","temperatureMax","temperatureMin")
+  names(ui) <- c("date","rainFrom","rainTo","temperatureMax","temperatureMin","img")
   #ui$date <- as_date(ui$date,tz="Europe/Berlin")
   ui$rainFrom <- as.numeric(ui$rainFrom)
   ui$rainTo <- as.numeric(ui$rainTo)
