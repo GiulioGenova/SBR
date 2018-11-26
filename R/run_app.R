@@ -1,5 +1,12 @@
+#' launch shiny app
+#' @param app character string with the name of the app.
+#' @param launchBrowser whether to launch the application with the browser or not.
 #' @export
-run_app <- function(app) {
+#' @examples
+#' run_app('dataBrowser')
+#'
+
+run_app <- function(app,launchBrowser=T) {
   # locate all the shiny app examples that exist
   validExamples <- list.files(system.file("shinyApps", package = "SBR"))
 
@@ -13,12 +20,16 @@ run_app <- function(app) {
   if (missing(app) || !nzchar(app) ||
       !app %in% validExamples) {
     stop(
-      'Please run `runExample()` with a valid example app as an argument.\n',
+      'Please run `run_app()` with a valid example app as an argument.\n',
       validExamplesMsg,
       call. = FALSE)
   }
 
   # find and launch the app
   appDir <- system.file("shinyApps", app, package = "SBR")
-  shiny::runApp(appDir, display.mode = "normal",launch.browser = T)
+  if(launchBrowser){
+    shiny::runApp(appDir, display.mode = "normal",launch.browser = T)
+  } else {
+    shiny::runApp(appDir, display.mode = "normal")
+  }
 }
