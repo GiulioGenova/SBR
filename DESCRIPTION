@@ -13,7 +13,10 @@ LazyData: true
 RoxygenNote: 6.1.1
 Depends: R (>= 3.5.0)
 Remotes: 
-  GiulioGenova/MonalisR
+  GiulioGenova/MonalisR,
+  ropensci/plotly,
+  rstudio/leaflet,
+  bhaskarvk/leaflet.extras
 Imports:
     DBI,
     RMariaDB,
@@ -40,5 +43,9 @@ Imports:
     remotes,
     MonalisR,
     ggplot2,
-    ggimage
+    ggimage,
+    readr,
+    shiny,
+    shinycssloaders,
+    plotly
 LinkingTo: Rcpp
