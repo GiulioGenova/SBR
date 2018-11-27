@@ -27,9 +27,20 @@ run_app <- function(app,launchBrowser=T) {
 
   # find and launch the app
   appDir <- system.file("shinyApps", app, package = "SBR")
-  if(launchBrowser){
-    shiny::runApp(appDir, display.mode = "normal",launch.browser = T)
-  } else {
+  if(launchBrowser==FALSE){
+
     shiny::runApp(appDir, display.mode = "normal")
+
+  } else {
+
+    if(launchBrowser==TRUE){
+
+      shiny::runApp(appDir, display.mode = "normal",launch.browser = launchBrowser)
+
+    }else if(!is.null(launchBrowser)){
+
+      shiny::runApp(appDir, display.mode = "normal",launch.browser = launchBrowser)
+
+    }
   }
 }
