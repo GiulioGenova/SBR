@@ -14,7 +14,6 @@ RoxygenNote: 6.1.1
 Depends: R (>= 3.5.0)
 Remotes: 
   GiulioGenova/MonalisR,
-  ropensci/plotly,
   rstudio/leaflet,
   bhaskarvk/leaflet.extras
 Imports:
@@ -46,6 +45,7 @@ Imports:
     ggimage,
     readr,
     shiny,
+    shinydashboard,
     shinycssloaders,
     plotly
 LinkingTo: Rcpp
