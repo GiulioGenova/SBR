@@ -24,15 +24,15 @@ ET <- function(data,
                ){
 
 
-  colnames(db)[colnames(db)=="GS_mean"] <- "Rs"
-  colnames(db)[colnames(db)=="LF_min"] <- "RHmin"
-  colnames(db)[colnames(db)=="LF_max"] <- "RHmax"
-  colnames(db)[colnames(db)=="LT_max"] <- "Tmax"
-  colnames(db)[colnames(db)=="LT_min"] <- "Tmin"
-  colnames(db)[colnames(db)=="WG_mean"] <- "u2"
+  colnames(data)[colnames(data)=="GS_mean"] <- "Rs"
+  colnames(data)[colnames(data)=="LF_min"] <- "RHmin"
+  colnames(data)[colnames(data)=="LF_max"] <- "RHmax"
+  colnames(data)[colnames(data)=="LT_max"] <- "Tmax"
+  colnames(data)[colnames(data)=="LT_min"] <- "Tmin"
+  colnames(data)[colnames(data)=="WG_mean"] <- "u2"
 
 
-  db<- db %>%
+  db<- data %>%
     dplyr::mutate(Year=year(TimeStamp),Month=month(TimeStamp),Day=day(TimeStamp),Rs=(Rs*0.0864))
 
 
@@ -54,7 +54,7 @@ ET <- function(data,
   et0_real<-ET.PenmanMonteith(data = et_real_tot_in,constants = constants,ts = "daily",
                               solar="data",wind = "yes",crop = "short",message = "yes",save.csv = "no")
   #df<-df %>% select(TimeStamp,id)
-  df_ET<-bind_cols(db,ET0=et0_real$ET.Daily)
+  df_ET<-bind_cols(db,ET0=as.numeric(et0_real$ET.Daily))
 
   df_ETc<-df_ET %>% mutate(DOY=yday(TimeStamp),
                            Kc = ifelse(DOY == DOY.ini.A, Kc.ini.A,

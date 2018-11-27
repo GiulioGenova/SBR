@@ -13,6 +13,7 @@ WB <- function(data,min_mm=10,max_mm=50){
       N_sumMinusETc=ifelse(row_number()==1,max_mm, N_sum-ETc),
       wb=ifelse(row_number()==1,max_mm,cumsumBounded(x = N_sumMinusETc,
                                                      low = min_mm,
-                                                     high = max_mm)))
+                                                     high = max_mm)),
+      irrigAdvise=ifelse(wb<=max_mm & wb> max_mm/2,"NoIrrig","Irrig"))
 
 }

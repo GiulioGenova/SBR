@@ -12,7 +12,10 @@ Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.1
 Depends: R (>= 3.5.0)
-Remotes: github::GiulioGenova/MonalisR
+Remotes: 
+  GiulioGenova/MonalisR,
+  rstudio/leaflet,
+  bhaskarvk/leaflet.extras
 Imports:
     DBI,
     RMariaDB,
@@ -37,5 +40,12 @@ Imports:
     glue,
     Rcpp,
     remotes,
-    MonalisR
+    MonalisR,
+    ggplot2,
+    ggimage,
+    readr,
+    shiny,
+    shinydashboard,
+    shinycssloaders,
+    plotly
 LinkingTo: Rcpp

@@ -2,10 +2,10 @@
 % Please edit documentation in R/forecast.R
 \name{forecast}
 \alias{forecast}
-\title{Get data from wheater forecas of province of Bozen sensors.}
+\title{Get data from wheater forecas of province of Bozen sensors based on lat long locations.}
 \usage{
-forecast()
+forecast(long, lat)
 }
 \description{
-Get data from wheater forecas of province of Bozen sensors.
+Get data from wheater forecas of province of Bozen sensors based on lat long locations.
 }
