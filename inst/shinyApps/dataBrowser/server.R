@@ -75,7 +75,7 @@ m <- m %>%addSearchOSM()%>%
 
 
 
-server <- function(input, output) {
+server <- function(input, output, session) {
 
   values <- reactiveValues(authenticated = FALSE)
 
@@ -295,6 +295,8 @@ server <- function(input, output) {
   )
 
 
-
+  session$onSessionEnded(function() {
+    stopApp()
+  })
 
 }
