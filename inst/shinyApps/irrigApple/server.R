@@ -15,6 +15,8 @@ provSensor=c("N","GS")#,"WG"
 #lat=46.657158
 Logged = FALSE
 
+Host <- "95.171.35.104"
+
 server <- function(input, output,session) {
 
   latLong<-reactiveValues(lat=NULL,long=NULL)
@@ -27,7 +29,7 @@ server <- function(input, output,session) {
     modalDialog(
       textInput("username", "Username:"),
       passwordInput("password", "Password:"),
-      textInput("host", "Host:"),
+      #textInput("host", "Host:"),
       footer = tagList(
         # modalButton("Cancel"),
         actionButton("ok", "OK")
@@ -50,16 +52,17 @@ server <- function(input, output,session) {
     isolate({
       Username <- input$username
       Password <- input$password
-      Host <- input$host
+      #Host <- input$host
     })
 
 
-   Logged = tryCatch({
-    #user<-"wrong"
-     dbConnect(MariaDB(),#RMariaDB::
-                        dbname = sprintf('sbr_wetter_%s',substr(Sys.Date(),1,4)),
-                        host = Host,user =  Username,
-                        password = Password)
+    Logged = tryCatch({
+      #user<-"wrong"
+      dbConnect(MariaDB(),#RMariaDB::
+                dbname = sprintf('sbr_wetter_%s',substr(Sys.Date(),1,4)),
+                host = Host,
+                user =  Username,
+                password = Password)
 
     }, error = function(e){NULL})
 
@@ -156,7 +159,7 @@ server <- function(input, output,session) {
     #db$img<-"http://daten.buergernetz.bz.it/services/weather/graphics/icons/imgsource/wetter/icon_18.png"
     db <- db %>% mutate(TimeStamp = factor(TimeStamp),
                         TimeStamp = factor(TimeStamp,
-                                          levels = rev(levels(TimeStamp))))
+                                           levels = rev(levels(TimeStamp))))
 
     p <- ggplot(db, aes(y=TimeStamp)) +#
       labs(x=NULL,y=NULL,fill=NULL)+

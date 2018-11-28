@@ -18,6 +18,8 @@ library(SBR)
 
 Logged = FALSE
 
+Host <- "95.171.35.104"
+
 wd<-getwd()
 file<-file.path(wd,"Orchards_monitoring_station_MONALISA-SBR_Project_21032018.kml")
 
@@ -85,7 +87,7 @@ server <- function(input, output, session) {
     modalDialog(
       textInput("username", "Username:"),
       passwordInput("password", "Password:"),
-      textInput("host", "Host:"),
+      #textInput("host", "Host:"),
       footer = tagList(
         # modalButton("Cancel"),
         actionButton("ok", "OK")
@@ -108,7 +110,7 @@ server <- function(input, output, session) {
     isolate({
       Username <- input$username
       Password <- input$password
-      Host <- input$host
+      #Host <- input$host
     })
 
 
