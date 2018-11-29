@@ -1,8 +1,13 @@
+if(.Platform$OS.type=="windows"){
+
 pb = winProgressBar(
   title = sprintf('Starting %s ...', "dataBrowser"),
   label = 'Initializing ...'
 )
 setWinProgressBar(pb, 1.00, label = 'Starting application')
+}
+
+
 
 library(ggplot2)
 library(DBI)
@@ -82,5 +87,6 @@ m <- m %>%addSearchOSM()%>%
   addLayersControl(baseGroups = c("OSM","SAT"),
                    options = layersControlOptions(collapsed = FALSE),position = "topleft")
 
-
+if(.Platform$OS.type=="windows"){
 close(pb)
+}

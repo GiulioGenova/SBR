@@ -1,8 +1,11 @@
-pb = winProgressBar(
-  title = sprintf('Starting %s ...', "dataBrowser"),
-  label = 'Initializing ...'
-)
-setWinProgressBar(pb, 1.00, label = 'Starting application')
+if(.Platform$OS.type=="windows"){
+
+  pb = winProgressBar(
+    title = sprintf('Starting %s ...', "dataBrowser"),
+    label = 'Initializing ...'
+  )
+  setWinProgressBar(pb, 1.00, label = 'Starting application')
+}
 
 # the server
 library(shiny)
@@ -26,4 +29,6 @@ Logged = FALSE
 
 Host <- "95.171.35.104"
 
-close(pb)
+if(.Platform$OS.type=="windows"){
+  close(pb)
+}
