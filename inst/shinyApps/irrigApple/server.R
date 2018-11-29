@@ -1,21 +1,4 @@
-# the server
-library(SBR)
-library(ggplot2)
-library(leaflet)
-library(leaflet.extras)
-library(dplyr)
-library(ggimage)
-library(DBI)
-library(RMariaDB)
-library(SBR)
 
-round="hour"
-provSensor=c("N","GS")#,"WG"
-#long=11.457978
-#lat=46.657158
-Logged = FALSE
-
-Host <- "95.171.35.104"
 
 server <- function(input, output,session) {
 

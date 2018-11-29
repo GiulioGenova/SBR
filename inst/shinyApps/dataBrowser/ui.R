@@ -1,16 +1,4 @@
 
-library(ggplot2)
-library(DBI)
-library(dplyr)
-library(lubridate)
-library(plotly)
-library(shinydashboard)
-library(shiny)
-library(leaflet)
-library(leaflet.extras)
-library(readr)
-library(rgdal)
-library(shinycssloaders)
 #library(shinyjs)
 #install.packages("shinyjs")
 #jsToggleFS <- 'shinyjs.toggleFullScreen = function() {

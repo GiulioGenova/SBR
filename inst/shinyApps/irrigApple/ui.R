@@ -1,6 +1,5 @@
 # the ui
-library(shiny)
-library(leaflet)
+
 
 #tags$head(tags$link(rel="shortcut icon", href="/www/favicon.png"))
 
