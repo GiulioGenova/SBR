@@ -82,8 +82,11 @@ server <- function(input, output, session) {
     station=sub("\\_.*", "", input$Station)
 
     query <- as.character(paste(station,collapse="+"))
-    test <<- sprintf(fmt = "http://www.beratungsring.org/wetterdaten/map_popup.php?ST=%s&date=%s",query,as.character(Sys.Date(),format="%d.%m.%Y"))
-  })
+    #test <<- sprintf(fmt = "http://www.beratungsring.org/wetterdaten/map_popup.php?ST=%s&date=%s",query,as.character(Sys.Date(),format="%d.%m.%Y"))
+    test <- sprintf(fmt = "http://www.beratungsring.org/wetterdaten/map_popup.php?ST=%s&date=%s",query,as.character(Sys.Date(),format="%d.%m.%Y"))
+    assign("test", test, envir=globalenv())
+
+    })
 
   output$map2 <- renderUI({
 
