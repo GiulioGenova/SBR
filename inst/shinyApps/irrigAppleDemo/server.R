@@ -107,18 +107,19 @@ server <- function(input, output,session) {
     #datestart <- "2018-11-01"
     lat <- latLong$lat
     long <- latLong$long
+    today <- input$today
 
     db <- mergeData(long = long,lat = lat,
                     datestart = datestart,
-                    #dateend = Sys.Date()+1,
+                    dateend = today+5,
                     provSensor = provSensor,
                     password = password,user = user,host = host)
 
     et <- ET(data = db)
 
-    df <- mergeOldAndForecast(data = et,long = long,lat = lat)
+    #df <- mergeOldAndForecast(data = et,long = long,lat = lat)
 
-    wb <- WB(df)
+    wb <- WB(et)
 
     wb <- wb %>% filter(TimeStamp > today)
 
@@ -150,10 +151,10 @@ server <- function(input, output,session) {
                 color="white",show.legend = T,size=1.5)#
     #coord_fixed(ratio = 1)
 
-    p + geom_image(x = 1.8, aes(image = img),size=.15) +
+    #p+ geom_image(x = 1.8, aes(image = img),size=.15) +
       #coord_flip() +
       #expand_limits(x = c(1,1.1))  +
-      coord_cartesian(xlim = c(0.98, 2),expand = F)+
+     p+ coord_cartesian(xlim = c(0.98, 2),expand = F)+
       #scale_y_reverse()+
       scale_fill_manual(values=c("MustIrrig"="red", "NoIrrig"="green","SugIrrig"="orange"))+
       #coord_flip()+

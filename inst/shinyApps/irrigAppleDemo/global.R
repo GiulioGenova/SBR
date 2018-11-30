@@ -26,7 +26,7 @@ provSensor=c("N","GS")#,"WG"
 #long=11.457978
 #lat=46.657158
 Logged = FALSE
-today <- Sys.Date()
+#today <- Sys.Date()
 Host <- "95.171.35.104"
 
 if(.Platform$OS.type=="windows"){

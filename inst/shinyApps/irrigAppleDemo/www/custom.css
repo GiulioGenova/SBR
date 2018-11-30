@@ -1,0 +1,20 @@
+.leaflet-container {
+  cursor: default !important;
+}
+
+.leaflet-container:active {
+  cursor: grab !important;
+}
+
+p {
+
+    margin: 0 15px;
+
+}
+
+.form-group {
+
+    margin-bottom: 15px;
+    margin-left: 15px;
+
+}
