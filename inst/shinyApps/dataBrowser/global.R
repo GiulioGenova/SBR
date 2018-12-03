@@ -1,10 +1,10 @@
 if(.Platform$OS.type=="windows"){
 
-pb = winProgressBar(
-  title = sprintf('Starting %s ...', "dataBrowser"),
-  label = 'Initializing ...'
-)
-setWinProgressBar(pb, 1.00, label = 'Starting application')
+  pb = winProgressBar(
+    title = sprintf('Starting %s ...', "dataBrowser"),
+    label = 'Initializing ...'
+  )
+  setWinProgressBar(pb, 1.00, label = 'Starting application')
 }
 
 
@@ -33,8 +33,10 @@ Logged = FALSE
 Host <- "95.171.35.104"
 
 wd<-getwd()
-file<-file.path(wd,"Orchards_monitoring_station_MONALISA-SBR_Project_21032018.kml")
-
+# kml <- file.path(wd,"Orchards_monitoring_station_MONALISA-SBR_Project_21032018.kml")
+# kml <- readOGR(file, layer = ogrListLayers(file)[1])
+# save(kml,file = "kml.rda")
+#kml@coords[,'coords.x1']
 # y axis title
 RHy <- list(title = "Air RH [%]")
 Airy <- list(title = "Air & Soil T [°C]")
@@ -62,9 +64,6 @@ STline<-"dash"
 RHline<-"solid"
 AirTline<-"soild"
 
-
-kml <- readOGR(file, layer = ogrListLayers(file)[1])
-#kml@coords[,'coords.x1']
 c1 <- awesomeIcons(icon = "ios-close", iconColor = "black",
                    library = "ion", markerColor = "blue")
 
@@ -88,5 +87,5 @@ m <- m %>%addSearchOSM()%>%
                    options = layersControlOptions(collapsed = FALSE),position = "topleft")
 
 if(.Platform$OS.type=="windows"){
-close(pb)
+  close(pb)
 }

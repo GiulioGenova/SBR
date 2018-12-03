@@ -13,6 +13,9 @@ server <- function(input, output,session) {
       textInput("username", "Username:"),
       passwordInput("password", "Password:"),
       #textInput("host", "Host:"),
+      if (failed)
+        div(tags$b("Invalid username or password", style = "color: red;")),
+
       footer = tagList(
         # modalButton("Cancel"),
         actionButton("ok", "OK")
@@ -53,7 +56,7 @@ server <- function(input, output,session) {
     if (!is.null(Logged)) {
 
       Logged <<- TRUE
-      values$authenticated <- TRUE
+      #values$authenticated <- TRUE
       obs1$suspend()
       removeModal()
       user <<- Username
@@ -63,17 +66,17 @@ server <- function(input, output,session) {
 
     } else {
 
-      values$authenticated <- FALSE
-
+      #values$authenticated <- FALSE
+      showModal(dataModal(failed = TRUE))
     }
 
   })
 
-
-  output$dataInfo <- renderPrint({
-    if (values$authenticated) "OK!!!!!"
-    else "You are NOT authenticated"
-  })
+#
+#   output$dataInfo <- renderPrint({
+#     if (values$authenticated) "OK!!!!!"
+#     else "You are NOT authenticated"
+#   })
 
 
 

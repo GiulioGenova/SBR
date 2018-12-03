@@ -28,7 +28,7 @@ navbarPage(
                                        min = Sys.Date()-180,max = Sys.Date()),
                              dateInput("today",label = "what day is today",
                                        min = Sys.Date()-180,max = Sys.Date()),
-                             plotOutput("irrigAdvise", height = "250px")
+                             plotOutput("irrigAdvise", height = "250px")%>% withSpinner()
 
                )
            )
