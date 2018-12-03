@@ -27,16 +27,11 @@ library(tidyr)
 library(SBR)
 
 
-
 Logged = FALSE
 
 Host <- "95.171.35.104"
 
-wd<-getwd()
-# kml <- file.path(wd,"Orchards_monitoring_station_MONALISA-SBR_Project_21032018.kml")
-# kml <- readOGR(file, layer = ogrListLayers(file)[1])
-# save(kml,file = "kml.rda")
-#kml@coords[,'coords.x1']
+
 # y axis title
 RHy <- list(title = "Air RH [%]")
 Airy <- list(title = "Air & Soil T [°C]")
@@ -64,27 +59,6 @@ STline<-"dash"
 RHline<-"solid"
 AirTline<-"soild"
 
-c1 <- awesomeIcons(icon = "ios-close", iconColor = "black",
-                   library = "ion", markerColor = "blue")
-
-m <- leaflet()%>%#addSearchOSM()%>%
-  htmlwidgets::onRender(".leaflet-control {
-                        float: left;
-                        clear: both;
-                        }")
-m <- m %>% addProviderTiles("OpenStreetMap.Mapnik", group = "OSM")
-m <- m %>% addProviderTiles("Esri.WorldImagery", group = "SAT")
-#m<-m %>%addCircles(data=kml,color = "darkblue",
-#                   radius = 10,opacity = 1,popup= as.character(kml$Name))
-
-m<-m %>%addAwesomeMarkers(data = kml,icon = c1,popup= as.character(kml$Name))
-
-m <- m %>%addSearchOSM()%>%
-  addEasyButton(easyButton(icon="fa-crosshairs", title="Locate Me",
-                           onClick=JS("function(btn, map){ map.locate({setView: true}); }")))%>%
-  addMeasure(position = "topleft",primaryLengthUnit = "meters")%>%
-  addLayersControl(baseGroups = c("OSM","SAT"),
-                   options = layersControlOptions(collapsed = FALSE),position = "topleft")
 
 if(.Platform$OS.type=="windows"){
   close(pb)
