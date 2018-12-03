@@ -17,6 +17,7 @@ library(dplyr)
 library(ggimage)
 library(DBI)
 library(RMariaDB)
+library(shinycssloaders)
 library(SBR)
 
 

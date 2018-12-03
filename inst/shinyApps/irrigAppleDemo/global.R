@@ -17,14 +17,14 @@ library(dplyr)
 library(ggimage)
 library(DBI)
 library(RMariaDB)
+library(sp)
 library(SBR)
 
 
 
 round="hour"
 provSensor=c("N","GS")#,"WG"
-#long=11.457978
-#lat=46.657158
+
 Logged = FALSE
 #today <- Sys.Date()
 Host <- "95.171.35.104"
