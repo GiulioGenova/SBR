@@ -18,9 +18,60 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// etcadj
+NumericVector etcadj(NumericVector n, NumericVector e, double taw, double p, NumericVector k, double dry);
+RcppExport SEXP _SBR_etcadj(SEXP nSEXP, SEXP eSEXP, SEXP tawSEXP, SEXP pSEXP, SEXP kSEXP, SEXP drySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type n(nSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type e(eSEXP);
+    Rcpp::traits::input_parameter< double >::type taw(tawSEXP);
+    Rcpp::traits::input_parameter< double >::type p(pSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type k(kSEXP);
+    Rcpp::traits::input_parameter< double >::type dry(drySEXP);
+    rcpp_result_gen = Rcpp::wrap(etcadj(n, e, taw, p, k, dry));
+    return rcpp_result_gen;
+END_RCPP
+}
+// ks
+NumericVector ks(NumericVector n, NumericVector e, double taw, double p, NumericVector k, double dry);
+RcppExport SEXP _SBR_ks(SEXP nSEXP, SEXP eSEXP, SEXP tawSEXP, SEXP pSEXP, SEXP kSEXP, SEXP drySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type n(nSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type e(eSEXP);
+    Rcpp::traits::input_parameter< double >::type taw(tawSEXP);
+    Rcpp::traits::input_parameter< double >::type p(pSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type k(kSEXP);
+    Rcpp::traits::input_parameter< double >::type dry(drySEXP);
+    rcpp_result_gen = Rcpp::wrap(ks(n, e, taw, p, k, dry));
+    return rcpp_result_gen;
+END_RCPP
+}
+// wbadj
+NumericVector wbadj(NumericVector n, NumericVector e, double taw, double p, NumericVector k, double dry);
+RcppExport SEXP _SBR_wbadj(SEXP nSEXP, SEXP eSEXP, SEXP tawSEXP, SEXP pSEXP, SEXP kSEXP, SEXP drySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type n(nSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type e(eSEXP);
+    Rcpp::traits::input_parameter< double >::type taw(tawSEXP);
+    Rcpp::traits::input_parameter< double >::type p(pSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type k(kSEXP);
+    Rcpp::traits::input_parameter< double >::type dry(drySEXP);
+    rcpp_result_gen = Rcpp::wrap(wbadj(n, e, taw, p, k, dry));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_SBR_cumsumBounded", (DL_FUNC) &_SBR_cumsumBounded, 3},
+    {"_SBR_etcadj", (DL_FUNC) &_SBR_etcadj, 6},
+    {"_SBR_ks", (DL_FUNC) &_SBR_ks, 6},
+    {"_SBR_wbadj", (DL_FUNC) &_SBR_wbadj, 6},
     {NULL, NULL, 0}
 };
 
