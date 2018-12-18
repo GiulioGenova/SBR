@@ -25,7 +25,9 @@ navbarPage(
                              p("Please indicate the last day you irrigated below."),
                              p("Then click in the map on your field to get irrigation advice"),
                              dateInput("date",label = "last irrigation date",
-                                       min = Sys.Date()-90,max = Sys.Date()),
+                                       min = Sys.Date()-180,max = Sys.Date()),
+                             dateInput("today",label = "what day is today",
+                                       min = Sys.Date()-180,max = Sys.Date()),
                              plotOutput("irrigAdvise", height = "250px")%>% withSpinner()
 
                )

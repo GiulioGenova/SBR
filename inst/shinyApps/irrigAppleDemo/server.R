@@ -13,7 +13,6 @@ server <- function(input, output,session) {
       textInput("username", "Username:"),
       passwordInput("password", "Password:"),
       #textInput("host", "Host:"),
-
       if (failed)
         div(tags$b("Invalid username or password", style = "color: red;")),
 
@@ -73,11 +72,11 @@ server <- function(input, output,session) {
 
   })
 
-
-  # output$dataInfo <- renderPrint({
-  #   if (values$authenticated) "OK!!!!!"
-  #   else "You are NOT authenticated"
-  # })
+#
+#   output$dataInfo <- renderPrint({
+#     if (values$authenticated) "OK!!!!!"
+#     else "You are NOT authenticated"
+#   })
 
 
 
@@ -109,27 +108,28 @@ server <- function(input, output,session) {
     req(input$map_click)
     datestart <- input$date
     #datestart <- "2018-11-01"
-    #long=11.857978
-    #lat=46.657158
     lat <- latLong$lat
     long <- latLong$long
+    today <- input$today
 
     point <- cbind(LONG=long,LAT=lat)
     point <- SpatialPoints(point,proj4string = CRS("+init=epsg:4326"))
 
     fallsin<- !is.na(point %over% orchards [,"Landuse"])[1]
     if(fallsin){
+
+
       db <- mergeData(long = long,lat = lat,
                       datestart = datestart,
-                      #dateend = Sys.Date()+1,
+                      dateend = today+5,
                       provSensor = provSensor,
                       password = password,user = user,host = host)
 
       et <- ET(data = db)
 
-      df <- mergeOldAndForecast(data = et,long = long,lat = lat)
+      #df <- mergeOldAndForecast(data = et,long = long,lat = lat)
 
-      wb <- WB(df)
+      wb <- WB(et)
 
       wb <- wb %>% filter(TimeStamp > today)
     } else {
@@ -146,14 +146,16 @@ server <- function(input, output,session) {
 
     db <- db()
 
-    plotIrrigAdvice(db,T)
+    plotIrrigAdvice(db,F)
 
   })
 
 
 
   output$map <- renderLeaflet({
+
     buildMap()
+
   })
 
   session$onSessionEnded(function() {
