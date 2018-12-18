@@ -1,7 +1,7 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 // [[Rcpp::export]]
-NumericVector ks(NumericVector n, NumericVector e, double taw, double p, NumericVector k, double dry) {
+NumericVector ks(NumericVector n, NumericVector e, double taw, double p, NumericVector k) {
   NumericVector ksout(e.size());
   double raw = taw*p;
   double acc = 0;
@@ -16,12 +16,12 @@ NumericVector ks(NumericVector n, NumericVector e, double taw, double p, Numeric
       acc = acc + e[i]*k[i] - n[i];
       ks=1;
     }
-    else if ((acc + e[i] - n[i])> raw & (acc + e[i] - n[i]) < dry) {
+    else if ((acc + e[i] - n[i])> raw & (acc + e[i] - n[i]) < taw) {
       ks = (taw-(acc + e[i] - n[i])) / ((1 - p) * taw );
       acc = acc + e[i]*k[i]*ks - n[i];
     }
     else {
-      acc = dry ;
+      acc = taw ;
       ks = (taw-acc) / ((1 - p) * taw );
     }
     ksout[i] = ks;

@@ -5,8 +5,7 @@
 \title{Computes computes water balace from evapotranspiration and precipitation data coming from et function
 and getForecast function}
 \usage{
-WB(data, min_mm = 10, max_mm = 50, lmitWarning_mm = 30,
-  lmitStress_mm = 20)
+WB(data, taw = 50, lmitWarning = 0.7, p = 0.5, startwb = 10)
 }
 \description{
 Computes computes water balace from evapotranspiration and precipitation data coming from et function

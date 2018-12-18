@@ -18,6 +18,7 @@ library(ggimage)
 library(DBI)
 library(RMariaDB)
 library(shinycssloaders)
+library(sp)
 library(SBR)
 
 

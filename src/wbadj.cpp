@@ -1,7 +1,7 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 // [[Rcpp::export]]
-NumericVector wbadj(NumericVector n, NumericVector e, double taw, double p, NumericVector k, double dry) {
+NumericVector wbadj(NumericVector n, NumericVector e, double taw, double p, NumericVector k) {
   NumericVector etcadj(e.size());
   double raw = taw*p;
   double acc = 0;
@@ -14,12 +14,12 @@ NumericVector wbadj(NumericVector n, NumericVector e, double taw, double p, Nume
     else if ((acc + e[i] - n[i])> 0 & (acc + e[i] - n[i]) < raw){
       acc = acc + e[i]*k[i] - n[i];
     }
-    else if ((acc + e[i] - n[i])> raw & (acc + e[i] - n[i]) < dry) {
+    else if ((acc + e[i] - n[i])> raw & (acc + e[i] - n[i]) < taw) {
       ks = (taw-(acc + e[i] - n[i])) / ((1 - p) * taw );
       acc = acc + e[i]*k[i]*ks - n[i];
     }
     else {
-      acc = dry ;
+      acc = taw ;
     }
     etcadj[i] = acc;
   }

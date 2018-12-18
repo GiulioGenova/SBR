@@ -5,15 +5,15 @@ cumsumBounded <- function(x, low, high) {
     .Call('_SBR_cumsumBounded', PACKAGE = 'SBR', x, low, high)
 }
 
-etcadj <- function(n, e, taw, p, k, dry) {
-    .Call('_SBR_etcadj', PACKAGE = 'SBR', n, e, taw, p, k, dry)
+etcadj <- function(n, e, taw, p, k) {
+    .Call('_SBR_etcadj', PACKAGE = 'SBR', n, e, taw, p, k)
 }
 
-ks <- function(n, e, taw, p, k, dry) {
-    .Call('_SBR_ks', PACKAGE = 'SBR', n, e, taw, p, k, dry)
+ks <- function(n, e, taw, p, k) {
+    .Call('_SBR_ks', PACKAGE = 'SBR', n, e, taw, p, k)
 }
 
-wbadj <- function(n, e, taw, p, k, dry) {
-    .Call('_SBR_wbadj', PACKAGE = 'SBR', n, e, taw, p, k, dry)
+wbadj <- function(n, e, taw, p, k) {
+    .Call('_SBR_wbadj', PACKAGE = 'SBR', n, e, taw, p, k)
 }
 

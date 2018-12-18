@@ -1,7 +1,7 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 // [[Rcpp::export]]
-NumericVector etcadj(NumericVector n, NumericVector e, double taw, double p, NumericVector k, double dry) {
+NumericVector etcadj(NumericVector n, NumericVector e, double taw, double p, NumericVector k) {
   NumericVector etcadjout(e.size());
   double raw = taw*p;
   double acc = 0;
@@ -19,13 +19,13 @@ NumericVector etcadj(NumericVector n, NumericVector e, double taw, double p, Num
       ks=1;
       etcadj = e[i]*k[i]*ks;
     }
-    else if ((acc + e[i] - n[i])> raw & (acc + e[i] - n[i]) < dry) {
+    else if ((acc + e[i] - n[i])> raw & (acc + e[i] - n[i]) < taw) {
       ks = (taw-(acc + e[i] - n[i])) / ((1 - p) * taw );
       acc = acc + e[i]*k[i]*ks - n[i];
       etcadj = e[i]*k[i]*ks;
     }
     else {
-      acc = dry ;
+      acc = taw ;
       ks = (taw-acc) / ((1 - p) * taw );
       etcadj = e[i]*k[i]*ks;
     }
