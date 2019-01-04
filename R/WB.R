@@ -6,14 +6,16 @@
 #' @importFrom Rcpp sourceCpp
 #' @useDynLib SBR
 
-WB <- function(data,taw=50,lmitWarning=0.7,p=0.5,startwb= 10){
+WB <- function(data,taw=50,lmitWarning=0.7,p=0.5,startwb= 10,irrig=0){
+
+data$irrig <- irrig
 
   data <- data %>%
     mutate(
       N_sum=ifelse(row_number()==1,startwb,N_sum),
       #ETcMinusN_sum=ifelse(row_number()==1,start, ETc-N_sum),
 
-      wbnotadj=cumsumBounded(x = ETc-N_sum,low = 0,high = taw),
+      wbnotadj=cumsumBounded(x = ETc-N_sum - irrig,low = 0,high = taw),
 
       # etcadj=ifelse(row_number()==1,start,etcadj(n=N_sum,e = ET0,
       #                                            taw = taw,p = p,
@@ -22,14 +24,14 @@ WB <- function(data,taw=50,lmitWarning=0.7,p=0.5,startwb= 10){
 
 
 
-      etcadj=etcadj(n=N_sum,e = ET0,taw = taw,p = p,k = Kc
+      etcadj=etcadj(n=N_sum, irrig = irrig ,e = ET0,taw = taw,p = p,k = Kc
       ),
 
       # ks=ifelse(row_number()==1,0,ks(n=N_sum,e = ET0,
       #                                taw = taw,p = p,
       #                                k = Kc
       # )),
-      ks=ks(n=N_sum,e = ET0,taw = taw,p = p,k = Kc
+      ks=ks(n=N_sum, irrig = irrig ,e = ET0,taw = taw,p = p,k = Kc
       ),
 
 
@@ -37,9 +39,11 @@ WB <- function(data,taw=50,lmitWarning=0.7,p=0.5,startwb= 10){
       #                                       taw = taw,p = p,
       #                                       k = Kc
       # )),
-      wb=wbadj(n=N_sum,e = ET0,taw = taw,p = p,k = Kc
+      wb=wbadj(n=N_sum, irrig = irrig ,e = ET0,taw = taw,p = p,k = Kc
       ),
 
+      waste=waste_water_adj(n=N_sum,e = ET0,irrig=irrig,taw = taw,p = p,k = Kc
+      ),
 
       irrigAdvise=ifelse(wb<=taw*p*lmitWarning,"NoIrrig",
                          ifelse(wb>= taw*p*lmitWarning & wb< taw*p,"SugIrrig","MustIrrig")),
