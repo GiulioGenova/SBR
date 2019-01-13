@@ -21,7 +21,7 @@ ET <- function(data,
                DOY.late=271,
                DOY.harv=312,
                tree_height=3
-               ){
+){
 
 
   colnames(data)[colnames(data)=="GS_mean"] <- "Rs"
@@ -33,7 +33,7 @@ ET <- function(data,
 
 
   db<- data %>%
-    dplyr::mutate(Year=year(TimeStamp),Month=month(TimeStamp),Day=day(TimeStamp),Rs=(Rs*0.0864))
+    mutate(Year=year(TimeStamp),Month=month(TimeStamp),Day=day(TimeStamp),Rs=(Rs*0.0864))
 
 
   et_real_tot_in<-ReadInputs(varnames = c("RHmin","RHmax", "u2","Tmin","Tmax","Rs"),climatedata = db,stopmissing = c(30,30,30),
@@ -63,9 +63,10 @@ ET <- function(data,
                                                      ifelse(DOY %in% DOY.dev:DOY.mid, (Kc.mid-Kc.dev)/(DOY.mid-DOY.dev)*(DOY-DOY.dev)+Kc.dev,
                                                             ifelse(DOY %in% DOY.mid:DOY.late, Kc.mid,
                                                                    ifelse(DOY %in% DOY.late:DOY.harv,(Kc.late-Kc.mid)/(DOY.harv-DOY.late)*(DOY-DOY.late)+Kc.mid, 0)))))),
-                           Kc_corr=ifelse(DOY %in% DOY.mid:DOY.late,Kc+(0.04*(u2-2)-0.004*(RHmin-45))*(tree_height/3)^0.3 ,Kc),
-                           ETc=ET0*Kc,
-                           ETc_corr=ET0*Kc_corr) %>%
+                           #Kc_corr=ifelse(DOY %in% DOY.mid:DOY.late,Kc+(0.04*(u2-2)-0.004*(RHmin-45))*(tree_height/3)^0.3 ,Kc),
+                           ETc=ET0*Kc#,
+                           #ETc_corr=ET0*Kc_corr
+  ) %>%
     select(-Year,-Month,-Day,-DOY)
 
   colnames(df_ETc)[colnames(df_ETc)=="Rs"] <- "GS_mean"

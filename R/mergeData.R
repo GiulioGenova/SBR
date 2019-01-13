@@ -1,7 +1,7 @@
 #' Merge data of a location - using closest province of Bozen and SBR stations -
 #'
 #' @export
-#' @importFrom glue collapse
+#' @importFrom glue glue_collapse
 #' @importFrom dplyr full_join matches
 #'
 
@@ -26,7 +26,7 @@ mergeData <- function(long,lat,datestart=Sys.Date()-2,dateend=Sys.Date()+1,round
                  spread = T,
                  round = round)
 
-  toTakeOut <- collapse(paste0(provSensor,"_"),"|")
+  toTakeOut <- paste0("^",glue_collapse(paste0(provSensor,"_"),"|"))
 
   z <- z %>% select(-matches(toTakeOut))
 

@@ -182,7 +182,90 @@ server <- function(input, output, session) {
       write.csv(db, con,quote = F,row.names = F,na = "NA",sep = ",",dec = ".")
     }
   )
+  # irrigApple
 
+  latLong<-reactiveValues(lat=NULL,long=NULL)
+
+  values <- reactiveValues(authenticated = FALSE)
+
+
+  observe({
+
+    click <- input$mapIrrig_click
+    latLong$lat <- click$lat
+    latLong$long <- click$lng
+
+  })
+
+  observe({
+
+    lat <- as.numeric(latLong$lat)
+    long <- as.numeric(latLong$long)
+
+    proxy <- leafletProxy("mapIrrig")%>% clearMarkers() #%>% removeDrawToolbar(clearFeatures = TRUE)
+
+    proxy<- proxy %>%
+
+      addAwesomeMarkers(lng = long, lat = lat)
+
+
+  })
+
+
+  db <- reactive({
+    req(input$date)
+    req(input$mapIrrig_click)
+    datestart <- input$date
+    #datestart <- "2018-11-01"
+    #long=11.857978
+    #lat=46.657158
+    lat <- latLong$lat
+    long <- latLong$long
+
+    point <- cbind(LONG=long,LAT=lat)
+    point <- SpatialPoints(point,proj4string = CRS("+init=epsg:4326"))
+
+    fallsin<- !is.na(point %over% orchards [,"Landuse"])[1]
+    if(fallsin){
+      db <- mergeData(long = long,lat = lat,
+                      datestart = datestart,
+                      #dateend = Sys.Date()+1,
+                      provSensor = provSensor,
+                      password = password,user = user,host = host)
+
+      et <- ET(data = db)
+
+      wb <- WB(et)
+
+      wb <- mergeOldAndForecast(data = wb,long = long,lat = lat)
+
+      wb <- wb %>% filter(TimeStamp > today)
+    } else {
+
+      wb<-NULL
+    }
+  })
+
+
+
+
+  output$irrigAdvise <- renderPlot({
+    req(db())
+
+    db <- db()
+
+    plotIrrigAdvice(db,T)
+
+  })
+
+
+
+  output$mapIrrig <- renderLeaflet({
+    buildMap()
+  })
+  # irrigApple end
+
+  #outputOptions(output, "irrigAdvise", suspendWhenHidden = FALSE)
 
   session$onSessionEnded(function() {
     stopApp()
