@@ -86,7 +86,7 @@ server <- function(input, output, session) {
     test <- sprintf(fmt = "http://www.beratungsring.org/wetterdaten/map_popup.php?ST=%s&date=%s",query,as.character(Sys.Date(),format="%d.%m.%Y"))
     assign("test", test, envir=globalenv())
 
-    })
+  })
 
   output$map2 <- renderUI({
 
@@ -130,7 +130,7 @@ server <- function(input, output, session) {
   pp <- eventReactive(input$refresh,{#,input$daterange,input$round,input$Station
 
     db=inputdb()
-    station=sub("\\_.*", "", input$Station)
+    #station=sub("\\_.*", "", input$Station)
 
     plotSBRdata(db)
 
@@ -140,32 +140,6 @@ server <- function(input, output, session) {
   output$plotall <- renderPlotly({
     pp()
   })
-
-  #output$plotair <- renderPlotly({
-  #  db=inputdb()
-  # station=sub("\\_.*", "", input$Station)
-  #db<-as_tibble(db)
-
-
-  # a<-plot_ly(db,x = ~date, y = ~RHmean)%>%#
-  #add_lines(name=~"RHmean")
-
-  #ay <- list(
-  # tickfont = list(color = "red"),
-  # overlaying = "y",
-  # side = "right",
-  #title = "second y axis"
-  # )
-  # p <- plot_ly() %>%
-  #   add_lines(db,x = ~date, y = ~RHmean, name = "RH") %>%
-  #   add_lines(db,x = ~date, y = ~Tmean, name = "T", yaxis = "y2") %>%
-  #  layout(
-  #    title = "Double Y Axis", yaxis2 = ay,
-  #    xaxis = list(title="x")
-  #  )
-  #   a
-
-  #})
 
   output$downloadData <- downloadHandler(
 
@@ -186,7 +160,7 @@ server <- function(input, output, session) {
 
   latLong<-reactiveValues(lat=NULL,long=NULL)
 
-  values <- reactiveValues(authenticated = FALSE)
+  #values <- reactiveValues(authenticated = FALSE)
 
 
   observe({
@@ -264,6 +238,83 @@ server <- function(input, output, session) {
     buildMap()
   })
   # irrigApple end
+
+  # irrigAppleDemo
+  latLongDm<-reactiveValues(lat=NULL,long=NULL)
+
+  observe({
+
+    clickDm <- input$mapIrrigDm_click
+    latLongDm$lat <- clickDm$lat
+    latLongDm$long <- clickDm$lng
+
+  })
+
+  observe({
+
+    lat <- as.numeric(latLongDm$lat)
+    long <- as.numeric(latLongDm$long)
+
+    proxy <- leafletProxy("mapIrrigDm")%>% clearMarkers() #%>% removeDrawToolbar(clearFeatures = TRUE)
+
+    proxy<- proxy %>%
+
+      addAwesomeMarkers(lng = long, lat = lat)
+
+
+  })
+
+  dbDm <- reactive({
+    req(input$dateDm)
+    req(input$mapIrrigDm_click)
+    datestart <- input$dateDm
+    #datestart <- "2018-11-01"
+    lat <- latLongDm$lat
+    long <- latLongDm$long
+    today <- input$today
+
+    point <- cbind(LONG=long,LAT=lat)
+    point <- SpatialPoints(point,proj4string = CRS("+init=epsg:4326"))
+
+    fallsin<- !is.na(point %over% orchards [,"Landuse"])[1]
+    if(fallsin){
+
+
+      db <- mergeData(long = long,lat = lat,
+                      datestart = datestart,
+                      dateend = today+5,
+                      provSensor = provSensor,
+                      password = password,user = user,host = host)
+
+      et <- ET(data = db)
+
+      #df <- mergeOldAndForecast(data = et,long = long,lat = lat)
+
+      wb <- WB(et)
+
+      wb <- wb %>% filter(TimeStamp > today)
+    } else {
+
+      wb<-NULL
+    }
+  })
+
+
+
+
+  output$irrigAdviseDm <- renderPlot({
+    req(dbDm())
+
+    db <- dbDm()
+
+    plotIrrigAdvice(db,F)
+
+  })
+
+  output$mapIrrigDm <- renderLeaflet({
+    buildMap()
+  })
+  # irrigAppleDemo end
 
   #outputOptions(output, "irrigAdvise", suspendWhenHidden = FALSE)
 

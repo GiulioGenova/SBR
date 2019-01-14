@@ -41,4 +41,11 @@ p {
   min-height: 870px !important;
   max-height: 965px !important;
 }
-
+#boxDm {
+  height: calc(100vh - 85px) !important;
+  min-height: 350px !important;
+}
+#mapIrrigDm{
+  height: 100% !important;
+  width: 100% !important;
+}
