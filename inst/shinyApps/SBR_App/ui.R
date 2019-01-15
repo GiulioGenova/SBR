@@ -59,7 +59,18 @@ ui <- dashboardPage(
                     p(h5("Please indicate the last day you irrigated below.") ),
                     p(h5("Then click in the map on your field to get irrigation advice")),
                     dateInput("date",label = "last irrigation date",
-                              min = Sys.Date()-90,max = Sys.Date())
+                              min = Sys.Date()-90,max = Sys.Date()),
+                    radioButtons("irr", "Irrigation type:",
+                                 c("Normal" = "norm",
+                                   "Light" = "light"),
+                                 selected = "norm",
+                                 inline = T),
+                    radioButtons("soil", "Soil type:",
+                                 c("Heavy" = "heavy",
+                                   "Medium"= "medium",
+                                   "Light" = "light"),
+                                 selected = "medium",
+                                 inline = T)
 
                   ),
 
@@ -91,7 +102,18 @@ ui <- dashboardPage(
                          dateInput("dateDm",label = "last irrigation date",
                                    min = Sys.Date()-365,max = Sys.Date()),
                          dateInput("today",label = "what day is today",
-                                   min = Sys.Date()-364,max = Sys.Date())
+                                   min = Sys.Date()-364,max = Sys.Date()),
+                         radioButtons("irrDm", "Irrigation type:",
+                                      c("Normal" = "norm",
+                                        "Light" = "light"),
+                                      selected = "norm",
+                                      inline = T),
+                         radioButtons("soilDm", "Soil type:",
+                                      c("Heavy" = "heavy",
+                                        "Medium"= "medium",
+                                        "Light" = "light"),
+                                      selected = "medium",
+                                      inline = T)
 
                        ),
 

@@ -3,7 +3,7 @@
 #' @export
 #' @importFrom lubridate year month day yday
 #' @importFrom dplyr mutate select bind_cols
-#' @importFrom Evapotranspiration ReadInputs ET.PenmanMonteith
+#' @importFrom Evapotranspiration ReadInputs
 #'
 
 
@@ -21,7 +21,11 @@ ET <- function(data,
                DOY.late=271,
                DOY.harv=312,
                tree_height=3,
-               radiation_unit="W"
+               radiation_unit="W",
+               crop = "short",
+               netRadiation="no",
+               wind = "yes",
+               message = "yes"
 ){
 
   if(radiation_unit=="W"){
@@ -67,8 +71,9 @@ ET <- function(data,
 
   constants=list(Elev=Elev,lambda=2.45,lat_rad=latitude,Gsc=0.0820,z=2,sigma=4.903*10^-9,G=0)
 
-  et0_real<-ET.PenmanMonteith(data = et_real_tot_in,constants = constants,ts = "daily",
-                              solar="data",wind = "yes",crop = "short",message = "yes",save.csv = "no")
+  et0_real<-ET_PenmanMonteith(data = et_real_tot_in,constants = constants,ts = "daily",
+                              solar="data",wind = wind,crop = crop,message = message,save.csv = "no",
+                              netRadiation=netRadiation)
   #df<-df %>% select(TimeStamp,id)
   df_ET<-bind_cols(db,ET0=as.numeric(et0_real$ET.Daily))
 
@@ -82,7 +87,16 @@ ET <- function(data,
                            Kc_corr=ifelse(DOY %in% DOY.mid:DOY.late,Kc+(0.04*(u2-2)-0.004*(RHmin-45))*(tree_height/3)^0.3 ,Kc),
                            ETc=ET0*Kc,
                            ETc_corr=ET0*Kc_corr
-  ) %>%
+
+  )
+
+  # if(any(is.na(df_ETc$ETc))){
+  #   df_ETc<-left_join(df_ETc,etAvg,by=c("DOY"="doy")) %>%
+  #     mutate(ETc=ifelse(is.na(ETc),ET,ETc)) %>%
+  #     select(-ET)
+  # }
+
+  df_ETc<-df_ETc%>%
     select(-Year,-Month,-Day,-DOY)
 
   colnames(df_ETc)[colnames(df_ETc)=="Rs"] <- "GS_mean"

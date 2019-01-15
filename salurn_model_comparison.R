@@ -33,7 +33,7 @@ db <- mergeData(long = long,lat = lat,
                 provSensor = provSensor,
                 password = password,user = user,host = host)
 
-et <- ET(db)
+et <- ET(db,netRadiation = "no",crop = "tall")
 
 
 #df <- mergeOldAndForecast(data = et,long = long,lat = lat)
@@ -100,7 +100,7 @@ wb %>% filter(N_sum<50) %>%
   geom_col(aes(TimeStamp,irrig),fill="black")+
   theme_classic()
 
-# the et balances
+# the et
 ggplot2::ggplot(wb,aes(TimeStamp,etcadj))+
   geom_line()+
   geom_line(aes(TimeStamp,et_sbr),color="blue")+

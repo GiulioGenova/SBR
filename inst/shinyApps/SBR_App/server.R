@@ -193,6 +193,24 @@ server <- function(input, output, session) {
     #datestart <- "2018-11-01"
     #long=11.857978
     #lat=46.657158
+
+    irr<- input$irr
+    soil<- input$soil
+
+    if(soil=="heavy"){
+      TAW=85
+    }else if(soil=="medium"){
+      TAW=75
+    }else if(soil=="light"){
+      TAW=65
+    }
+
+    if(irr=="norm"){
+      startwb=TAW
+    }else if(irr=="light"){
+      startwb=TAW*0.35
+    }
+
     lat <- latLong$lat
     long <- latLong$long
 
@@ -207,9 +225,9 @@ server <- function(input, output, session) {
                       provSensor = provSensor,
                       password = password,user = user,host = host)
 
-      et <- ET(data = db)
+      et <- ET(data = db,crop = "tall")
 
-      wb <- WB(et)
+      wb <- WB(et,taw = TAW,startwb = startwb)
 
       wb <- mergeOldAndForecast(data = wb,long = long,lat = lat)
 
@@ -269,9 +287,31 @@ server <- function(input, output, session) {
     req(input$mapIrrigDm_click)
     datestart <- input$dateDm
     #datestart <- "2018-11-01"
+
+
+
+    irrDm<- input$irrDm
+    soilDm<- input$soilDm
+
     lat <- latLongDm$lat
     long <- latLongDm$long
     today <- input$today
+
+    if(soilDm=="heavy"){
+      TAW=85
+    }else if(soilDm=="medium"){
+      TAW=75
+    }else if(soilDm=="light"){
+      TAW=65
+    }
+
+    if(irrDm=="norm"){
+      startwb=TAW
+    }else if(irrDm=="light"){
+      startwb=TAW*0.35
+    }
+
+
 
     point <- cbind(LONG=long,LAT=lat)
     point <- SpatialPoints(point,proj4string = CRS("+init=epsg:4326"))
@@ -286,11 +326,11 @@ server <- function(input, output, session) {
                       provSensor = provSensor,
                       password = password,user = user,host = host)
 
-      et <- ET(data = db)
+      et <- ET(data = db,crop = "tall")
 
       #df <- mergeOldAndForecast(data = et,long = long,lat = lat)
 
-      wb <- WB(et)
+      wb <- WB(et,taw = TAW,startwb = startwb)
 
       wb <- wb %>% filter(TimeStamp > today)
     } else {
