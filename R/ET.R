@@ -20,8 +20,15 @@ ET <- function(data,
                DOY.mid=141,
                DOY.late=271,
                DOY.harv=312,
-               tree_height=3
+               tree_height=3,
+               radiation_unit="W"
 ){
+
+  if(radiation_unit=="W"){
+    cnvrt=0.0864
+  }else if(radiation_unit=="MJ"){
+    cnvrt=1
+  }
 
 
   colnames(data)[colnames(data)=="GS_mean"] <- "Rs"
@@ -33,10 +40,12 @@ ET <- function(data,
 
 
   db<- data %>%
-    mutate(Year=year(TimeStamp),Month=month(TimeStamp),Day=day(TimeStamp),Rs=(Rs*0.0864))
+    mutate(Year=year(TimeStamp),Month=month(TimeStamp),Day=day(TimeStamp),Rs=(Rs*cnvrt))
 
 
-  et_real_tot_in<-ReadInputs(varnames = c("RHmin","RHmax", "u2","Tmin","Tmax","Rs"),climatedata = db,stopmissing = c(30,30,30),
+  et_real_tot_in<-ReadInputs(varnames = c("RHmin","RHmax", "u2","Tmin","Tmax","Rs"),
+                             climatedata = db,
+                             stopmissing = c(30,30,30),
                              interp_missing_days = T,
                              interp_missing_entries = T,
                              interp_abnormal = T,
@@ -49,7 +58,14 @@ ET <- function(data,
     Elev <- 300
   }
 
-  constants=list(Elev=300,lambda=2.45,lat_rad=0.802851,Gsc=0.0820,z=2,sigma=4.903*10^-9,G=0)
+  latitude <- names_file[which(names_file$id==id),"lat"]#
+  latitude = as.numeric(latitude)*pi/180
+
+  if(is.null(latitude)){
+    latitude = 0.802851
+  }
+
+  constants=list(Elev=Elev,lambda=2.45,lat_rad=latitude,Gsc=0.0820,z=2,sigma=4.903*10^-9,G=0)
 
   et0_real<-ET.PenmanMonteith(data = et_real_tot_in,constants = constants,ts = "daily",
                               solar="data",wind = "yes",crop = "short",message = "yes",save.csv = "no")
@@ -63,9 +79,9 @@ ET <- function(data,
                                                      ifelse(DOY %in% DOY.dev:DOY.mid, (Kc.mid-Kc.dev)/(DOY.mid-DOY.dev)*(DOY-DOY.dev)+Kc.dev,
                                                             ifelse(DOY %in% DOY.mid:DOY.late, Kc.mid,
                                                                    ifelse(DOY %in% DOY.late:DOY.harv,(Kc.late-Kc.mid)/(DOY.harv-DOY.late)*(DOY-DOY.late)+Kc.mid, 0)))))),
-                           #Kc_corr=ifelse(DOY %in% DOY.mid:DOY.late,Kc+(0.04*(u2-2)-0.004*(RHmin-45))*(tree_height/3)^0.3 ,Kc),
-                           ETc=ET0*Kc#,
-                           #ETc_corr=ET0*Kc_corr
+                           Kc_corr=ifelse(DOY %in% DOY.mid:DOY.late,Kc+(0.04*(u2-2)-0.004*(RHmin-45))*(tree_height/3)^0.3 ,Kc),
+                           ETc=ET0*Kc,
+                           ETc_corr=ET0*Kc_corr
   ) %>%
     select(-Year,-Month,-Day,-DOY)
 

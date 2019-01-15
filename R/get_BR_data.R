@@ -36,6 +36,15 @@ get_BR_data <- function(station,datestart=Sys.Date()-1,dateend=Sys.Date()+1,
     #Value14 / 10    AS 'GS', \
     #Value11 / 10    AS 'ET', \
     #Value7          AS 'WR', \
+
+    if(year==2013){
+      com1="#"
+      com2="#"
+    }else {
+      com1=""
+      com2=""
+    }
+
     if(round=="raw"){
 
 
@@ -53,14 +62,15 @@ get_BR_data <- function(station,datestart=Sys.Date()-1,dateend=Sys.Date()+1,
                  Value20 / 10    AS 'IR', \
                  BF10 / 1000     AS 'BWC20', \
                  BF30 / 1000     AS 'BWC40', \
-                 BT10 / 10       AS 'BT20', \
-                 BT30 / 10       AS 'BT40', \
+                 %s BT10 / 10       AS 'BT20', \
+                 %s BT30 / 10       AS 'BT40', \
                  BF50 / 10       AS 'BWP20', \
                  BF80 / 10       AS 'BWP40'\
                  FROM \
                  tab_messung \
                  WHERE \
                  (StationsNr =%s) AND Datum >= '%s' AND Datum <= '%s'",
+                     com1,com2,
                      as.character(paste(station,collapse=" OR StationsNr =")),
                      datestart,dateend)#
     }else{
@@ -94,15 +104,15 @@ get_BR_data <- function(station,datestart=Sys.Date()-1,dateend=Sys.Date()+1,
 
                      avg(BF10 / 1000)     AS 'BWC20_mean', \
                      avg(BF30 / 1000)     AS 'BWC40_mean', \
-                     avg(BT10 / 10)       AS 'BT20_mean', \
-                     avg(BT30 / 10)       AS 'BT40_mean', \
+                     %s avg(BT10 / 10)       AS 'BT20_mean', \
+                     %s avg(BT30 / 10)       AS 'BT40_mean', \
                      avg(BF50 / 10)       AS 'BWP20_mean', \
                      avg(BF80 / 10)       AS 'BWP40_mean'\
                      FROM \
                      tab_messung \
                      WHERE \
                      (StationsNr =%s) AND Datum >= '%s' AND Datum <= '%s'
-                     group by %s,id",roundExpr,
+                     group by %s,id",roundExpr,com1,com2,
                      as.character(paste(station,collapse=" OR StationsNr =")),
                      datestart,dateend,roundExpr)#
 
@@ -116,6 +126,16 @@ get_BR_data <- function(station,datestart=Sys.Date()-1,dateend=Sys.Date()+1,
     #x$StationsNr
     db <- dbGetQuery(con, query)
     dbDisconnect(con)
+
+    if(year==2013){
+      if(round=="raw"){
+        db$BT20=NA
+        db$BT40=NA
+      }else {
+        db$BT20_mean=NA
+        db$BT40_mean=NA
+      }
+    }
     #db<-db%>%filter(date>= startdate & date<= enddate)#%>%
     db
   }
