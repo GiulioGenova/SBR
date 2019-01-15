@@ -2,7 +2,7 @@
 #'
 #' @export
 #' @importFrom lubridate year month day yday
-#' @importFrom dplyr mutate select bind_cols
+#' @importFrom dplyr mutate select bind_cols left_join
 #' @importFrom Evapotranspiration ReadInputs
 #'
 
@@ -46,36 +46,51 @@ ET <- function(data,
   db<- data %>%
     mutate(Year=year(TimeStamp),Month=month(TimeStamp),Day=day(TimeStamp),Rs=(Rs*cnvrt))
 
+  tryCatch({
+    et_real_tot_in<-ReadInputs(varnames = c("RHmin","RHmax", "u2","Tmin","Tmax","Rs"),
+                               climatedata = db,
+                               stopmissing = c(30,30,30),
+                               interp_missing_days = T,
+                               interp_missing_entries = T,
+                               interp_abnormal = T,
+                               missing_method = "monthly average",
+                               abnormal_method = "monthly average")
+  }, error = function(e){et_real_tot_in<<-NULL})
 
-  et_real_tot_in<-ReadInputs(varnames = c("RHmin","RHmax", "u2","Tmin","Tmax","Rs"),
-                             climatedata = db,
-                             stopmissing = c(30,30,30),
-                             interp_missing_days = T,
-                             interp_missing_entries = T,
-                             interp_abnormal = T,
-                             missing_method = "monthly average",
-                             abnormal_method = "monthly average")
-  id=unique(db$id)
-  Elev <- names_file[which(names_file$id==id),"alt"]#
+  if(!is.null(et_real_tot_in)){
 
-  if(is.null(Elev)){
-    Elev <- 300
+    id=unique(db$id)
+    Elev <- names_file[which(names_file$id==id),"alt"]#
+
+    if(is.null(Elev)){
+      Elev <- 300
+    }
+
+    latitude <- names_file[which(names_file$id==id),"lat"]#
+    latitude = as.numeric(latitude)*pi/180
+
+    if(is.null(latitude)){
+      latitude = 0.802851
+    }
+
+    constants=list(Elev=Elev,lambda=2.45,lat_rad=latitude,Gsc=0.0820,z=2,sigma=4.903*10^-9,G=0)
+
+
+    et0_real<-ET_PenmanMonteith(data = et_real_tot_in,constants = constants,ts = "daily",
+                                solar="data",wind = wind,crop = crop,message = message,save.csv = "no",
+                                netRadiation=netRadiation)
+
+
+    #df<-df %>% select(TimeStamp,id)
+    df_ET<-bind_cols(db,ET0=as.numeric(et0_real$ET.Daily))
+  }else {
+    db <- db %>%
+      mutate(doy=yday(TimeStamp))
+
+    df_ET<-left_join(db,etAvg) %>%
+      mutate(ET0=ET) %>%
+      select(-ET,-doy)
   }
-
-  latitude <- names_file[which(names_file$id==id),"lat"]#
-  latitude = as.numeric(latitude)*pi/180
-
-  if(is.null(latitude)){
-    latitude = 0.802851
-  }
-
-  constants=list(Elev=Elev,lambda=2.45,lat_rad=latitude,Gsc=0.0820,z=2,sigma=4.903*10^-9,G=0)
-
-  et0_real<-ET_PenmanMonteith(data = et_real_tot_in,constants = constants,ts = "daily",
-                              solar="data",wind = wind,crop = crop,message = message,save.csv = "no",
-                              netRadiation=netRadiation)
-  #df<-df %>% select(TimeStamp,id)
-  df_ET<-bind_cols(db,ET0=as.numeric(et0_real$ET.Daily))
 
   df_ETc<-df_ET %>% mutate(DOY=yday(TimeStamp),
                            Kc = ifelse(DOY == DOY.ini.A, Kc.ini.A,

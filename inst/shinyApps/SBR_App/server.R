@@ -190,9 +190,12 @@ server <- function(input, output, session) {
     req(input$date)
     req(input$mapIrrig_click)
     datestart <- input$date
+    lat <- latLong$lat
+    long <- latLong$long
     #datestart <- "2018-11-01"
     #long=11.857978
     #lat=46.657158
+
 
     irr<- input$irr
     soil<- input$soil
@@ -211,8 +214,8 @@ server <- function(input, output, session) {
       startwb=TAW*0.35
     }
 
-    lat <- latLong$lat
-    long <- latLong$long
+
+
 
     point <- cbind(LONG=long,LAT=lat)
     point <- SpatialPoints(point,proj4string = CRS("+init=epsg:4326"))
@@ -290,12 +293,15 @@ server <- function(input, output, session) {
 
 
 
-    irrDm<- input$irrDm
-    soilDm<- input$soilDm
+
 
     lat <- latLongDm$lat
     long <- latLongDm$long
     today <- input$today
+
+
+    irrDm<- input$irrDm
+    soilDm<- input$soilDm
 
     if(soilDm=="heavy"){
       TAW=85
