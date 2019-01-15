@@ -7,6 +7,9 @@ server <- function(input, output, session) {
   # is TRUE, then display a message that the previous value was invalid.
   dataModal <- function(failed = FALSE) {
     modalDialog(
+      p(h4(tags$b("Welcome to the SBR App"))),
+      p(h5("Please insert username and password for the Beratungsring database")),
+      p(h5("You need to be inside Beratungsring or eurac network to use this app")),
       textInput("username", "Username:"),
       passwordInput("password", "Password:"),
       #textInput("host", "Host:"),

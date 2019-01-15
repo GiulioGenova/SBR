@@ -5,7 +5,7 @@ has_internet <- function(){
 if(.Platform$OS.type=="windows"){
 
   pb = winProgressBar(
-    title = sprintf('Starting %s ...', "dataBrowser"),
+    title = sprintf('Starting %s ...', "SBR App"),
     label = 'Initializing ...'
   )
   setWinProgressBar(pb, 1.00, label = 'Starting application')

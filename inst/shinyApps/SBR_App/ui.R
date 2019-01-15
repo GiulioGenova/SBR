@@ -5,8 +5,8 @@ ui <- dashboardPage(
   dashboardSidebar(
     sidebarMenu(
 
-      menuItem("Data overwiev", tabName = "Data", icon = icon("bar-chart-o")),
-      menuItem("map", tabName = "map", icon = icon("info-circle")),
+      menuItem("Data Browser", tabName = "Data", icon = icon("bar-chart-o")),
+      menuItem("Station map", tabName = "map", icon = icon("info-circle")),
       menuItem("irrigApple", tabName = "irrigApple", icon = icon("bar-chart-o")),
       menuItem("irrigApple Demo", tabName = "irrigAppleDm", icon = icon("bar-chart-o"))
     )),
