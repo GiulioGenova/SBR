@@ -1,3 +1,7 @@
+has_internet <- function(){
+  !is.null(curl::nslookup("r-project.org", error = FALSE))
+}
+
 if(.Platform$OS.type=="windows"){
 
   pb = winProgressBar(
@@ -5,7 +9,19 @@ if(.Platform$OS.type=="windows"){
     label = 'Initializing ...'
   )
   setWinProgressBar(pb, 1.00, label = 'Starting application')
+
+  if (!has_internet()) {
+
+  msg=tcltk::tk_messageBox(
+    type="ok",
+    message="This app needs an active internet connection to work. Please check your internet connection",
+    icon="error")
+
+}else{}
+
 }
+
+
 
 
 

@@ -17,6 +17,8 @@ Remotes:
   rstudio/leaflet,
   bhaskarvk/leaflet.extras
 Imports:
+    tcltk,
+    curl,
     DBI,
     RMariaDB,
     lubridate,
