@@ -13,7 +13,9 @@
 
 
 
-get_BR_data <- function(station,datestart=Sys.Date()-1,dateend=Sys.Date()+1,
+get_BR_data <- function(station,
+                        sensor=NULL,
+                        datestart=Sys.Date()-1,dateend=Sys.Date()+1,
                         user,
                         password,
                         host,
@@ -23,7 +25,57 @@ get_BR_data <- function(station,datestart=Sys.Date()-1,dateend=Sys.Date()+1,
 
   dateend=as_date(dateend)+1
 
-  query_SBR_data <- function(year,station,datestart,
+  if(is.null(sensor)){
+    con_config<-dbConnect(MariaDB(),
+                          user=user,
+                          password= password,
+                          host=host,
+                          dbname="sbr_wetter_config")
+
+    tab_messwert_config = dbGetQuery(con_config,sprintf("SELECT StationsNr,MesswertNr\
+                                     FROM tab_messwert_config\
+                                     WHERE \
+                                     (StationsNr =%s)",
+                                                        as.character(paste(station,
+                                                                           collapse=" OR StationsNr ="))))
+
+    sensor=unique(tab_messwert_config$MesswertNr)
+
+    dbDisconnect(con_config)
+
+
+    #tab_meteostationzeile = dbGetQuery(con_config,"SELECT *  FROM tab_meteostationzeile")
+  }
+
+  con_config<-dbConnect(MariaDB(),
+                        user=user,
+                        password= password,
+                        host=host,
+                        dbname="sbr_wetter_config")
+
+  tab_messwert_bez = dbGetQuery(con_config,sprintf("SELECT MesswertNr,\
+MesswertBezDe,\
+MesswertEh,\
+messwertSpalte,\
+Faktor\
+FROM tab_messwert_bez\
+WHERE \
+(MesswertNr =%s)",as.character(paste(sensor,
+                                     collapse=" OR MesswertNr ="))
+  )
+  )
+
+  dbDisconnect(con_config)
+
+
+  sensors = as.character(paste0(tab_messwert_bez$messwertSpalte,
+                                "/",tab_messwert_bez$Faktor,
+                                " AS ","'",
+                                tab_messwert_bez$MesswertBezDe,
+                                "'",
+                                collapse=", "))
+
+  query_SBR_data <- function(year,station,sensors,datestart,
                              dateend,user,password,host){
     #year=2018;year=2013
     #station=c(7,12,14,172,176)
@@ -48,29 +100,34 @@ get_BR_data <- function(station,datestart=Sys.Date()-1,dateend=Sys.Date()+1,
     if(round=="raw"){
 
 
+
+      # Value3 / 10     AS 'LF', \
+      # Value4 / 10     AS 'LT', \
+      # Value6 / 10     AS 'WG', \
+      #
+      # Value9 / 10     AS 'N', \
+      # Value10         AS 'IRYN', \
+      #
+      #
+      # Value20 / 10    AS 'IR', \
+      # BF10 / 1000     AS 'BWC20', \
+      # BF30 / 1000     AS 'BWC40', \
+      # %s BT10 / 10       AS 'BT20', \
+      # %s BT30 / 10       AS 'BT40', \
+      # BF50 / 10       AS 'BWP20', \
+      # BF80 / 10       AS 'BWP40'\
+
+
       query<-sprintf("SELECT \
                  Datum           AS 'TimeStamp', \
                  StationsNr      AS 'id' , \
-                 Value3 / 10     AS 'LF', \
-                 Value4 / 10     AS 'LT', \
-                 Value6 / 10     AS 'WG', \
-
-                 Value9 / 10     AS 'N', \
-                 Value10         AS 'IRYN', \
-
-
-                 Value20 / 10    AS 'IR', \
-                 BF10 / 1000     AS 'BWC20', \
-                 BF30 / 1000     AS 'BWC40', \
-                 %s BT10 / 10       AS 'BT20', \
-                 %s BT30 / 10       AS 'BT40', \
-                 BF50 / 10       AS 'BWP20', \
-                 BF80 / 10       AS 'BWP40'\
+                 %s \
                  FROM \
                  tab_messung \
                  WHERE \
                  (StationsNr =%s) AND Datum >= '%s' AND Datum <= '%s'",
-                     com1,com2,
+                     #com1,com2,
+                     sensors,
                      as.character(paste(station,collapse=" OR StationsNr =")),
                      datestart,dateend)#
     }else{
@@ -146,7 +203,8 @@ get_BR_data <- function(station,datestart=Sys.Date()-1,dateend=Sys.Date()+1,
   db <- lapply(years,query_SBR_data,station=station,
                datestart=datestart,
                dateend=dateend,user=user,
-               password=password,host=host)#,round=input$round
+               password=password,host=host,
+               sensors=sensors)#,round=input$round
 
   db <- bind_rows(db)
 
