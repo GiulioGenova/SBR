@@ -20,23 +20,41 @@ ui <- dashboardPage(
       tabItem(tabName = "Data",
 
               fluidRow(
-                box(width = 3,downloadLink('downloadData', h4('Download')),actionButton(label= "update selection","refresh")),
+                box(width = 3,downloadLink('downloadData', h4('Download')),
+                    actionButton(label= "update selection","refresh")),
 
                 box(width = 3,selectInput("Station", label = h4("Station"), #,multiple = T,
-                                          choices = sort(names_file$name))),
+                                          choices = sort(name_file$name),selected = "Algund_2"),
+                    selectInput("selectedsensor", label = h4("Parameter"),
+                                choices = paste0(unique(sensor_file$MesswertBezDe),"_avg"),
+                                selected = "Temperatur 2m_avg",multiple = T)#, as.list(unique(sensor_file$MesswertBezDe))
+                    #verbatimTextOutput("selectSensorlist")
+                    ),
 
-                box(width = 4,dateRangeInput(label = h4("Pick a date range"),inputId = "daterange",separator = " - ",min = "2013-01-01",
+                box(width = 4,dateRangeInput(label = h4("Pick a date range"),
+                                             inputId = "daterange",
+                                             separator = " - ",
+                                             min = "2013-01-01",
                                              start = Sys.Date()-3,
                                              end = Sys.Date()+1)),
-                box(width = 2,selectInput("round",label = h4("Time aggregation"),choices = list("hour","day","month","year")))
+
+                box(width = 2,selectInput("round",label = h4("Time aggregation"),
+                                          choices = list("raw","hour","day","month","year"),
+                                          selected = "hour"),
+                    sliderInput('plotHeight', 'Height of plot (in pixels)',
+                                min = 150, max = 3500, value = 480)
+                    )
 
                 ,
-                box(
-                  id="box_plot",
-                  title = "Soil Air Precipitation Irrigation",solidHeader = TRUE,
-                  collapsible = FALSE,status = "primary",
-                  plotlyOutput("plotall")%>% withSpinner(), width = 12)#,height = "920px"
 
+                uiOutput("plotAll")
+
+                # box(
+                #   #id="box_plot",
+                #   title = "Soil Air Precipitation Irrigation",solidHeader = TRUE,
+                #   collapsible = FALSE,status = "primary",
+                #   plotlyOutput("plotall")%>% withSpinner(), width = 12)#,height = "920px"
+                #   #plotOutput("plotall",height = "auto")%>% withSpinner(), width = 12)#,height = "920px"
 
               )
 

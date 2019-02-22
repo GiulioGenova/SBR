@@ -31,7 +31,7 @@ p {
   min-height: 350px !important;
 }
 #map2 {height: 100% !important;}
-#box_plot {
+/*#box_plot {
   height: 90vh !important;
   min-height: 920px !important;
   max-height: 1000px !important;
@@ -41,6 +41,9 @@ p {
   min-height: 870px !important;
   max-height: 965px !important;
 }
+#plotAll {
+  margin-top: 200px;
+}*/
 #boxDm {
   height: calc(100vh - 85px) !important;
   min-height: 350px !important;

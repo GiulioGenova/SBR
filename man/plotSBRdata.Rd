@@ -4,7 +4,7 @@
 \alias{plotSBRdata}
 \title{plot data form SBR stations with plotly}
 \usage{
-plotSBRdata(db)
+plotSBRdata(db, height = 1500)
 }
 \description{
 plot data form SBR stations with plotly

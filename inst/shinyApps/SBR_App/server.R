@@ -74,6 +74,10 @@ server <- function(input, output, session) {
     else "You are NOT authenticated"
   })
 
+
+  ##############################################################################
+  # data browser
+
   output$map<-renderLeaflet({
 
     staticMap
@@ -83,7 +87,7 @@ server <- function(input, output, session) {
   #leafletOutput('map', height=600)
   observe({
     #station=sub("\\_.*", "", input$Station)
-    station=names_file[names_file$name==input$Station,"id"]
+    station=name_file[name_file$name==input$Station,"id"]
     query <- as.character(paste(station,collapse="+"))
     #test <<- sprintf(fmt = "http://www.beratungsring.org/wetterdaten/map_popup.php?ST=%s&date=%s",query,as.character(Sys.Date(),format="%d.%m.%Y"))
     test <- sprintf(fmt = "http://www.beratungsring.org/wetterdaten/map_popup.php?ST=%s&date=%s",query,as.character(Sys.Date(),format="%d.%m.%Y"))
@@ -102,22 +106,92 @@ server <- function(input, output, session) {
 
 
   ## connenction and query on sbr mysql database
-  inputdb=reactive({
+  inputdb=eventReactive(input$refresh,{
     #station=sub("\\_.*", "", input$Station)
     station=names_file[names_file$name==input$Station,"id"]
     start_date<-as.character(input$daterange[1])
     end_date<-as.character(input$daterange[2])
-    out_dir="H:/Projekte/SBR/04_Data/06_daily_resample"
+    #out_dir="H:/Projekte/SBR/04_Data/06_daily_resample"
     round=input$round
     #db<-resample_SBR(station = station,start_date = start_date,end_date = end_date,round=round)
-    db_SBR<-get_BR_data(station=station,datestart=start_date,dateend=end_date,
-                        user = user,password = password,
-                        host=host,
-                        spread = T,
-                        round=round)
+    #db_SBR<-
+
+
+    sensor=input$selectedsensor
+    get_BR_data(station=station,sensor=sensor,
+                datestart=start_date,dateend=end_date,
+                user = user,password = password,
+                host=host,
+                spread = F,
+                add_names = F,
+                round=round)
 
     #db<-resample_BR_data(db_SBR,round = round,spread=T)
 
+  })
+
+  output$plotAll <- renderUI({
+
+    #req(db())
+    #db=inputdb()
+    output$plotall <- renderPlotly({
+
+      pp()
+      #plotSBRdata(db)
+    })
+
+    #req(input$refresh)
+
+    box(width = 12,height = input$plotHeight+50,
+        title = "Graphs",solidHeader = TRUE,
+        plotlyOutput("plotall")%>% withSpinner()
+    )
+
+  })
+
+
+  # output$selectSensorlist <- renderText({
+  #
+  #   paramChoices()
+  #
+  # })
+
+  observe({
+
+    #stat="Latsch_1"
+    #stat=input$Station
+    station=SBR::name_file[SBR::name_file$name==input$Station,"id"]
+
+    tab <- SBR::sensor_file %>%
+      filter(StationsNr%in%(station))
+
+    if(input$round=="raw"){
+
+      x<-as.list(unique(tab$MesswertBezDe))
+
+    }else{
+
+      x<-as.list(c(
+        paste0(unique(tab$MesswertBezDe),"_avg"),
+        paste0(unique(tab$MesswertBezDe),"_sum"),
+        paste0(unique(tab$MesswertBezDe),"_min"),
+        paste0(unique(tab$MesswertBezDe),"_max"))
+      )
+
+    }
+
+    #return(choices)
+
+    # Can use character(0) to remove all choices
+    if (is.null(x))
+      x <- character(0)
+
+    # Can also set the label and select items
+    updateSelectInput(session, "selectedsensor",
+                      #label = paste("Select input label", length(x)),
+                      choices = x,
+                      selected = "Temperatur 2m_avg"
+    )
   })
 
 
@@ -130,19 +204,20 @@ server <- function(input, output, session) {
 
 
   ## Plot output
-  pp <- eventReactive(input$refresh,{#,input$daterange,input$round,input$Station
+  pp <- reactive({#,input$daterange,input$round,input$Station
 
     db=inputdb()
     #station=sub("\\_.*", "", input$Station)
+    height=input$plotHeight
+    plotSBRdata(db=db,height=height)#
 
-    plotSBRdata(db)
 
   })
 
 
-  output$plotall <- renderPlotly({
-    pp()
-  })
+  # output$plotall <- renderPlotly({
+  #   pp()
+  # })
 
   output$downloadData <- downloadHandler(
 
@@ -159,6 +234,8 @@ server <- function(input, output, session) {
       write.csv(db, con,quote = F,row.names = F,na = "NA",sep = ",",dec = ".")
     }
   )
+
+  #############################################################################
   # irrigApple
 
   latLong<-reactiveValues(lat=NULL,long=NULL)
@@ -263,6 +340,7 @@ server <- function(input, output, session) {
   })
   # irrigApple end
 
+  #############################################################################
   # irrigAppleDemo
   latLongDm<-reactiveValues(lat=NULL,long=NULL)
 
@@ -350,7 +428,6 @@ server <- function(input, output, session) {
 
 
 
-
   output$irrigAdviseDm <- renderPlot({
     req(dbDm())
 
@@ -366,6 +443,7 @@ server <- function(input, output, session) {
   # irrigAppleDemo end
 
   #outputOptions(output, "irrigAdvise", suspendWhenHidden = FALSE)
+  outputOptions(output, "plotAll", suspendWhenHidden = FALSE)
 
   session$onSessionEnded(function() {
     stopApp()

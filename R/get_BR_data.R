@@ -25,55 +25,141 @@ get_BR_data <- function(station,
 
   dateend=as_date(dateend)+1
 
-  if(is.null(sensor)){
-    con_config<-dbConnect(MariaDB(),
-                          user=user,
-                          password= password,
-                          host=host,
-                          dbname="sbr_wetter_config")
 
-    tab_messwert_config = dbGetQuery(con_config,sprintf("SELECT StationsNr,MesswertNr\
-                                     FROM tab_messwert_config\
-                                     WHERE \
-                                     (StationsNr =%s)",
-                                                        as.character(paste(station,
-                                                                           collapse=" OR StationsNr ="))))
-
-    sensor=unique(tab_messwert_config$MesswertNr)
-
-    dbDisconnect(con_config)
+  #station=c(9,103,35)
+  tab <- sensor_file %>%
+    filter(StationsNr%in%(station))
 
 
-    #tab_meteostationzeile = dbGetQuery(con_config,"SELECT *  FROM tab_meteostationzeile")
+
+  if(round=="raw"){
+    #sensor=c("Trockentemperatur 60cm","Temperatur 2m","Feuchte max in Messinterval")
+
+    if(!is.null(sensor)){
+      sensor=unique(sensor_file[sensor_file$MesswertBezDe%in%sensor,"MesswertNr"])
+      tab <- tab %>% filter(MesswertNr%in%(sensor)) %>%
+        select(messwertSpalte,Faktor,MesswertBezDe,MesswertEh) %>%
+        unique
+
+    }
+
+
+    sensors = as.character(
+      paste0(tab$messwertSpalte,
+             "/",tab$Faktor,
+             " AS ","'",
+             tab$MesswertBezDe,
+             "'",
+             collapse=", "))
+
+  }else {
+
+
+    if(!is.null(sensor)){
+
+      #sensor=c("Trockentemperatur 60cm_avg","Temperatur 2m_avg","Feuchte max in Messinterval_min")
+      sensor_avg=sensor[grep(sensor,pattern = "*_avg")]
+      sensor_avg=sub("\\_.*", "", sensor_avg)
+      sensor_avg=unique(sensor_file[sensor_file$MesswertBezDe%in%sensor_avg,"MesswertNr"])
+
+      tab_avg <- tab %>% filter(MesswertNr%in%(sensor_avg)) %>%
+        select(messwertSpalte,Faktor,MesswertBezDe,MesswertEh) %>%
+        unique
+
+      if(nrow(tab_avg)>0){
+        query_avg = paste0(
+          "avg(",
+          tab_avg$messwertSpalte,
+          ")",
+          "/",tab_avg$Faktor,
+          " AS ","'",
+          tab_avg$MesswertBezDe,
+          "_avg",
+          "'",
+          collapse=", ")
+
+      }else{query_avg=NULL}
+
+      sensor_sum=sensor[grep(sensor,pattern = "*_sum")]
+      sensor_sum=sub("\\_.*", "", sensor_sum)
+      sensor_sum=unique(sensor_file[sensor_file$MesswertBezDe%in%sensor_sum,"MesswertNr"])
+
+      tab_sum <- tab %>% filter(MesswertNr%in%(sensor_sum)) %>%
+        select(messwertSpalte,Faktor,MesswertBezDe,MesswertEh) %>%
+        unique
+
+      if(nrow(tab_sum)>0){
+        query_sum = paste0(
+          "sum(",
+          tab_sum$messwertSpalte,
+          ")",
+          "/",tab_sum$Faktor,
+          " AS ","'",
+          tab_sum$MesswertBezDe,
+          "_sum",
+          "'",
+          collapse=", ")
+
+      }else{query_sum=NULL}
+
+      sensor_min=sensor[grep(sensor,pattern = "*_min")]
+      sensor_min=sub("\\_.*", "", sensor_min)
+      sensor_min=unique(sensor_file[sensor_file$MesswertBezDe%in%sensor_min,"MesswertNr"])
+
+      tab_min <- tab %>% filter(MesswertNr%in%(sensor_min)) %>%
+        select(messwertSpalte,Faktor,MesswertBezDe,MesswertEh) %>%
+        unique
+
+      if(nrow(tab_min)>0){
+        query_min = paste0(
+          "min(",
+          tab_min$messwertSpalte,
+          ")",
+          "/",tab_min$Faktor,
+          " AS ","'",
+          tab_min$MesswertBezDe,
+          "_min",
+          "'",
+          collapse=", ")
+
+      }else{query_min=NULL}
+
+
+      sensor_max=sensor[grep(sensor,pattern = "*_max")]
+      sensor_max=sub("\\_.*", "", sensor_max)
+      sensor_max=unique(sensor_file[sensor_file$MesswertBezDe%in%sensor_max,"MesswertNr"])
+
+      tab_max <- tab %>% filter(MesswertNr%in%(sensor_max)) %>%
+        select(messwertSpalte,Faktor,MesswertBezDe,MesswertEh) %>%
+        unique
+
+      if(nrow(tab_max)>0){
+
+        query_max = paste0(
+          "max(",
+          tab_max$messwertSpalte,
+          ")",
+          "/",tab_max$Faktor,
+          " AS ","'",
+          tab_max$MesswertBezDe,
+          "_max",
+          "'",
+          collapse=", ")
+
+      }else{query_max=NULL}
+
+    }
+
+    query=c(query_avg,query_sum,query_min,query_max)
+
+    sensors = as.character(
+      paste(collapse =", ",#sep = ",",
+            query
+      )
+
+    )
   }
 
-  con_config<-dbConnect(MariaDB(),
-                        user=user,
-                        password= password,
-                        host=host,
-                        dbname="sbr_wetter_config")
-
-  tab_messwert_bez = dbGetQuery(con_config,sprintf("SELECT MesswertNr,\
-MesswertBezDe,\
-MesswertEh,\
-messwertSpalte,\
-Faktor\
-FROM tab_messwert_bez\
-WHERE \
-(MesswertNr =%s)",as.character(paste(sensor,
-                                     collapse=" OR MesswertNr ="))
-  )
-  )
-
-  dbDisconnect(con_config)
-
-
-  sensors = as.character(paste0(tab_messwert_bez$messwertSpalte,
-                                "/",tab_messwert_bez$Faktor,
-                                " AS ","'",
-                                tab_messwert_bez$MesswertBezDe,
-                                "'",
-                                collapse=", "))
 
   query_SBR_data <- function(year,station,sensors,datestart,
                              dateend,user,password,host){
@@ -142,34 +228,39 @@ WHERE \
         roundExpr <- "CONCAT_WS(' ',DATE_FORMAT(Datum, '%Y-%m-%d'),time_format(Datum,'%H:00:00'))"
       }
 
+
+      # min(Value3 / 10)     AS 'LF_min', \
+      # avg(Value3 / 10)     AS 'LF_mean',\
+      # max(Value3 / 10)     AS 'LF_max', \
+      #
+      # min(Value4 / 10)     AS 'LT_min', \
+      # avg(Value4 / 10)     AS 'LT_mean',\
+      # max(Value4 / 10)     AS 'LT_max', \
+      #
+      # avg(Value6 / 10 )    AS 'WG_mean', \
+      #
+      # sum(Value9 / 10)     AS 'N_sum', \
+      # sum(Value10/12)      AS 'IRYN_h', \
+      # sum(Value20 / 10)    AS 'IR_sum', \
+      #
+      # avg(BF10 / 1000)     AS 'BWC20_mean', \
+      # avg(BF30 / 1000)     AS 'BWC40_mean', \
+      # %s avg(BT10 / 10)       AS 'BT20_mean', \
+      # %s avg(BT30 / 10)       AS 'BT40_mean', \
+      # avg(BF50 / 10)       AS 'BWP20_mean', \
+      # avg(BF80 / 10)       AS 'BWP40_mean'\
+
+
+
       query<-sprintf("SELECT \
                      %s           AS 'TimeStamp', \
                      StationsNr      AS 'id' , \
-                     min(Value3 / 10)     AS 'LF_min', \
-                     avg(Value3 / 10)     AS 'LF_mean',\
-                     max(Value3 / 10)     AS 'LF_max', \
-
-                     min(Value4 / 10)     AS 'LT_min', \
-                     avg(Value4 / 10)     AS 'LT_mean',\
-                     max(Value4 / 10)     AS 'LT_max', \
-
-                     avg(Value6 / 10 )    AS 'WG_mean', \
-
-                     sum(Value9 / 10)     AS 'N_sum', \
-                     sum(Value10/12)      AS 'IRYN_h', \
-                     sum(Value20 / 10)    AS 'IR_sum', \
-
-                     avg(BF10 / 1000)     AS 'BWC20_mean', \
-                     avg(BF30 / 1000)     AS 'BWC40_mean', \
-                     %s avg(BT10 / 10)       AS 'BT20_mean', \
-                     %s avg(BT30 / 10)       AS 'BT40_mean', \
-                     avg(BF50 / 10)       AS 'BWP20_mean', \
-                     avg(BF80 / 10)       AS 'BWP40_mean'\
+                     %s \
                      FROM \
                      tab_messung \
                      WHERE \
-                     (StationsNr =%s) AND Datum >= '%s' AND Datum <= '%s'
-                     group by %s,id",roundExpr,com1,com2,
+                     (StationsNr =%s) AND Datum >= '%s' AND Datum <= '%s'\
+                     group by %s,id",roundExpr,sensors,#com1,com2,
                      as.character(paste(station,collapse=" OR StationsNr =")),
                      datestart,dateend,roundExpr)#
 
@@ -181,6 +272,7 @@ WHERE \
     #y<-as.data.frame()
     #x[["ops"]]$vars
     #x$StationsNr
+    query
     db <- dbGetQuery(con, query)
     dbDisconnect(con)
 
@@ -208,18 +300,6 @@ WHERE \
 
   db <- bind_rows(db)
 
-
-  # if(round=="5 min"){
-  #
-  #   db <- db %>%
-  #     mutate(BWC20=(BWC20*m)+q,BWC40=(BWC40*m)+q)}
-  #
-  # else{
-  #
-  #   db <- db %>%
-  #     mutate(BWC20mean=(BWC20mean*m)+q,BWC40mean=(BWC40mean*m)+q)
-  #
-  # }
   if(round=="raw"){
     round <- "5 min"}
 
@@ -234,11 +314,18 @@ WHERE \
     db <- db %>%
       gather(Sensor,Value,-TimeStamp,-id)#tidyr::
 
+    if(round=="5 min"){
+      db <-full_join(
+        db,tab %>% select(MesswertBezDe,MesswertEh) ,
+        by = c("Sensor"="MesswertBezDe")
+      )
+    }
+
   }
 
   if(add_names){
 
-    db <- left_join(db,names_file)
+    db <- left_join(db,name_file)
 
   }
 

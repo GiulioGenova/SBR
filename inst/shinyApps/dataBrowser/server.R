@@ -104,13 +104,13 @@ server <- function(input, output, session) {
     station=names_file[names_file$name==input$Station,"id"]
     start_date<-as.character(input$daterange[1])
     end_date<-as.character(input$daterange[2])
-    out_dir="H:/Projekte/SBR/04_Data/06_daily_resample"
+    #out_dir="H:/Projekte/SBR/04_Data/06_daily_resample"
     round=input$round
     #db<-resample_SBR(station = station,start_date = start_date,end_date = end_date,round=round)
     db_SBR<-get_BR_data(station=station,datestart=start_date,dateend=end_date,
                         user = user,password = password,
                         host=host,
-                        spread = T,
+                        spread = F,
                         round=round)
 
     #db<-resample_BR_data(db_SBR,round = round,spread=T)

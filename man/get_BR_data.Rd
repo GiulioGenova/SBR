@@ -4,9 +4,9 @@
 \alias{get_BR_data}
 \title{Get data from SBR monitoring stations.}
 \usage{
-get_BR_data(station, datestart = Sys.Date() - 1, dateend = Sys.Date() +
-  1, user, password, host, add_names = FALSE, spread = FALSE,
-  round = "hour")
+get_BR_data(station, sensor = NULL, datestart = Sys.Date() - 1,
+  dateend = Sys.Date() + 1, user, password, host, add_names = FALSE,
+  spread = FALSE, round = "hour")
 }
 \arguments{
 \item{station}{station number.}

@@ -5,7 +5,10 @@
 \title{Merge data of a location - using closest province of Bozen and SBR stations -}
 \usage{
 mergeData(long, lat, datestart = Sys.Date() - 2, dateend = Sys.Date() +
-  1, round = "day", provSensor = c("GS", "N"), password, user, host)
+  1, round = "day", provSensor = c("GS", "N"),
+  sbrSensor = c("Temperatur 2m_min", "Temperatur 2m_max",
+  "Relative Luftfeuchtigkeit_min", "Relative Luftfeuchtigkeit_max",
+  "Windgeschwindigkeit_avg"), password, user, host)
 }
 \description{
 Merge data of a location - using closest province of Bozen and SBR stations -
