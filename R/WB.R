@@ -6,12 +6,19 @@
 #' @importFrom Rcpp sourceCpp
 #' @useDynLib SBR
 
-WB <- function(data,taw=50,lmitWarning=0.8,p=0.5,startwb= 50,irrig=0){
+WB <- function(data,taw=50,lmitWarning=0.8,p=0.5,startwb= 50,irrig=0,slope=0){
 
 #data$irrig <- irrig
 #data$irrig <- ifelse(is.na(irrig),0,irrig)
   if(!any(names(data)=="irrig")){
     data$irrig <- irrig
+  }
+
+  if(slope>0){
+  coeffRedSlope=(1-slope/100)
+
+  data$N_sum = data$N_sum*coeffRedSlope
+
   }
 
   data <- data %>%

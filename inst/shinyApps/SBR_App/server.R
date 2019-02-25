@@ -7,7 +7,7 @@ sensorPresel<-c("Trockentemperatur 60cm","Feuchttemperatur 60cm",
                 "Bodenfeuchtigkeit 40cm","Bodenwasserpotenzial 20cm",
                 "Bodenwasserpotenzial 40cm","Bodentemperatur -10cm",
                 "Bodentemperatur -30cm","Luftdruck"
-                )#"Bodentemperatur -25cm","Verdunstung",
+)#"Bodentemperatur -25cm","Verdunstung",
 
 aggrAvg<-c("Trockentemperatur 60cm","Feuchttemperatur 60cm",
            "Relative Luftfeuchtigkeit","Temperatur 2m",
@@ -147,8 +147,14 @@ server <- function(input, output, session) {
     #db<-resample_SBR(station = station,start_date = start_date,end_date = end_date,round=round)
     #db_SBR<-
 
-
     sensor=input$selectedsensor
+
+    if(length(sensor)==0 | length(station)==0){
+
+      NULL
+
+    }else{
+
     get_BR_data(station=station,sensor=sensor,
                 datestart=start_date,dateend=end_date,
                 user = user,password = password,
@@ -157,6 +163,7 @@ server <- function(input, output, session) {
                 add_names = T,
                 round=round)
 
+    }
     #db<-resample_BR_data(db_SBR,round = round,spread=T)
 
   })
@@ -165,6 +172,26 @@ server <- function(input, output, session) {
 
     #req(db())
     #db=inputdb()
+    # if(is.character(pp())){
+    #
+    #   output$plotall <- renderText({
+    #
+    #     pp()
+    #     #plotSBRdata(db)
+    #   })
+    #
+    #
+    #   box(width = 12,height = input$plotHeight+90,
+    #       title = "Grafik",solidHeader = TRUE,
+    #       #actionButton(label= "Grafik/Auswahl aktualisieren","refresh"),
+    #       #sliderInput('plotHeight', 'Höhe der Grafik (in Pixel)',
+    #       #           min = 150, max = 3500, value = 480),
+    #       verbatimTextOutput("plotall")%>% withSpinner()#,
+    #       #downloadLink('downloadData', h4('Download'))
+    #   )
+    #
+    # }else{
+
     output$plotall <- renderPlotly({
 
       pp()
@@ -177,11 +204,11 @@ server <- function(input, output, session) {
         title = "Grafik",solidHeader = TRUE,
         #actionButton(label= "Grafik/Auswahl aktualisieren","refresh"),
         #sliderInput('plotHeight', 'Höhe der Grafik (in Pixel)',
-         #           min = 150, max = 3500, value = 480),
+        #           min = 150, max = 3500, value = 480),
         plotlyOutput("plotall")%>% withSpinner()#,
         #downloadLink('downloadData', h4('Download'))
     )
-
+    #}
   })
 
 
@@ -190,6 +217,24 @@ server <- function(input, output, session) {
   #   paramChoices()
   #
   # })
+
+
+  output$rightstatsens <- reactive({
+
+    station=names_file[names_file$name%in%input$Station,"id"]
+    sensor=input$selectedsensor
+
+    if(length(sensor)==0 | length(station)==0){
+
+      FALSE
+
+    }else{
+
+      TRUE
+    }
+
+  })
+
 
   observe({
 
@@ -246,13 +291,22 @@ server <- function(input, output, session) {
 
     db=inputdb()
     #station=sub("\\_.*", "", input$Station)
+    if(!is.null(db)){
+
     height=input$plotHeight
     plotSBRdata(db=db,height=height)#
 
+    }else{
+
+      "Select at least one station and one parameter"
+
+    }
 
   })
 
-
+  output$mssgstatsenserror <- renderText({
+    "Wählen Sie mindestens eine Station und einen Parameter aus"
+    })
   # output$plotall <- renderPlotly({
   #   pp()
   # })
@@ -326,12 +380,17 @@ server <- function(input, output, session) {
       TAW=65
     }
 
-    if(irr=="norm"){
-      startwb=TAW
-    }else if(irr=="light"){
-      startwb=TAW*0.35
-    }
+    # irrig used to be based on two categories ("normal" and "light")
+    # and computed based on the TAW. the client asked for a numerical
+    # input (in mm)
 
+    # if(irr=="norm"){
+    #   startwb=TAW
+    # }else if(irr=="light"){
+    #   startwb=TAW*0.35
+    # }
+
+    startwb=as.numeric(irr)
 
 
 
@@ -348,7 +407,7 @@ server <- function(input, output, session) {
 
       et <- ET(data = db,crop = "tall")
 
-      wb <- WB(et,taw = TAW,startwb = startwb)
+      wb <- WB(et,taw = TAW,startwb = startwb,slope=input$slope)
 
       wb <- mergeOldAndForecast(data = wb,long = long,lat = lat)
 
@@ -482,6 +541,7 @@ server <- function(input, output, session) {
 
   #outputOptions(output, "irrigAdvise", suspendWhenHidden = FALSE)
   outputOptions(output, "plotAll", suspendWhenHidden = FALSE)
+  outputOptions(output, 'rightstatsens', suspendWhenHidden=FALSE)
 
   session$onSessionEnded(function() {
     stopApp()
