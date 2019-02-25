@@ -20,35 +20,54 @@ ui <- dashboardPage(
       tabItem(tabName = "Data",
 
               fluidRow(
-                box(width = 3,downloadLink('downloadData', h4('Download')),
-                    actionButton(label= "update selection","refresh")),
+                 box(width = 2,#,
+                     selectInput("Station", label = h4(tags$b("Station")), #,multiple = T,
+                                 choices = sort(name_file$name),
+                                 selected = "Algund_2",multiple = T)),
 
-                box(width = 3,selectInput("Station", label = h4("Station"), #,multiple = T,
-                                          choices = sort(name_file$name),selected = "Algund_2"),
-                    selectInput("selectedsensor", label = h4("Parameter"),
+                box(width = 3,#,
+                    selectInput("selectedsensor", label = h4(tags$b("Parameter")),
                                 choices = paste0(unique(sensor_file$MesswertBezDe),"_avg"),
                                 selected = "Temperatur 2m_avg",multiple = T)#, as.list(unique(sensor_file$MesswertBezDe))
                     #verbatimTextOutput("selectSensorlist")
                     ),
 
-                box(width = 4,dateRangeInput(label = h4("Pick a date range"),
+                box(width = 3,dateRangeInput(label = h4(tags$b("Datumsbereich auswählen")),
                                              inputId = "daterange",
                                              separator = " - ",
                                              min = "2013-01-01",
                                              start = Sys.Date()-3,
-                                             end = Sys.Date()+1)),
+                                             end = Sys.Date()+1,
+                                             language = "de"
+                                            )),
 
-                box(width = 2,selectInput("round",label = h4("Time aggregation"),
-                                          choices = list("raw","hour","day","month","year"),
-                                          selected = "hour"),
-                    sliderInput('plotHeight', 'Height of plot (in pixels)',
-                                min = 150, max = 3500, value = 480)
+                box(width = 2,selectInput("round",label = h4("Zeitaggregation"),
+                                          choices = list(rohwerte="raw",
+                                                         stündlich="hour",
+                                                         täglich="day",
+                                                         monatlich="month",
+                                                         järlich="year"),
+                                          selected = "hour")#,
+                    # sliderInput('plotHeight', 'Höhe der Grafik (in Pixel)',
+                    #             min = 150, max = 3500, value = 480)
                     )
+                ,
+
+                box(width = 2,
+                     sliderInput('plotHeight', 'Höhe der Grafik (in Pixel)',
+                                 min = 150, max = 3500, value = 480)
+                ),
+
+                box(width = 2,
+                  actionButton(label= "Grafik/Auswahl aktualisieren","refresh"))
 
                 ,
 
-                uiOutput("plotAll")
+                box(width = 2,
+                    downloadLink('downloadData', h4('Download'))
+                ),
 
+                uiOutput("plotAll")
                 # box(
                 #   #id="box_plot",
                 #   title = "Soil Air Precipitation Irrigation",solidHeader = TRUE,

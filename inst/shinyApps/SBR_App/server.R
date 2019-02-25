@@ -1,3 +1,34 @@
+sensorPresel<-c("Trockentemperatur 60cm","Feuchttemperatur 60cm",
+                "Relative Luftfeuchtigkeit","Temperatur 2m",
+                "Windgeschwindigkeit","Windrichtung",
+                "Blattnaesse","Niederschlag",
+                "Beregnung",
+                "Bodenfeuchtigkeit 20cm",
+                "Bodenfeuchtigkeit 40cm","Bodenwasserpotenzial 20cm",
+                "Bodenwasserpotenzial 40cm","Bodentemperatur -10cm",
+                "Bodentemperatur -30cm","Luftdruck"
+                )#"Bodentemperatur -25cm","Verdunstung",
+
+aggrAvg<-c("Trockentemperatur 60cm","Feuchttemperatur 60cm",
+           "Relative Luftfeuchtigkeit","Temperatur 2m",
+           "Windgeschwindigkeit","Windrichtung",
+           "Blattnaesse",
+           "Bodenfeuchtigkeit 20cm",
+           "Bodenfeuchtigkeit 40cm","Bodenwasserpotenzial 20cm",
+           "Bodenwasserpotenzial 40cm","Bodentemperatur -10cm",
+           "Bodentemperatur -30cm","Luftdruck")
+
+aggrSum<-c("Niederschlag",
+           "Beregnung")
+
+aggrMin<-c("Trockentemperatur 60cm","Feuchttemperatur 60cm","Temperatur 2m",
+           "Bodentemperatur -10cm",
+           "Bodentemperatur -30cm")
+
+aggrMax<-c("Trockentemperatur 60cm","Feuchttemperatur 60cm","Temperatur 2m",
+           "Bodentemperatur -10cm",
+           "Bodentemperatur -30cm")
+
 
 server <- function(input, output, session) {
 
@@ -87,7 +118,7 @@ server <- function(input, output, session) {
   #leafletOutput('map', height=600)
   observe({
     #station=sub("\\_.*", "", input$Station)
-    station=name_file[name_file$name==input$Station,"id"]
+    station=name_file[name_file$name%in%input$Station,"id"]
     query <- as.character(paste(station,collapse="+"))
     #test <<- sprintf(fmt = "http://www.beratungsring.org/wetterdaten/map_popup.php?ST=%s&date=%s",query,as.character(Sys.Date(),format="%d.%m.%Y"))
     test <- sprintf(fmt = "http://www.beratungsring.org/wetterdaten/map_popup.php?ST=%s&date=%s",query,as.character(Sys.Date(),format="%d.%m.%Y"))
@@ -98,7 +129,7 @@ server <- function(input, output, session) {
   output$map2 <- renderUI({
 
     #station=sub("\\_.*", "", input$Station)
-    station=names_file[names_file$name==input$Station,"id"]
+    station=names_file[names_file$name%in%input$Station,"id"]
     map_test <- tags$iframe(src=test, height="100%", width="100%")
     print(map_test)
     map_test
@@ -108,7 +139,7 @@ server <- function(input, output, session) {
   ## connenction and query on sbr mysql database
   inputdb=eventReactive(input$refresh,{
     #station=sub("\\_.*", "", input$Station)
-    station=names_file[names_file$name==input$Station,"id"]
+    station=names_file[names_file$name%in%input$Station,"id"]
     start_date<-as.character(input$daterange[1])
     end_date<-as.character(input$daterange[2])
     #out_dir="H:/Projekte/SBR/04_Data/06_daily_resample"
@@ -123,7 +154,7 @@ server <- function(input, output, session) {
                 user = user,password = password,
                 host=host,
                 spread = F,
-                add_names = F,
+                add_names = T,
                 round=round)
 
     #db<-resample_BR_data(db_SBR,round = round,spread=T)
@@ -142,9 +173,13 @@ server <- function(input, output, session) {
 
     #req(input$refresh)
 
-    box(width = 12,height = input$plotHeight+50,
-        title = "Graphs",solidHeader = TRUE,
-        plotlyOutput("plotall")%>% withSpinner()
+    box(width = 12,height = input$plotHeight+90,
+        title = "Grafik",solidHeader = TRUE,
+        #actionButton(label= "Grafik/Auswahl aktualisieren","refresh"),
+        #sliderInput('plotHeight', 'Höhe der Grafik (in Pixel)',
+         #           min = 150, max = 3500, value = 480),
+        plotlyOutput("plotall")%>% withSpinner()#,
+        #downloadLink('downloadData', h4('Download'))
     )
 
   })
@@ -160,10 +195,11 @@ server <- function(input, output, session) {
 
     #stat="Latsch_1"
     #stat=input$Station
-    station=SBR::name_file[SBR::name_file$name==input$Station,"id"]
+    station=SBR::name_file[SBR::name_file$name%in%input$Station,"id"]
 
     tab <- SBR::sensor_file %>%
-      filter(StationsNr%in%(station))
+      filter(StationsNr%in%(station),
+             MesswertBezDe%in%(sensorPresel))
 
     if(input$round=="raw"){
 
@@ -172,10 +208,12 @@ server <- function(input, output, session) {
     }else{
 
       x<-as.list(c(
-        paste0(unique(tab$MesswertBezDe),"_avg"),
-        paste0(unique(tab$MesswertBezDe),"_sum"),
-        paste0(unique(tab$MesswertBezDe),"_min"),
-        paste0(unique(tab$MesswertBezDe),"_max"))
+
+
+        paste0(unique(tab$MesswertBezDe[tab$MesswertBezDe %in% aggrAvg]),"_avg"),
+        paste0(unique(tab$MesswertBezDe[tab$MesswertBezDe %in% aggrSum]),"_sum"),
+        paste0(unique(tab$MesswertBezDe[tab$MesswertBezDe %in% aggrMin]),"_min"),
+        paste0(unique(tab$MesswertBezDe[tab$MesswertBezDe %in% aggrMax]),"_max"))
       )
 
     }

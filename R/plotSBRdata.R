@@ -3,6 +3,7 @@
 #' @export
 #' @import plotly
 #' @import ggplot2
+#' @import dplyr
 #'
 
 plotSBRdata <- function(db,height=1500){
@@ -78,33 +79,47 @@ plotSBRdata <- function(db,height=1500){
   # #p
   db <- db %>% filter(!is.na(Value))
 
-  plot_list <- function(db){#,height=800,nsensors
-    #db=df
-    sensors=unique(db$Sensor)
-    #db <- db %>%  transform(ids = as.integer(factor(Sensor)))
 
-    plots<- function(sensors,db){#,height=height,nsensors=nsensors
-
-      db <- db %>%filter(Sensor==sensors)
-
-      db %>% plot_ly(linetype = ~id,
-        x = ~TimeStamp,
-        y = ~Value#,
-        #height = (height/nsensors)
-      ) %>%
-        add_lines(name =  unique(db$Sensor)) %>%#paste(unique(db$MesswertEh),)
-        layout(yaxis = list(title = ~Sensor))#title= ~Sensor,
-    }
-
-
-    lapply(sensors,plots,db=db)#,height=height,nsensors=nsensors
-
-  }
-
-  sensors=unique(db$Sensor)
-  subplot(plot_list(db=db),#,nsensors=nsensors
-          nrows = length(sensors),shareX = TRUE,#,height = height
-          titleX = F,titleY = TRUE)%>%
+########################################################
+  #
+  # plot_list <- function(db){#,height=800,nsensors
+  #   #db=df
+  #   sensors=unique(db$Sensor)
+  #   #db <- db %>%  transform(ids = as.integer(factor(Sensor)))
+  #
+  #   plots<- function(sensors,db){#,height=height,nsensors=nsensors
+  #
+  #     db <- db %>%filter(Sensor==sensors)
+  #
+  #     db %>% plot_ly(linetype = ~id,
+  #       x = ~TimeStamp,
+  #       y = ~Value#,
+  #       #height = (height/nsensors)
+  #     ) %>%
+  #       add_lines(name =  ~Sensor) %>%#paste(unique(db$MesswertEh),)
+  #       layout(yaxis = list(title = ~paste(Sensor,MesswertEh)))#title= ~Sensor,
+  #   }
+  #
+  #
+  #   lapply(sensors,plots,db=db)#,height=height,nsensors=nsensors
+  #
+  # }
+  #
+  # sensors=unique(db$Sensor)
+  # subplot(plot_list(db=db),#,nsensors=nsensors
+  #         nrows = length(sensors),shareX = TRUE,#,height = height
+  #         titleX = F,titleY = TRUE)%>%
+  #   layout(autosize = T, height = height)
+##################################################################################
+  #####################
+  db %>%
+    dplyr::group_by(Sensor) %>%
+    dplyr::do(plot = plot_ly(data = ., x = ~TimeStamp,y = ~Value,linetype = ~StationsName) %>%
+         add_lines(name =  ~paste(StationsName,Sensor)) %>%
+           layout(yaxis = list(title = ~paste(Sensor,MesswertEh)))
+    ) %>%
+    subplot(nrows = length(unique(db$Sensor)),
+            shareX = TRUE,titleX = FALSE,shareY=FALSE,titleY = TRUE)%>%#
     layout(autosize = T, height = height)
 
 

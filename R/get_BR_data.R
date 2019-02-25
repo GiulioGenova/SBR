@@ -314,11 +314,30 @@ get_BR_data <- function(station,
     db <- db %>%
       gather(Sensor,Value,-TimeStamp,-id)#tidyr::
 
+
     if(round=="5 min"){
-      db <-full_join(
+      db <-left_join(
         db,tab %>% select(MesswertBezDe,MesswertEh) ,
         by = c("Sensor"="MesswertBezDe")
       )
+    }else{
+
+      tab_unit_avg <- tab %>%
+        mutate(MesswertBezDe=paste0(MesswertBezDe,"_avg"))
+      tab_unit_sum <- tab %>%
+        mutate(MesswertBezDe=paste0(MesswertBezDe,"_sum"))
+      tab_unit_min <- tab %>%
+        mutate(MesswertBezDe=paste0(MesswertBezDe,"_min"))
+      tab_unit_max <- tab %>%
+        mutate(MesswertBezDe=paste0(MesswertBezDe,"_max"))
+
+      tab_unit=bind_rows(tab_unit_avg,tab_unit_sum,tab_unit_min,tab_unit_max)
+
+      db <-left_join(
+        db,tab_unit %>% select(MesswertBezDe,MesswertEh) ,
+        by = c("Sensor"="MesswertBezDe")
+      )
+
     }
 
   }
