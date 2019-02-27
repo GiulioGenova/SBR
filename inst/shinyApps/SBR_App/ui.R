@@ -42,11 +42,11 @@ ui <- dashboardPage(
                 )),
 
                 box(width = 2,selectInput("round",label = h4("Zeitaggregation"),
-                                          choices = list(rohwerte="raw",
+                                          choices = list(Rohwerte="raw",
                                                          stündlich="hour",
                                                          täglich="day",
                                                          monatlich="month",
-                                                         järlich="year"),
+                                                         jährlich="year"),
                                           selected = "hour")#,
                     # sliderInput('plotHeight', 'Höhe der Grafik (in Pixel)',
                     #             min = 150, max = 3500, value = 480)
