@@ -20,69 +20,84 @@ ui <- dashboardPage(
       tabItem(tabName = "Data",
 
               fluidRow(
-                box(width = 2,#,
+                box(width = 3,
+
                     selectInput("Station", label = h4(tags$b("Station")), #,multiple = T,
                                 choices = sort(name_file$name),
-                                selected = "Algund_2",multiple = T)),
-
-                box(width = 3,#,
-                    selectInput("selectedsensor", label = h4(tags$b("Parameter")),
-                                choices = paste0(unique(sensor_file$MesswertBezDe),"_avg"),
-                                selected = "Temperatur 2m_avg",multiple = T)#, as.list(unique(sensor_file$MesswertBezDe))
-                    #verbatimTextOutput("selectSensorlist")
-                ),
-
-                box(width = 3,dateRangeInput(label = h4(tags$b("Datumsbereich auswählen")),
-                                             inputId = "daterange",
-                                             separator = " - ",
-                                             min = "2013-01-01",
-                                             start = Sys.Date()-3,
-                                             end = Sys.Date()+1,
-                                             language = "de"
-                )),
-
-                box(width = 2,selectInput("round",label = h4("Zeitaggregation"),
-                                          choices = list(Rohwerte="raw",
-                                                         stündlich="hour",
-                                                         täglich="day",
-                                                         monatlich="month",
-                                                         jährlich="year"),
-                                          selected = "hour")#,
-                    # sliderInput('plotHeight', 'Höhe der Grafik (in Pixel)',
-                    #             min = 150, max = 3500, value = 480)
-                )
-                ,
-
-                box(width = 2,
-                    sliderInput('plotHeight', 'Höhe der Grafik (in Pixel)',
-                                min = 150, max = 3500, value = 480)
-                ),
-
-                box(width = 2,
+                                selected = "Algund_2",multiple = T),
 
                     conditionalPanel(condition = "output.rightstatsens==false",
                                      textOutput( "mssgstatsenserror")),
 
+
                     conditionalPanel(condition = "output.rightstatsens",#br(),
                                      actionButton(label= "Grafik/Auswahl aktualisieren","refresh"))
-                )
 
-                ,
-
-                box(width = 2,
-                    downloadLink('downloadData', h4('Download'))
                 ),
 
-                uiOutput("plotAll")
-                # box(
-                #   #id="box_plot",
-                #   title = "Soil Air Precipitation Irrigation",solidHeader = TRUE,
-                #   collapsible = FALSE,status = "primary",
-                #   plotlyOutput("plotall")%>% withSpinner(), width = 12)#,height = "920px"
-                #   #plotOutput("plotall",height = "auto")%>% withSpinner(), width = 12)#,height = "920px"
+                box(width = 3,
 
+                    selectInput("selectedsensor", label = h4(tags$b("Parameter")),
+                                choices = paste0(unique(sensor_file$MesswertBezDe),"_avg"),
+                                selected = "Temperatur 2m_avg",multiple = T),# as.list(unique(sensor_file$MesswertBezDe))
+                    #verbatimTextOutput("selectSensorlist")
+                    conditionalPanel(
+                      condition = "input.round != 'raw'",
+                      checkboxGroupInput(inputId="doResamp",label = "Zeitaggregation",
+                                         choices = list(Avg="_avg",
+                                                        Min="_min",
+                                                        Max="_max",
+                                                        Sum="_sum"),
+                                         selected = "_avg",
+                                         inline=TRUE)
+                    )
+                    # checkboxInput("doAvg","Avg",TRUE),
+                    # checkboxInput("doSum","Sum",TRUE),
+                    # checkboxInput("doMin","Min",TRUE),
+                    # checkboxInput("doMax","Max",TRUE)
+                ),
+
+                box(width = 3,
+                    dateRangeInput(label = h4(tags$b("Datumsbereich auswählen")),
+                                   inputId = "daterange",
+                                   separator = " - ",
+                                   min = "2013-01-01",
+                                   start = Sys.Date()-3,
+                                   end = Sys.Date()+1,
+                                   language = "de"
+                    ),
+
+                    sliderInput('plotHeight', 'Höhe der Grafik (in Pixel)',
+                                min = 150, max = 3500, value = 480)
+
+                ),
+
+                box(width = 3,
+
+                    selectInput("round",label = h4("Zeitaggregation"),
+                                choices = list(Rohwerte="raw",
+                                               stündlich="hour",
+                                               täglich="day",
+                                               monatlich="month",
+                                               jährlich="year"),
+                                selected = "hour"),
+
+                    downloadLink('downloadData', h4('Download'))
+
+                )
+                ,
+
+                fluidRow(
+                  uiOutput("plotAll")
+                  # box(
+                  #   #id="box_plot",
+                  #   title = "Soil Air Precipitation Irrigation",solidHeader = TRUE,
+                  #   collapsible = FALSE,status = "primary",
+                  #   plotlyOutput("plotall")%>% withSpinner(), width = 12)#,height = "920px"
+                  #   #plotOutput("plotall",height = "auto")%>% withSpinner(), width = 12)#,height = "920px"
+
+                )
               )
-
       ),
       tabItem(tabName = "map",
               fluidRow(

@@ -1,3 +1,4 @@
+
 sensorPresel<-c("Trockentemperatur 60cm","Feuchttemperatur 60cm",
                 "Relative Luftfeuchtigkeit","Temperatur 2m",
                 "Windgeschwindigkeit","Windrichtung",
@@ -8,27 +9,6 @@ sensorPresel<-c("Trockentemperatur 60cm","Feuchttemperatur 60cm",
                 "Bodenwasserpotenzial 40cm","Bodentemperatur -10cm",
                 "Bodentemperatur -30cm","Luftdruck"
 )#"Bodentemperatur -25cm","Verdunstung",
-
-aggrAvg<-c("Trockentemperatur 60cm","Feuchttemperatur 60cm",
-           "Relative Luftfeuchtigkeit","Temperatur 2m",
-           "Windgeschwindigkeit","Windrichtung",
-           "Blattnaesse",
-           "Bodenfeuchtigkeit 20cm",
-           "Bodenfeuchtigkeit 40cm","Bodenwasserpotenzial 20cm",
-           "Bodenwasserpotenzial 40cm","Bodentemperatur -10cm",
-           "Bodentemperatur -30cm","Luftdruck")
-
-aggrSum<-c("Niederschlag",
-           "Beregnung")
-
-aggrMin<-c("Trockentemperatur 60cm","Feuchttemperatur 60cm","Temperatur 2m",
-           "Bodentemperatur -10cm",
-           "Bodentemperatur -30cm")
-
-aggrMax<-c("Trockentemperatur 60cm","Feuchttemperatur 60cm","Temperatur 2m",
-           "Bodentemperatur -10cm",
-           "Bodentemperatur -30cm")
-
 
 server <- function(input, output, session) {
 
@@ -155,13 +135,13 @@ server <- function(input, output, session) {
 
     }else{
 
-    get_BR_data(station=station,sensor=sensor,
-                datestart=start_date,dateend=end_date,
-                user = user,password = password,
-                host=host,
-                spread = F,
-                add_names = T,
-                round=round)
+      get_BR_data(station=station,sensor=sensor,
+                  datestart=start_date,dateend=end_date,
+                  user = user,password = password,
+                  host=host,
+                  spread = F,
+                  add_names = T,
+                  round=round)
 
     }
     #db<-resample_BR_data(db_SBR,round = round,spread=T)
@@ -252,13 +232,69 @@ server <- function(input, output, session) {
 
     }else{
 
-      x<-as.list(c(
+      #if (input$doAvg){
+
+        aggrAvg<-c("Trockentemperatur 60cm","Feuchttemperatur 60cm",
+                   "Relative Luftfeuchtigkeit","Temperatur 2m",
+                   "Windgeschwindigkeit","Windrichtung",
+                   "Blattnaesse",
+                   "Bodenfeuchtigkeit 20cm",
+                   "Bodenfeuchtigkeit 40cm","Bodenwasserpotenzial 20cm",
+                   "Bodenwasserpotenzial 40cm","Bodentemperatur -10cm",
+                   "Bodentemperatur -30cm","Luftdruck")
+
+      #}else {
+
+      #  aggrAvg<-c()
+
+      #}
+
+      #if (input$doSum){
+
+        aggrSum<-c("Niederschlag",
+                   "Beregnung")
+      #}else{
+
+      #  aggrSum<-c()
+
+      #}
+
+      #if (input$doMin){
+
+      aggrMin<-c("Trockentemperatur 60cm","Feuchttemperatur 60cm","Temperatur 2m",
+                 "Bodentemperatur -10cm",
+                 "Bodentemperatur -30cm")
+      #}else{
+
+      #  aggrMin<-c()
+
+      #}
+
+      #if (input$doMax){
+
+      aggrMax<-c("Trockentemperatur 60cm","Feuchttemperatur 60cm","Temperatur 2m",
+                 "Bodentemperatur -10cm",
+                 "Bodentemperatur -30cm")
+
+     # }else{
+
+      #  aggrMax<-c()
+
+     # }
+
+      # x<-as.list(c(
+      #
+      #
+      #   paste0(unique(tab$MesswertBezDe[tab$MesswertBezDe %in% aggrAvg]),"_avg"),
+      #   paste0(unique(tab$MesswertBezDe[tab$MesswertBezDe %in% aggrSum]),"_sum"),
+      #   paste0(unique(tab$MesswertBezDe[tab$MesswertBezDe %in% aggrMin]),"_min"),
+      #   paste0(unique(tab$MesswertBezDe[tab$MesswertBezDe %in% aggrMax]),"_max"))
+      # )
+
+      x<-as.list(
 
 
-        paste0(unique(tab$MesswertBezDe[tab$MesswertBezDe %in% aggrAvg]),"_avg"),
-        paste0(unique(tab$MesswertBezDe[tab$MesswertBezDe %in% aggrSum]),"_sum"),
-        paste0(unique(tab$MesswertBezDe[tab$MesswertBezDe %in% aggrMin]),"_min"),
-        paste0(unique(tab$MesswertBezDe[tab$MesswertBezDe %in% aggrMax]),"_max"))
+        paste0(unique(tab$MesswertBezDe),input$doResamp)
       )
 
     }
@@ -273,7 +309,7 @@ server <- function(input, output, session) {
     updateSelectInput(session, "selectedsensor",
                       #label = paste("Select input label", length(x)),
                       choices = x,
-                      selected = "Temperatur 2m_avg"
+                      selected = input$selectedsensor#"Temperatur 2m_avg"
     )
   })
 
@@ -293,8 +329,8 @@ server <- function(input, output, session) {
     #station=sub("\\_.*", "", input$Station)
     if(!is.null(db)){
 
-    height=input$plotHeight
-    plotSBRdata(db=db,height=height)#
+      height=input$plotHeight
+      plotSBRdata(db=db,height=height)#
 
     }else{
 
@@ -306,7 +342,7 @@ server <- function(input, output, session) {
 
   output$mssgstatsenserror <- renderText({
     "Wählen Sie mindestens eine Station und einen Parameter aus"
-    })
+  })
   # output$plotall <- renderPlotly({
   #   pp()
   # })
