@@ -21,6 +21,7 @@ ET <- function(data,
                DOY.late=271,
                DOY.harv=312,
                tree_height=3,
+               slopeCorr=NULL,
                radiation_unit="W",
                crop = "short",
                netRadiation="no",
@@ -120,6 +121,11 @@ ET <- function(data,
   colnames(df_ETc)[colnames(df_ETc)=="Tmax"] <- "LT_max"
   colnames(df_ETc)[colnames(df_ETc)=="Tmin"] <- "LT_min"
   colnames(df_ETc)[colnames(df_ETc)=="u2"] <- "WG_mean"
+
+  if(!is.null(slopeCorr)){
+    df_ETc$ETc = df_ETc$ETc*slopeCorr
+    df_ETc$ETc_corr = df_ETc$ETc_corr*slopeCorr
+  }
 
   df_ETc
 }
