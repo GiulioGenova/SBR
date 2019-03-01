@@ -441,9 +441,11 @@ server <- function(input, output, session) {
                       provSensor = provSensor,
                       password = password,user = user,host = host)
 
-      et <- ET(data = db,crop = "tall")
+      slope=raster::extract(slopeFilt, point)
 
-      wb <- WB(et,taw = TAW,startwb = startwb,slope=input$slope)
+      et <- ET(data = db,crop = "tall",slope=slope)
+
+      wb <- WB(et,taw = TAW,startwb = startwb)
 
       wb <- mergeOldAndForecast(data = wb,long = long,lat = lat)
 

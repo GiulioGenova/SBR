@@ -21,7 +21,7 @@ ET <- function(data,
                DOY.late=271,
                DOY.harv=312,
                tree_height=3,
-               slopeCorr=NULL,
+               slope=NULL,
                radiation_unit="W",
                crop = "short",
                netRadiation="no",
@@ -122,9 +122,10 @@ ET <- function(data,
   colnames(df_ETc)[colnames(df_ETc)=="Tmin"] <- "LT_min"
   colnames(df_ETc)[colnames(df_ETc)=="u2"] <- "WG_mean"
 
-  if(!is.null(slopeCorr)){
-    df_ETc$ETc = df_ETc$ETc*slopeCorr
-    df_ETc$ETc_corr = df_ETc$ETc_corr*slopeCorr
+  if(!is.null(slope)){
+    corr=1/cos(slope*pi/180)
+    df_ETc$ETc = df_ETc$ETc*corr
+    df_ETc$ETc_corr = df_ETc$ETc_corr*corr
   }
 
   df_ETc

@@ -131,9 +131,9 @@ ui <- dashboardPage(
 
                     numericInput("irr", "Bewässerte Menge [mm]:",50),
 
-                    numericInput("slope", "Steigung [%]:",
-                                 0,min = 0,max = 35
-                    ),
+                    # numericInput("slope", "Steigung [%]:",
+                    #              0,min = 0,max = 35
+                    # ),
 
                     radioButtons("soil", "Bodenart:",
                                  c("Schwer" = "heavy",
