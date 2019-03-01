@@ -527,13 +527,13 @@ server <- function(input, output, session) {
       TAW=65
     }
 
-    if(irrDm=="norm"){
-      startwb=TAW
-    }else if(irrDm=="light"){
-      startwb=TAW*0.35
-    }
+    # if(irrDm=="norm"){
+    #   startwb=TAW
+    # }else if(irrDm=="light"){
+    #   startwb=TAW*0.35
+    # }
 
-
+    startwb=as.numeric(irrDm)
 
     point <- cbind(LONG=long,LAT=lat)
     point <- SpatialPoints(point,proj4string = CRS("+init=epsg:4326"))
@@ -547,6 +547,11 @@ server <- function(input, output, session) {
                       dateend = today+5,
                       provSensor = provSensor,
                       password = password,user = user,host = host)
+
+      slope=raster::extract(slopeFilt, point)
+
+      et <- ET(data = db,crop = "tall",slope=slope)
+
 
       et <- ET(data = db,crop = "tall")
 

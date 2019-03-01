@@ -8,7 +8,7 @@ ui <- dashboardPage(
       menuItem("Data Browser", tabName = "Data", icon = icon("bar-chart-o")),
       menuItem("Station map", tabName = "map", icon = icon("info-circle")),
       menuItem("irrigAplant", tabName = "irrigApple", icon = icon("bar-chart-o")),
-      menuItem("irrigApple Demo", tabName = "irrigAppleDm", icon = icon("bar-chart-o"))
+      menuItem("irrigAplant Demo", tabName = "irrigAppleDm", icon = icon("bar-chart-o"))
     )),
   dashboardBody(
     tags$head(
@@ -167,21 +167,39 @@ ui <- dashboardPage(
                 column(width = 5,
                        box(
                          width = 12,
-                         p(h5("Please indicate the last day you irrigated below.") ),
-                         p(h5("Then click in the map on your field to get irrigation advice")),
-                         dateInput("dateDm",label = "last irrigation date",
-                                   min = Sys.Date()-365,max = Sys.Date()),
-                         dateInput("today",label = "what day is today",
-                                   min = Sys.Date()-364,max = Sys.Date()),
-                         radioButtons("irrDm", "Irrigation type:",
-                                      c("Normal" = "norm",
-                                        "Light" = "light"),
-                                      selected = "norm",
-                                      inline = T),
-                         radioButtons("soilDm", "Soil type:",
-                                      c("Heavy" = "heavy",
-                                        "Medium"= "medium",
-                                        "Light" = "light"),
+                         p(h4("Geben Sie unten den letzten Tag an, den Sie bewässert haben.") ),
+                         p(h4("Klicken Sie dann in der Karte auf Ihr Feld, um einen Bewässerungshinweis zu erhalten")),
+
+                         # dateInput("dateDm",label = "Letzter Bewässerungszeitpunkt",
+                         #           min = Sys.Date()-365,max = Sys.Date(),language = "de"),
+                         # dateInput("today",label = "Welcher Tag ist heute?",
+                         #           min = Sys.Date()-364,max = Sys.Date(),language = "de"),
+
+                         # radioButtons("irrDm", "Irrigation type:",
+                         #              c("Normal" = "norm",
+                         #                "Light" = "light"),
+                         #              selected = "norm",
+                         #              inline = T),
+
+
+                         div(style=" width: 100%;",
+                             div(style="display: inline-block;vertical-align:top; width: 40%;",
+                                 dateInput("dateDm",label = "Letzter Bewässerungszeitpunkt",
+                                           min = Sys.Date()-365,max = Sys.Date(),language = "de")
+                             ),
+                             div(style="display: inline-block;vertical-align:top; width: 40%;",
+                                 dateInput("today",label = "Welcher Tag ist heute?",
+                                           min = Sys.Date()-364,max = Sys.Date(),language = "de")
+                             )
+                         ),
+
+
+                         numericInput("irrDm", "Bewässerte Menge [mm]:",50),
+
+                         radioButtons("soilDm", "Bodenart:",
+                                      c("Schwer" = "heavy",
+                                        "Mittel"= "medium",
+                                        "Licht" = "light"),
                                       selected = "medium",
                                       inline = T)
 
