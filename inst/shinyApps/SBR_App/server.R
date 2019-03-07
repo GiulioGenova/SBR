@@ -293,7 +293,7 @@ server <- function(input, output, session) {
 
       x<-as.list(
 
-        as.vector(outer(tab$MesswertBezDe, input$doResamp, paste, sep=""))
+        sort(as.vector(outer(tab$MesswertBezDe, input$doResamp, paste, sep="")),decreasing = F,na.last = T)
         #paste0(unique(tab$MesswertBezDe),input$doResamp)
       )
 
