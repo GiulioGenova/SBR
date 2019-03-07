@@ -129,7 +129,7 @@ ui <- dashboardPage(
                     #              selected = "norm",
                     #              inline = T),
 
-                    numericInput("irr", "Bewässerte Menge [mm]:",50),
+                    numericInput("irr", "Bewässerte Menge [mm]:",value = 50,min = 0,max=300),
 
                     # numericInput("slope", "Steigung [%]:",
                     #              0,min = 0,max = 35
