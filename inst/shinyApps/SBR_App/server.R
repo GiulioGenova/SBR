@@ -293,8 +293,8 @@ server <- function(input, output, session) {
 
       x<-as.list(
 
-
-        paste0(unique(tab$MesswertBezDe),input$doResamp)
+        as.vector(outer(tab$MesswertBezDe, input$doResamp, paste, sep=""))
+        #paste0(unique(tab$MesswertBezDe),input$doResamp)
       )
 
     }

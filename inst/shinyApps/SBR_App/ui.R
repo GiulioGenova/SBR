@@ -138,7 +138,7 @@ ui <- dashboardPage(
                     radioButtons("soil", "Bodenart:",
                                  c("Schwer" = "heavy",
                                    "Mittel"= "medium",
-                                   "Licht" = "light"),
+                                   "Leicht" = "light"),
                                  selected = "medium",
                                  inline = T)
 
@@ -194,12 +194,12 @@ ui <- dashboardPage(
                          ),
 
 
-                         numericInput("irrDm", "Bewässerte Menge [mm]:",50),
+                         numericInput("irrDm", "Bewässerte Menge [mm]:",value = 50,min = 0,max=300),
 
                          radioButtons("soilDm", "Bodenart:",
                                       c("Schwer" = "heavy",
                                         "Mittel"= "medium",
-                                        "Licht" = "light"),
+                                        "Leicht" = "light"),
                                       selected = "medium",
                                       inline = T)
 
