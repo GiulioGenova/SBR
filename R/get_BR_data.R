@@ -7,7 +7,7 @@
 #' @importFrom lubridate as_datetime year floor_date
 #' @importFrom RMariaDB MariaDB
 #' @importFrom tidyr gather
-#' @importFrom dplyr left_join mutate bind_rows
+#' @importFrom dplyr left_join mutate bind_rows group_rows
 #' @importFrom DBI dbGetQuery dbConnect dbDisconnect
 #' @importFrom magrittr %>%
 
