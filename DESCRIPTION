@@ -18,6 +18,7 @@ Remotes:
   bhaskarvk/leaflet.extras
 Imports:
     tcltk,
+    dplyr,
     curl,
     DBI,
     RMariaDB,
