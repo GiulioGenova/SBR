@@ -552,9 +552,6 @@ server <- function(input, output, session) {
 
       et <- ET(data = db,crop = "tall",slope=slope)
 
-
-      et <- ET(data = db,crop = "tall")
-
       #df <- mergeOldAndForecast(data = et,long = long,lat = lat)
 
       wb <- WB(et,taw = TAW,startwb = startwb)

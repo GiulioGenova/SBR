@@ -14,8 +14,6 @@ frcst<-frcst %>%  mutate(doy = yday(TimeStamp),
                          N_sum = (rainFrom+rainTo)/2) %>%
   select(doy,TimeStamp,N_sum,img)
 
-SBR::etAvg$ET
-
 if(!is.null(slope)){
   corr=1/cos(slope*pi/180)
   etAvg$ET = etAvg$ET*corr
