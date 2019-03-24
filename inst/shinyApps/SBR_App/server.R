@@ -447,7 +447,7 @@ server <- function(input, output, session) {
 
       wb <- WB(et,taw = TAW,startwb = startwb)
 
-      wb <- mergeOldAndForecast(data = wb,long = long,lat = lat)
+      wb <- mergeOldAndForecast(data = wb,long = long,lat = lat,slope=slope)
 
       wb <- wb %>% filter(TimeStamp > today)
     } else {

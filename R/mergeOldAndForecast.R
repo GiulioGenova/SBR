@@ -7,9 +7,9 @@
 #'
 
 
-mergeOldAndForecast <- function(data,long,lat,taw=50,lmitWarning=0.7,p=0.5,start=0){
+mergeOldAndForecast <- function(data,long,lat,taw=50,lmitWarning=0.8,p=0.5,start=0,slope=NULL){
 
-  dff<-mergeEtAndForecast(long = long,lat = lat)
+  dff<-mergeEtAndForecast(long = long,lat = lat,slope=slope)
 
   colnames(dff)[colnames(dff)=="ET"] <- "ETc"
 
