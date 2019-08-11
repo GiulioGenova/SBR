@@ -6,7 +6,7 @@
 and getForecast function}
 \usage{
 WB(data, taw = 50, lmitWarning = 0.8, p = 0.5, startwb = 50,
-  irrig = 0, slope = 0)
+  irrig = 0)
 }
 \description{
 Computes computes water balace from evapotranspiration and precipitation data coming from et function

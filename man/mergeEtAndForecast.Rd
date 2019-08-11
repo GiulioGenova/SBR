@@ -4,7 +4,7 @@
 \alias{mergeEtAndForecast}
 \title{merge data from wheater forecast and et average data}
 \usage{
-mergeEtAndForecast(long, lat)
+mergeEtAndForecast(long, lat, slope = NULL)
 }
 \description{
 merge data from wheater forecast and et average data
