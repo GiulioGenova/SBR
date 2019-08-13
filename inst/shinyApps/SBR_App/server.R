@@ -429,11 +429,10 @@ server <- function(input, output, session) {
     startwb=as.numeric(irr)
 
 
-
     point <- cbind(LONG=long,LAT=lat)
     point <- SpatialPoints(point,proj4string = CRS("+init=epsg:4326"))
 
-    fallsin<- !is.na(point %over% orchards [,"Landuse"])[1]
+    fallsin<- !is.na(point %over% mask )[1]#[,"Landuse"]
     if(fallsin){
       db <- mergeData(long = long,lat = lat,
                       datestart = datestart,
@@ -538,7 +537,7 @@ server <- function(input, output, session) {
     point <- cbind(LONG=long,LAT=lat)
     point <- SpatialPoints(point,proj4string = CRS("+init=epsg:4326"))
 
-    fallsin<- !is.na(point %over% orchards [,"Landuse"])[1]
+    fallsin<- !is.na(point %over% mask )[1]#[,"Landuse"]
     if(fallsin){
 
 

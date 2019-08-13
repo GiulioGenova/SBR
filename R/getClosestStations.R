@@ -31,28 +31,28 @@ getClosestStations<-function(long,lat,provSensor=NULL){
 
   pointProv <- spTransform(point, CRS = crsProv)
   pointSbr <- spTransform(point, CRS = crsProv)
-  names_file_sp <- spTransform(names_file_sp,CRS = crsProv) %>%
-    filter(id %in% c(3,
-                     7,
-                     9,
-                     12,
-                     14,
-                     17,
-                     #30,
-                     37,
-                     39,
-                     52,
-                     70,
-                     84,
-                     103,
-                     105,
-                     106,
-                     125,
-                     169,
-                     171,
-                     172,
-                     174,
-                     176))
+  names_file_sp <- spTransform(names_file_sp,CRS = crsProv) #%>%
+    # filter(id %in% c(3,
+    #                  7,
+    #                  9,
+    #                  12,
+    #                  14,
+    #                  17,
+    #                  #30,
+    #                  37,
+    #                  39,
+    #                  52,
+    #                  70,
+    #                  84,
+    #                  103,
+    #                  105,
+    #                  106,
+    #                  125,
+    #                  169,
+    #                  171,
+    #                  172,
+    #                  174,
+    #                  176))
 
   if(is.null(provSensor)){
     provSensor=get_provBz_sensors()$Sensor %>% unique

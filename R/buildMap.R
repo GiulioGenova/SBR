@@ -34,7 +34,9 @@ buildMap <- function(){
   #m
   #levels=unique(orchards$Landuse)
 
-  m <- m %>%  addPolygons(stroke= F,data = orchards,color = "blue" , fillOpacity = 0.35) #%>%
+  m <- m %>% # addPolygons(stroke= F,data = orchards,color = "blue" , fillOpacity = 0.35)%>%
+    addPolygons(stroke= T,color = "black" , fillOpacity = 0,opacity = 1,weight = 2,
+                data=mask) #%>%
   #addLegend(position = "topright",pal = "blue", values = levels, title = "Apple Orchards")
   m
 
