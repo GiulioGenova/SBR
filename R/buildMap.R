@@ -6,20 +6,31 @@
 #'
 
 buildMap <- function(){
+  html_legend <- "<img src='Papirus-Team-Papirus-Apps-Weather.svg'> <br/>SBR wetter station"
+
 
   m <- leaflet() %>%
-    #setView( lng = 10.921895, lat = 46.458969,zoom = 10) %>%
+    addProviderTiles("Esri.WorldImagery", group = "Satellite") %>%
+    addProviderTiles("OpenStreetMap.Mapnik", group = "Street Map")%>%
+    addMeasure(position = "topleft",primaryLengthUnit = "meters")%>%
     addSearchOSM()%>%
     addEasyButton(easyButton(
       icon = "fa-crosshairs", title = "Locate Me",
       onClick = JS("function(btn, map){ map.locate({setView: true}); }"))) %>%
     addFullscreenControl()%>%
-
-    addProviderTiles("Esri.WorldImagery", group = "Satellite") %>%
-    addProviderTiles("OpenStreetMap.Mapnik", group = "Street Map")%>%
-    addMeasure(position = "topleft",primaryLengthUnit = "meters")%>%
+    addMarkers(lng = name_file$lon,lat = name_file$lat,
+               popup = name_file$name,label = name_file$name,
+               icon=makeIcon(iconUrl = "Papirus-Team-Papirus-Apps-Weather.svg",
+                             iconWidth =  30,iconHeight =  30),
+               clusterOptions = markerClusterOptions()
+    ) %>%
+    # addCircleMarkers(lng = name_file$lon,lat = name_file$lat,
+    #            popup = name_file$name,label = name_file$name#,
+    #            #clusterOptions = markerClusterOptions(freezeAtZoom = 5)
+    #            ) %>%
     addLayersControl(baseGroups = c("Satellite","Street Map"),#overlayGroups = c('draw'),
-                     options = layersControlOptions(collapsed = FALSE),position = "topright")
+                     options = layersControlOptions(collapsed = FALSE),position = "topright")%>%
+    addControl(html = html_legend, position = "bottomleft")
   #m
   #levels=unique(orchards$Landuse)
 
