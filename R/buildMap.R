@@ -6,7 +6,7 @@
 #'
 
 buildMap <- function(){
-  html_legend <- "<img src='Papirus-Team-Papirus-Apps-Weather.svg'> <br/>SBR wetter station"
+  html_legend <- "<img width=30 height=30 src='weather-station-icon-2.jpg'> <br/>Beratungsring<br/>Wetterstation"
 
 
   m <- leaflet() %>%
@@ -20,9 +20,9 @@ buildMap <- function(){
     addFullscreenControl()%>%
     addMarkers(lng = name_file$lon,lat = name_file$lat,
                popup = name_file$name,label = name_file$name,
-               icon=makeIcon(iconUrl = "Papirus-Team-Papirus-Apps-Weather.svg",
+               icon=makeIcon(iconUrl = "weather-station-icon-2.jpg",
                              iconWidth =  30,iconHeight =  30),
-               clusterOptions = markerClusterOptions()
+               clusterOptions = markerClusterOptions(spiderfyOnMaxZoom = T)
     ) %>%
     # addCircleMarkers(lng = name_file$lon,lat = name_file$lat,
     #            popup = name_file$name,label = name_file$name#,
@@ -30,7 +30,7 @@ buildMap <- function(){
     #            ) %>%
     addLayersControl(baseGroups = c("Satellite","Street Map"),#overlayGroups = c('draw'),
                      options = layersControlOptions(collapsed = FALSE),position = "topright")%>%
-    addControl(html = html_legend, position = "bottomleft")
+    addControl(html = html_legend, position = "topright")
   #m
   #levels=unique(orchards$Landuse)
 
