@@ -110,6 +110,14 @@ ui <- dashboardPage(
       ),
       tabItem(tabName = "irrigApple",
               fluidRow(
+                conditionalPanel(id = "controlsParent",
+                  condition="($('html').hasClass('shiny-busy'))",
+                  absolutePanel(id = "controls", class = "panel panel-default", fixed = TRUE,
+                                draggable = TRUE,top = 15, left = "auto", right = 0, bottom = "auto",
+                                img(src="spinner3.gif",
+                                    width = "215px", height = "315px")
+                  )
+                ),
                 # column(
                 #   width = 3,
                 #   box(
@@ -187,16 +195,22 @@ ui <- dashboardPage(
 
                   ),
                   box(
+                    width = 12,
+
+                    timevisOutput("irrigAdvise")#%>% withSpinner()
+                  )
+                  ,
+                  box(
                     id="box1",
                     width = 12,
-                    leafletOutput("mapIrrig"),
-                    absolutePanel(id = "controls", class = "panel panel-default", fixed = FALSE,
-                                  draggable = TRUE, top = 5, left = "auto", right = 80, bottom = "auto",
-                                  width = "80%", height = "auto",
-
-                                  timevisOutput("irrigAdvise")
-
-                    )#%>% withSpinner()
+                    leafletOutput("mapIrrig")#,
+                    # absolutePanel(id = "controls", class = "panel panel-default", fixed = FALSE,
+                    #               draggable = TRUE, top = 5, left = "auto", right = 80, bottom = "auto",
+                    #               width = "80%", height = "auto",
+                    #
+                    #               timevisOutput("irrigAdvise")
+                    #
+                    # )
                   )
                 )
 
