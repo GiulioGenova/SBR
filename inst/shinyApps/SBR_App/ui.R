@@ -190,9 +190,9 @@ ui <- dashboardPage(
                     id="box1",
                     width = 12,
                     leafletOutput("mapIrrig"),
-                    absolutePanel(id = "controls", class = "panel panel-default", fixed = TRUE,
-                                  draggable = TRUE, top = 60, left = "auto", right = 60, bottom = "auto",
-                                  width = "75%", height = "auto",
+                    absolutePanel(id = "controls", class = "panel panel-default", fixed = FALSE,
+                                  draggable = TRUE, top = 5, left = "auto", right = 80, bottom = "auto",
+                                  width = "80%", height = "auto",
 
                                   timevisOutput("irrigAdvise")
 
