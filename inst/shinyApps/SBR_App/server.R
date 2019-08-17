@@ -458,16 +458,23 @@ server <- function(input, output, session) {
 
 
 
-  output$irrigAdvise <- renderPlot({
+  # output$irrigAdvise <- renderPlot({
+  #   req(db())
+  #
+  #   db <- db()
+  #
+  #   plotIrrigAdvice(db,T)
+  #
+  # })
+
+  output$irrigAdvise <- renderTimevis({
     req(db())
 
     db <- db()
 
-    plotIrrigAdvice(db,T)
+    plotIrrigAdvice2(db,T)
 
   })
-
-
 
   output$mapIrrig <- renderLeaflet({
     buildMap()

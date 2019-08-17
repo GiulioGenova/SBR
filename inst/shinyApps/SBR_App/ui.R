@@ -110,14 +110,54 @@ ui <- dashboardPage(
       ),
       tabItem(tabName = "irrigApple",
               fluidRow(
+                # column(
+                #   width = 3,
+                #   box(
+                #     width = 12,
+                #     p(h4("Geben Sie unten den letzten Tag an, den Sie bewässert haben.") ),
+                #     p(h4("Klicken Sie dann in der Karte auf Ihr Feld, um einen Bewässerungshinweis zu erhalten")),
+                #     dateInput("date",label = "Letzter Bewässerungszeitpunkt",
+                #               min = Sys.Date()-90,max = Sys.Date(),language = "de"),
+                #
+                #     # irrig used to be based on two categories ("normal" and "light")
+                #     # and computed based on the TAW. the client asked for a numerical
+                #     # input (in mm)
+                #
+                #     # radioButtons("irr", "Irrigation type:",
+                #     #              c("Normal" = "norm",
+                #     #                "Light" = "light"),
+                #     #              selected = "norm",
+                #     #              inline = T),
+                #
+                #     numericInput("irr", "Bewässerte Menge [mm]:",value = 50,min = 0,max=300),
+                #
+                #     # numericInput("slope", "Steigung [%]:",
+                #     #              0,min = 0,max = 35
+                #     # ),
+                #
+                #     radioButtons("soil", "Bodenart:",
+                #                  c("Schwer" = "heavy",
+                #                    "Mittel"= "medium",
+                #                    "Leicht" = "light"),
+                #                  selected = "medium",
+                #                  inline = T)
+                #
+                #   )
+                # )
+                # ,
                 column(
-                  width = 5,
+                  width = 12,
+                  # box(
+                  #   width=12,
+                  #   #plotOutput("irrigAdvise")%>% withSpinner()
+                  #   timevisOutput("irrigAdvise")
+                  # )
                   box(
-                    width = 12,
+                    width = 6,
                     p(h4("Geben Sie unten den letzten Tag an, den Sie bewässert haben.") ),
                     p(h4("Klicken Sie dann in der Karte auf Ihr Feld, um einen Bewässerungshinweis zu erhalten")),
                     dateInput("date",label = "Letzter Bewässerungszeitpunkt",
-                              min = Sys.Date()-90,max = Sys.Date(),language = "de"),
+                              min = Sys.Date()-90,max = Sys.Date(),language = "de")#,
 
                     # irrig used to be based on two categories ("normal" and "light")
                     # and computed based on the TAW. the client asked for a numerical
@@ -128,6 +168,9 @@ ui <- dashboardPage(
                     #                "Light" = "light"),
                     #              selected = "norm",
                     #              inline = T),
+                  ),
+                  box(
+                    width = 6,
 
                     numericInput("irr", "Bewässerte Menge [mm]:",value = 50,min = 0,max=300),
 
@@ -143,19 +186,17 @@ ui <- dashboardPage(
                                  inline = T)
 
                   ),
-
-                  box(
-                    width=12,
-                    plotOutput("irrigAdvise")%>% withSpinner()
-                  )
-                )
-                ,
-                column(
-                  width = 7,
                   box(
                     id="box1",
                     width = 12,
-                    leafletOutput("mapIrrig")#%>% withSpinner()
+                    leafletOutput("mapIrrig"),
+                    absolutePanel(id = "controls", class = "panel panel-default", fixed = TRUE,
+                                  draggable = TRUE, top = 60, left = "auto", right = 60, bottom = "auto",
+                                  width = "75%", height = "auto",
+
+                                  timevisOutput("irrigAdvise")
+
+                    )#%>% withSpinner()
                   )
                 )
 
