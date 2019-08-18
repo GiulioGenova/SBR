@@ -51,7 +51,8 @@ plotIrrigAdvice2 <- function(db, wthrIcns=T){
                                         ifelse(db$key=="irrigAdvise",
                                                "Bewässerung",
                                                "Wetter")
-                                      ))
+                                      )),
+             options = list(stack=FALSE)#locale = 'de',
   )
 
   return(p)
