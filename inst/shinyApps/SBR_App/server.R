@@ -466,6 +466,10 @@ server <- function(input, output, session) {
   #   plotIrrigAdvice(db,T)
   #
   # })
+  output$nodata <-reactive({
+    return(is.null(db()))
+  })
+
 
   output$irrigAdvise <- renderTimevis({
     req(db())
@@ -592,5 +596,5 @@ server <- function(input, output, session) {
   session$onSessionEnded(function() {
     stopApp()
   })
-
+  outputOptions(output, 'nodata', suspendWhenHidden=FALSE)
 }

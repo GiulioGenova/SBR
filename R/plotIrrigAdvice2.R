@@ -9,9 +9,9 @@
 
 plotIrrigAdvice2 <- function(db, wthrIcns=T){
 
-  MustIrrig="Muss<br>bewässern"
-  NoIrrig="Keinen<br>bewässerung"
-  SugIrrig="Bewässerung<br>nvorschlagen"
+  MustIrrig="Bewässern<br>notwendig"
+  NoIrrig="Keine<br>Bewässerung"
+  SugIrrig="Bewässerung<br>empfohlen"
 
   db <- db %>% dplyr::mutate(
     irrigAdvise = dplyr::case_when(
