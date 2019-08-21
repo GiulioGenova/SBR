@@ -113,9 +113,9 @@ ui <- dashboardPage(
                 conditionalPanel(id = "controlsParent",
                                  condition="($('html').hasClass('shiny-busy'))",
                                  absolutePanel(id = "controls", class = "panel panel-default", fixed = TRUE,
-                                               draggable = TRUE,top = 15, left = "auto", right = 0, bottom = "auto",
-                                               img(src="spinner3.gif",
-                                                   width = "150px", height = "220px")
+                                               draggable = TRUE,top = 25, left = "auto", right = 0, bottom = "auto",
+                                               img(src="annaffiatoio.gif",#spinner3.gif
+                                                   width = "200px", height = "200px")
                                  )
                 ),
                 # column(
