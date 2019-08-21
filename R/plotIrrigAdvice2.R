@@ -52,7 +52,7 @@ plotIrrigAdvice2 <- function(db, wthrIcns=T){
                                                "Bewässerung",
                                                "Wetter")
                                       )),
-             options = list(stack=FALSE)#locale = 'de',
+             options = list(locale = 'de',stack=FALSE)#
   )
 
   return(p)
