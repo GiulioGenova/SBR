@@ -28,9 +28,9 @@ plotIrrigAdvice2 <- function(db, wthrIcns=T){
   db <- db %>% dplyr::mutate(
 
     color = dplyr::case_when(
-      value==MustIrrig ~ "red",
-      value==NoIrrig ~ "green",
-      value==SugIrrig ~ "orange"
+      value==MustIrrig ~ "#cc3232",
+      value==NoIrrig ~ "#2dc937",
+      value==SugIrrig ~ "#db7b2b"
     )
   )
 
@@ -41,7 +41,7 @@ plotIrrigAdvice2 <- function(db, wthrIcns=T){
     content = db$value,
     start   = paste(db$TimeStamp, "01:00"),
     end     = paste(db$TimeStamp, "23:00"),
-    style   = paste("background-color:", db$color ,";"),
+    style   = paste("background-color:", db$color ,";","font-weight: bold; font-size: 105%;"),
     group   = db$key
 
   )

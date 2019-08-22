@@ -19,7 +19,7 @@ p {
 
 }
 #box1 {
-  height: calc(100vh - 85px) !important;
+  height: calc(100vh - 280px) !important;
   min-height: 350px !important;
 }
 #mapIrrig{
