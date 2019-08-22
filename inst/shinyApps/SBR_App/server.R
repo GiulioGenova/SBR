@@ -575,14 +575,29 @@ server <- function(input, output, session) {
 
 
 
-  output$irrigAdviseDm <- renderPlot({
+  # output$irrigAdviseDm <- renderPlot({
+  #   req(dbDm())
+  #
+  #   db <- dbDm()
+  #
+  #   plotIrrigAdvice2(db,F)
+  #
+  # })
+
+  output$nodataDm <-reactive({
+    return(is.null(dbDm()))
+  })
+
+
+  output$irrigAdviseDm <- renderTimevis({
     req(dbDm())
 
     db <- dbDm()
 
-    plotIrrigAdvice(db,F)
+    plotIrrigAdvice2(db,F)
 
   })
+
 
   output$mapIrrigDm <- renderLeaflet({
     buildMap()
@@ -597,4 +612,5 @@ server <- function(input, output, session) {
     stopApp()
   })
   outputOptions(output, 'nodata', suspendWhenHidden=FALSE)
+  outputOptions(output, 'nodataDm', suspendWhenHidden=FALSE)
 }

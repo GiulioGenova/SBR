@@ -1,7 +1,7 @@
 #' plot the data of irrigation advice
 #'
 #' @export
-#' @import  timevis
+#' @importFrom timevis timevis
 #' @import  htmltools
 #' @importFrom dplyr mutate case_when
 #' @importFrom tidyr gather
@@ -18,12 +18,20 @@ plotIrrigAdvice2 <- function(db, wthrIcns=T){
       irrigAdvise=="MustIrrig" ~ MustIrrig,
       irrigAdvise=="NoIrrig" ~ NoIrrig,
       irrigAdvise=="SugIrrig" ~ SugIrrig
-    ),
-    img=SBR::templateImg(img=img,width=60,height=60,rainFrom,rainTo,temperatureMax,temperatureMin)
+    )
   )
 
+  if(wthrIcns){
+    db <-  db %>% dplyr::mutate(
+      img=SBR::templateImg(img=img,width=60,height=60,rainFrom,rainTo,temperatureMax,temperatureMin)
+    )
+    db <- tidyr::gather(db,"key","value",irrigAdvise,img)
 
-  db <- tidyr::gather(db,"key","value",irrigAdvise,img)
+  }else{
+    db <- tidyr::gather(db,"key","value",irrigAdvise)
+    }
+
+
 
   db <- db %>% dplyr::mutate(
     style = dplyr::case_when(

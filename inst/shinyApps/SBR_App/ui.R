@@ -4,11 +4,11 @@ ui <- dashboardPage(
   dashboardHeader(title = "SBR App - Demo"),
   dashboardSidebar(
     sidebarMenu(
-
-      menuItem("Data Browser", tabName = "Data", icon = icon("bar-chart-o")),
-      menuItem("Station map", tabName = "map", icon = icon("info-circle")),
       menuItem("irrigAplant", tabName = "irrigApple", icon = icon("bar-chart-o")),
-      menuItem("irrigAplant Demo", tabName = "irrigAppleDm", icon = icon("bar-chart-o"))
+      menuItem("irrigAplant Demo", tabName = "irrigAppleDm", icon = icon("bar-chart-o")),
+      menuItem("Data Browser", tabName = "Data", icon = icon("bar-chart-o")),
+      menuItem("Station map", tabName = "map", icon = icon("info-circle"))
+
     )),
   dashboardBody(
     tags$head(
@@ -223,9 +223,17 @@ ui <- dashboardPage(
       ),
       tabItem(tabName = "irrigAppleDm",
               fluidRow(
-                column(width = 5,
+                conditionalPanel(id = "controlsParent",
+                                 condition="($('html').hasClass('shiny-busy'))",
+                                 absolutePanel(id = "controls", class = "panel panel-default", fixed = TRUE,
+                                               draggable = TRUE,top = 25, left = "auto", right = 0, bottom = "auto",
+                                               img(src="annaffiatoio.gif",#spinner3.gif
+                                                   width = "200px", height = "200px")
+                                 )
+                ),
+                column(width = 12,
                        box(
-                         width = 12,
+                         width = 6,
                          p(h4("Geben Sie unten den letzten Tag an, den Sie bewässert haben.") ),
                          p(h4("Klicken Sie dann in der Karte auf Ihr Feld, um einen Bewässerungshinweis zu erhalten")),
 
@@ -250,8 +258,12 @@ ui <- dashboardPage(
                                  dateInput("today",label = "Welcher Tag ist heute?",
                                            min = Sys.Date()-364,max = Sys.Date(),language = "de")
                              )
-                         ),
+                         )
 
+                       )
+                       ,
+                       box(
+                         width = 6,
 
                          numericInput("irrDm", "Bewässerte Menge [mm]:",value = 50,min = 0,max=300),
 
@@ -266,24 +278,26 @@ ui <- dashboardPage(
 
                        box(
                          width=12,
-                         plotOutput("irrigAdviseDm")%>% withSpinner()
-
+                         #plotOutput("irrigAdviseDm")%>% withSpinner()
+                         conditionalPanel(condition="output.nodataDm",
+                                          p(h3("no data") )
+                         ),
+                         conditionalPanel(condition="output.nodataDm==false",
+                                          timevisOutput("irrigAdviseDm")
+                         )
                        )
-                )
-                ,
-                column(
-                  width = 7,
-                  box(
-                    id="boxDm",
-                    width = 12,
-                    leafletOutput("mapIrrigDm")#%>% withSpinner()
-                  )
-                )
+                       ,
+                       box(
+                         id="boxDm",
+                         width = 12,
+                         leafletOutput("mapIrrigDm")#%>% withSpinner()
+                       )
 
 
+                )
               )
-      )
 
+      )
     )
   )
 )
