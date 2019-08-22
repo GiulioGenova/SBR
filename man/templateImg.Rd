@@ -4,7 +4,8 @@
 \alias{templateImg}
 \title{create an html template for image}
 \usage{
-templateImg(img, width, height)
+templateImg(img, width, height, rainFrom, rainTo, temperatureMax,
+  temperatureMin)
 }
 \description{
 create an html template for image
