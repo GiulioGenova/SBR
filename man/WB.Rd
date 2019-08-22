@@ -8,6 +8,9 @@ and getForecast function}
 WB(data, taw = 50, lmitWarning = 0.8, p = 0.5, startwb = 50,
   irrig = 0)
 }
+\arguments{
+\item{startwb}{is the initial precipitation}
+}
 \description{
 Computes computes water balace from evapotranspiration and precipitation data coming from et function
 and getForecast function

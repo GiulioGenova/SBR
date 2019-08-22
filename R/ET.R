@@ -26,7 +26,9 @@ ET <- function(data,
                crop = "short",
                netRadiation="no",
                wind = "yes",
-               message = "yes"
+               message = "yes",
+               latitude=NULL,
+               Elev=NULL
 ){
 
   if(radiation_unit=="W"){
@@ -60,18 +62,24 @@ ET <- function(data,
 
   if(!is.null(et_real_tot_in)){
 
-    id=unique(db$id)
-    Elev <- names_file[which(names_file$id==id),"alt"]#
+    if(!is.null(db$id) & is.null(Elev)){
+
+      id=unique(db$id)
+      Elev <- names_file[which(names_file$id==id),"alt"]
+
+
+    }else{
+      Elev=NULL
+    }
 
     if(is.null(Elev)){
       Elev <- 300
     }
 
-    latitude <- names_file[which(names_file$id==id),"lat"]#
-    latitude = as.numeric(latitude)*pi/180
-
     if(is.null(latitude)){
       latitude = 0.802851
+    }else{
+      latitude = as.numeric(latitude)*pi/180
     }
 
     constants=list(Elev=Elev,lambda=2.45,lat_rad=latitude,Gsc=0.0820,z=2,sigma=4.903*10^-9,G=0)

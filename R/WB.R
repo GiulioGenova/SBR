@@ -5,6 +5,7 @@
 #' @importFrom dplyr row_number
 #' @importFrom Rcpp sourceCpp
 #' @useDynLib SBR
+#' @param startwb is the initial precipitation
 
 WB <- function(data,taw=50,lmitWarning=0.8,p=0.5,startwb= 50,irrig=0){#,slope=0
 

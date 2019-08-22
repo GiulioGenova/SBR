@@ -9,7 +9,7 @@ ET(data, Kc.ini.A = 0.1, Kc.ini.B = 0.4, Kc.dev = 0.7,
   DOY.dev = 91, DOY.mid = 141, DOY.late = 271, DOY.harv = 312,
   tree_height = 3, slope = NULL, radiation_unit = "W",
   crop = "short", netRadiation = "no", wind = "yes",
-  message = "yes")
+  message = "yes", latitude = NULL, Elev = NULL)
 }
 \description{
 Computes Evapotraspiration using PenmanMonteith from data retrieved with function mergeData

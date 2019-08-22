@@ -10,6 +10,9 @@ mergeData(long, lat, datestart = Sys.Date() - 2, dateend = Sys.Date() +
   "Relative Luftfeuchtigkeit_min", "Relative Luftfeuchtigkeit_max",
   "Windgeschwindigkeit_avg"), password, user, host)
 }
+\arguments{
+\item{sbrSensor}{if only data from the province of bozen is supplied se to NULL}
+}
 \description{
 Merge data of a location - using closest province of Bozen and SBR stations -
 }
