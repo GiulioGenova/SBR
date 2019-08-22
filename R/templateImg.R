@@ -6,9 +6,9 @@ templateImg <- function(img,width,height,rainFrom,rainTo,temperatureMax,temperat
   sprintf(
     '<div><img src="%s" width="%s" height="%s"></div>
      <div>Niederschlag [mm]:</div>
-     <div>von %s bis %s</div>
+     <div>von <b>%s</b> bis <b>%s</b></div>
      <div>Temperatur [°C]:</div>
-     <div>max %s min %s</div>
+     <div>max <b>%s</b> min <b>%s</b></div>
     '
     ,
     img,width,height,rainFrom,rainTo,temperatureMax,temperatureMin

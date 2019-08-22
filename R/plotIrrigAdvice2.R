@@ -19,7 +19,7 @@ plotIrrigAdvice2 <- function(db, wthrIcns=T){
       irrigAdvise=="NoIrrig" ~ NoIrrig,
       irrigAdvise=="SugIrrig" ~ SugIrrig
     ),
-    img=SBR::templateImg(img=img,width=50,height=50,rainFrom,rainTo,temperatureMax,temperatureMin)
+    img=SBR::templateImg(img=img,width=60,height=60,rainFrom,rainTo,temperatureMax,temperatureMin)
   )
 
 
@@ -29,12 +29,8 @@ plotIrrigAdvice2 <- function(db, wthrIcns=T){
     style = dplyr::case_when(
       value==MustIrrig ~"background-color: #cc3232;font-weight: bold; font-size: 105%;",
       value==NoIrrig ~ "background-color: #2dc937;font-weight: bold; font-size: 105%;",
-      value==SugIrrig ~ "background-color: #db7b2b;font-weight: bold; font-size: 105%;"
-    ),
-    color = dplyr::case_when(
-      value==MustIrrig ~ "#cc3232",
-      value==NoIrrig ~ "#2dc937",
-      value==SugIrrig ~ "#db7b2b"
+      value==SugIrrig ~ "background-color: #db7b2b;font-weight: bold; font-size: 105%;",
+      TRUE ~ "font-size: 75%;"
     )
   )
 
@@ -45,7 +41,6 @@ plotIrrigAdvice2 <- function(db, wthrIcns=T){
     content = db$value,
     start   = paste(db$TimeStamp, "01:00"),
     end     = paste(db$TimeStamp, "23:00"),
-    #style   = paste("background-color:", db$color ,";","font-weight: bold; font-size: 105%;"),
     style   = db$style,
     group   = db$key
 
