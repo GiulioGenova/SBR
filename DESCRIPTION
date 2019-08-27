@@ -49,5 +49,6 @@ Imports:
     shiny,
     shinydashboard,
     shinycssloaders,
-    plotly
+    plotly,
+	timevis
 LinkingTo: Rcpp
