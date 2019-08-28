@@ -444,11 +444,11 @@ server <- function(input, output, session) {
 
       et <- ET(data = db,crop = "tall",slope=slope)
 
-      wb <- WB(et,taw = TAW,startwb = startwb)
+      wb <- mergeOldAndForecast(data = et,long = long,lat = lat,slope=slope)
 
-      wb <- mergeOldAndForecast(data = wb,long = long,lat = lat,slope=slope)
+      wb <- WB(wb,taw = TAW,startwb = startwb)
 
-      wb <- wb %>% filter(TimeStamp > today)
+      #wb <- wb %>% filter(TimeStamp > today)
     } else {
 
       wb<-NULL
@@ -566,7 +566,7 @@ server <- function(input, output, session) {
 
       wb <- WB(et,taw = TAW,startwb = startwb)
 
-      wb <- wb %>% filter(TimeStamp > today)
+      #wb <- wb %>% filter(TimeStamp > today)
     } else {
 
       wb<-NULL
