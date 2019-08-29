@@ -22,14 +22,26 @@ plotIrrigAdvice2 <- function(db, wthrIcns=T){
   )
 
   if(wthrIcns){
-    db <-  db %>% dplyr::mutate(
-      img=SBR::templateImg(img=img,width=60,height=60,rainFrom,rainTo,temperatureMax,temperatureMin)
-    )
+    if(!is.null(db$img)){
+
+      db <-  db %>% dplyr::mutate(
+        img=ifelse(!is.na(img),
+                   SBR::templateImg(img=img,width=60,height=60,rainFrom,rainTo,temperatureMax,temperatureMin),
+                   SBR::templatePastWtr(rain=round(N_sum),temperatureMax=round(LT_max),temperatureMin=round(LT_min))
+        )
+      )
+    }else{
+
+      db <-  db %>% dplyr::mutate(
+        img=SBR::templatePastWtr(rain=round(N_sum),temperatureMax=round(LT_max),temperatureMin=round(LT_min))
+      )
+
+    }
     db <- tidyr::gather(db,"key","value",irrigAdvise,img)
 
   }else{
     db <- tidyr::gather(db,"key","value",irrigAdvise)
-    }
+  }
 
 
 
@@ -61,7 +73,7 @@ plotIrrigAdvice2 <- function(db, wthrIcns=T){
                                                "Wetter")
                                       )),
              options = list(locale = 'de',stack=FALSE)#
-  )
+  ) %>% setWindow(data$start[length(data$start)-5], data$end[length(data$end)])
 
   return(p)
 }

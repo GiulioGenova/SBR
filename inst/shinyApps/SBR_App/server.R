@@ -426,7 +426,7 @@ server <- function(input, output, session) {
     #   startwb=TAW*0.35
     # }
 
-    startwb=as.numeric(irr)
+    irrig=as.numeric(irr)
 
 
     point <- cbind(LONG=long,LAT=lat)
@@ -446,7 +446,7 @@ server <- function(input, output, session) {
 
       wb <- mergeOldAndForecast(data = et,long = long,lat = lat,slope=slope)
 
-      wb <- WB(wb,taw = TAW,startwb = startwb)
+      wb <- WB(wb,taw = TAW,irrig = irrig)
 
       #wb <- wb %>% filter(TimeStamp > today)
     } else {
@@ -543,7 +543,7 @@ server <- function(input, output, session) {
     #   startwb=TAW*0.35
     # }
 
-    startwb=as.numeric(irrDm)
+    irrig=as.numeric(irrDm)
 
     point <- cbind(LONG=long,LAT=lat)
     point <- SpatialPoints(point,proj4string = CRS("+init=epsg:4326"))
@@ -564,7 +564,7 @@ server <- function(input, output, session) {
 
       #df <- mergeOldAndForecast(data = et,long = long,lat = lat)
 
-      wb <- WB(et,taw = TAW,startwb = startwb)
+      wb <- WB(et,taw = TAW,irrig = irrig)
 
       #wb <- wb %>% filter(TimeStamp > today)
     } else {
@@ -594,7 +594,7 @@ server <- function(input, output, session) {
 
     db <- dbDm()
 
-    plotIrrigAdvice2(db,F)
+    plotIrrigAdvice2(db,T)
 
   })
 
