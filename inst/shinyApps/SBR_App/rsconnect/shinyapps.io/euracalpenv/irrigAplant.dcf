@@ -1,0 +1,12 @@
+name: irrigAplant
+title: irrigAplant
+username:
+account: euracalpenv
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 1157562
+bundleId: 2391756
+url: https://euracalpenv.shinyapps.io/irrigAplant/
+when: 1567779708.31785
+asMultiple: FALSE
+asStatic: FALSE
