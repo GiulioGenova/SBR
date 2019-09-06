@@ -1,13 +1,13 @@
 
 ui <- dashboardPage(
   skin = "blue",
-  dashboardHeader(title = "SBR App - Demo"),
-  dashboardSidebar(
+  dashboardHeader(title = "irrigAplant"),
+  dashboardSidebar(collapsed = T,
     sidebarMenu(
-      menuItem("irrigAplant", tabName = "irrigApple", icon = icon("bar-chart-o")),
-      menuItem("irrigAplant Demo", tabName = "irrigAppleDm", icon = icon("bar-chart-o")),
-      menuItem("Data Browser", tabName = "Data", icon = icon("bar-chart-o")),
-      menuItem("Station map", tabName = "map", icon = icon("info-circle"))
+      menuItem("irrigAplant", tabName = "irrigApple", icon = icon("bar-chart-o"))#,
+      #menuItem("irrigAplant Demo", tabName = "irrigAppleDm", icon = icon("bar-chart-o")),
+      #menuItem("Data Browser", tabName = "Data", icon = icon("bar-chart-o")),
+      #menuItem("Station map", tabName = "map", icon = icon("info-circle"))
 
     )),
   dashboardBody(

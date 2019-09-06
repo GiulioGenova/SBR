@@ -10,80 +10,86 @@ sensorPresel<-c("Trockentemperatur 60cm","Feuchttemperatur 60cm",
                 "Bodentemperatur -30cm","Luftdruck"
 )#"Bodentemperatur -25cm","Verdunstung",
 
+password=NULL#"roMonaLisa$14pr"
+user=NULL#"ROeuracMonalisa"
+host=NULL#"95.171.35.104"
+provSensor=c("GS","N","WG","LT","LF")
+sbrSensor=NULL
+
 server <- function(input, output, session) {
 
   values <- reactiveValues(authenticated = FALSE)
 
   # Return the UI for a modal dialog with data selection input. If 'failed'
   # is TRUE, then display a message that the previous value was invalid.
-  dataModal <- function(failed = FALSE) {
-    modalDialog(
-      p(h4(tags$b("Welcome to the SBR App"))),
-      p(h5("Please insert username and password for the Beratungsring database")),
-      p(h5("You need to be inside Beratungsring or eurac network to use this app")),
-      textInput("username", "Username:"),
-      passwordInput("password", "Password:"),
-      #textInput("host", "Host:"),
-      footer = tagList(
-        # modalButton("Cancel"),
-        actionButton("ok", "OK")
-      )
-    )
-  }
-
-  # Show modal when button is clicked.
-  # This `observe` is suspended only whith right user credential
-
-  obs1 <- observe({
-    showModal(dataModal())
-  })
-
-  # When OK button is pressed, attempt to authenticate. If successful,
-  # remove the modal.
-
-  obs2 <- observe({
-    req(input$ok)
-    isolate({
-      Username <- input$username
-      Password <- input$password
-      #Host <- input$host
-    })
-
-
-    Logged = tryCatch({
-      #user<-"wrong"
-      dbConnect(MariaDB(),#RMariaDB::
-                dbname = sprintf('sbr_wetter_%s',substr(Sys.Date(),1,4)),
-                host = Host,user =  Username,
-                password = Password)
-
-    }, error = function(e){NULL})
-
-
-    if (!is.null(Logged)) {
-
-      Logged <<- TRUE
-      values$authenticated <- TRUE
-      obs1$suspend()
-      removeModal()
-      user <<- Username
-      password <<- Password
-      host <<- Host
-      dbDisconnect(Logged)
-
-    } else {
-
-      values$authenticated <- FALSE
-
-    }
-
-  })
-
-
-  output$dataInfo <- renderPrint({
-    if (values$authenticated) "OK!!!!!"
-    else "You are NOT authenticated"
-  })
+  # dataModal <- function(failed = FALSE) {
+  #   modalDialog(
+  #     p(h4(tags$b("Welcome to the SBR App"))),
+  #     p(h5("Please insert username and password for the Beratungsring database")),
+  #     p(h5("You need to be inside Beratungsring or eurac network to use this app")),
+  #     textInput("username", "Username:"),
+  #     passwordInput("password", "Password:"),
+  #     #textInput("host", "Host:"),
+  #     footer = tagList(
+  #       # modalButton("Cancel"),
+  #       actionButton("ok", "OK")
+  #     )
+  #   )
+  # }
+  #
+  # # Show modal when button is clicked.
+  # # This `observe` is suspended only whith right user credential
+  #
+  # obs1 <- observe({
+  #   showModal(dataModal())
+  # })
+  #
+  # # When OK button is pressed, attempt to authenticate. If successful,
+  # # remove the modal.
+  #
+  # obs2 <- observe({
+  #   req(input$ok)
+  #   isolate({
+  #     Username <- input$username
+  #     Password <- input$password
+  #     #Host <- input$host
+  #   })
+  #
+  #
+  #   Logged = tryCatch({
+  #     #user<-"wrong"
+  #     dbConnect(MariaDB(),#RMariaDB::
+  #               dbname = sprintf('sbr_wetter_%s',substr(Sys.Date(),1,4)),
+  #               host = Host,user =  Username,
+  #               password = Password)
+  #
+  #   }, error = function(e){NULL})
+  #
+  #
+  #   if (!is.null(Logged)) {
+  #
+  #     Logged <<- TRUE
+  #     values$authenticated <- TRUE
+  #     obs1$suspend()
+  #     removeModal()
+  #     user <<- Username
+  #     password <<- Password
+  #     host <<- Host
+  #     dbDisconnect(Logged)
+  #
+  #   } else {
+  #
+  #     values$authenticated <- FALSE
+  #
+  #   }
+  #
+  # })
+  #
+  #
+  # output$dataInfo <- renderPrint({
+  #   if (values$authenticated) "OK!!!!!"
+  #   else "You are NOT authenticated"
+  # })
 
 
   ##############################################################################
@@ -438,6 +444,7 @@ server <- function(input, output, session) {
                       datestart = datestart,
                       #dateend = Sys.Date()+1,
                       provSensor = provSensor,
+                      sbrSensor=sbrSensor,
                       password = password,user = user,host = host)
 
       slope=raster::extract(slopeFilt, point)
