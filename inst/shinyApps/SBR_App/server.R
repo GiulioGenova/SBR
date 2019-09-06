@@ -615,9 +615,9 @@ server <- function(input, output, session) {
   outputOptions(output, "plotAll", suspendWhenHidden = FALSE)
   outputOptions(output, 'rightstatsens', suspendWhenHidden=FALSE)
 
-  session$onSessionEnded(function() {
-    stopApp()
-  })
+  # session$onSessionEnded(function() {
+  #   stopApp()
+  # })
   outputOptions(output, 'nodata', suspendWhenHidden=FALSE)
   outputOptions(output, 'nodataDm', suspendWhenHidden=FALSE)
 }
