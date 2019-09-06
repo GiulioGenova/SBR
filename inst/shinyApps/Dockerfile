@@ -61,11 +61,11 @@ RUN R -e "devtools::install_github('GiulioGenova/SBR', ref='onlyopendata')"
 
 
 # copy the app to the image
-RUN mkdir /root/SBR
-COPY /SBR /root/SBR
+RUN mkdir /root/SBR_App
+COPY /SBR_App /root/SBR_App
 
 COPY Rprofile.site /usr/lib/R/etc/
-COPY Rprofile.site /root/SBR/
+COPY Rprofile.site /root/SBR_App/
 
 EXPOSE 3838
 
