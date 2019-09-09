@@ -20,7 +20,7 @@ libgit2-dev
 
 
 
-# system library dependency for the euler app
+# system library dependency for the app
 RUN apt-get update && apt-get install -y \
 libmpfr-dev \
 lbzip2 \
@@ -44,7 +44,8 @@ netcdf-bin \
 protobuf-compiler \
 tk-dev \
 unixodbc-dev \
-libv8-dev
+libv8-dev \
+libmagick++-dev
 
 # basic shiny functionality
 RUN R -e "install.packages(c('shiny', 'rmarkdown'), repos='https://cloud.r-project.org/')"
