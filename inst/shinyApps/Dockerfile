@@ -70,4 +70,4 @@ COPY Rprofile.site /root/SBR_App/
 
 EXPOSE 3838
 
-CMD ["R", "-e", "shiny::runApp('/root/SBR',host='0.0.0.0',port=3838)"]
+CMD ["R", "-e", "shiny::runApp('/root/SBR_App',host='0.0.0.0',port=3838)"]
