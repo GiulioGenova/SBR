@@ -30,7 +30,8 @@ WB <- function(data,taw=50,lmitWarning=0.8,p=0.5,startwb= NULL,irrig=0){#,slope=
         #ETcMinusN_sum=ifelse(row_number()==1,start, ETc-N_sum),
 
         wbnotadj=cumsumBounded(x = ETc-N_sum - irrig,low = 0,high = taw),
-
+        irrigAdvisenotadj=ifelse(wbnotadj<=taw*p*lmitWarning,"NoIrrig",
+                           ifelse(wbnotadj>= taw*p*lmitWarning & wbnotadj< taw*p,"SugIrrig","MustIrrig")),
         # etcadj=ifelse(row_number()==1,start,etcadj(n=N_sum,e = ET0,
         #                                            taw = taw,p = p,
         #                                            k = Kc
