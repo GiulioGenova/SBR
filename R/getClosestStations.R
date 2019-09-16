@@ -17,8 +17,13 @@
 # load("SBR_names.RData")
 
 
-getClosestStations<-function(long,lat,provSensor=NULL){
+getClosestStations<-function(long=NULL,lat=NULL,idSBR=NULL,provSensor=NULL){
 
+  if(is.null(long)|is.null(lat)&!is.null(idSBR)){
+
+    lat=name_file[which(name_file$id==idSBR),]$lat
+    long=name_file[which(name_file$id==idSBR),]$lon
+  }
 
   sp <- getMeteoStat(format = "spatial")
   crsProv <- sp@proj4string
@@ -30,44 +35,50 @@ getClosestStations<-function(long,lat,provSensor=NULL){
   point <- SpatialPoints(point,proj4string = CRS("+init=epsg:4326"))
 
   pointProv <- spTransform(point, CRS = crsProv)
-  pointSbr <- spTransform(point, CRS = crsProv)
-  names_file_sp <- spTransform(names_file_sp,CRS = crsProv) %>%
-    filter(id %in% c(3,
-                     7,
-                     9,
-                     12,
-                     14,
-                     17,
-                     #30,
-                     37,
-                     39,
-                     52,
-                     70,
-                     84,
-                     103,
-                     105,
-                     106,
-                     125,
-                     169,
-                     171,
-                     172,
-                     174,
-                     176))
+
 
   if(is.null(provSensor)){
     provSensor=get_provBz_sensors()$Sensor %>% unique
   }
 
+  if(is.null(idSBR)){
 
-  distSbr <- gDistance(spgeom1 = pointSbr,spgeom2 = names_file_sp,byid = T)
+    pointSbr <- spTransform(point, CRS = crsProv)
+    names_file_sp <- spTransform(names_file_sp,CRS = crsProv) %>%
+      filter(id %in% c(3,
+                       7,
+                       9,
+                       12,
+                       14,
+                       17,
+                       #30,
+                       37,
+                       39,
+                       52,
+                       70,
+                       84,
+                       103,
+                       105,
+                       106,
+                       125,
+                       169,
+                       171,
+                       172,
+                       174,
+                       176))
 
-  minDist<- min(distSbr)
+    distSbr <- gDistance(spgeom1 = pointSbr,spgeom2 = names_file_sp,byid = T)
 
-  minDistId <- which(distSbr==min(distSbr))
+    minDist<- min(distSbr)
 
-  SbrClosest<-names_file_sp@data[minDistId,"id"]
+    minDistId <- which(distSbr==min(distSbr))
 
+    SbrClosest<-names_file_sp@data[minDistId,"id"]
 
+  }else{
+
+    SbrClosest<-idSBR
+  }
 
   provDistances <- lapply(provSensor,
                           function(provSensor,point,sp,crs){
@@ -90,7 +101,7 @@ getClosestStations<-function(long,lat,provSensor=NULL){
                           point=pointProv,sp = sp,crs = crsProv)
 
   provClosest <- bind_rows(provDistances)
-
+  print(provClosest)
   ret <- list(sbr=SbrClosest,prov=provClosest)
 
   return(ret)

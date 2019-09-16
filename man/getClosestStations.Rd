@@ -4,7 +4,8 @@
 \alias{getClosestStations}
 \title{Get closest province of Bozen and SBR stations}
 \usage{
-getClosestStations(long, lat, provSensor = NULL)
+getClosestStations(long = NULL, lat = NULL, idSBR = NULL,
+  provSensor = NULL)
 }
 \description{
 Get closest province of Bozen and SBR stations

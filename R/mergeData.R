@@ -5,7 +5,7 @@
 #' @importFrom dplyr full_join matches
 #' @param sbrSensor if only data from the province of bozen is supplied se to NULL
 
-mergeData <- function(long,lat,datestart=Sys.Date()-2,dateend=Sys.Date()+1,round="day",
+mergeData <- function(long=NULL,lat=NULL,idSBR=NULL,datestart=Sys.Date()-2,dateend=Sys.Date()+1,round="day",
                       provSensor=c("GS","N"),
                       sbrSensor=c("Temperatur 2m_min","Temperatur 2m_max",
                                   "Relative Luftfeuchtigkeit_min",
@@ -13,7 +13,7 @@ mergeData <- function(long,lat,datestart=Sys.Date()-2,dateend=Sys.Date()+1,round
                                   "Windgeschwindigkeit_avg"),
                       password,user,host){
 
-  x<-getClosestStations(long = long,lat = lat,provSensor = provSensor)
+  x<-getClosestStations(long = long,lat = lat,idSBR=idSBR,provSensor = provSensor)
 
   y<-get_provBz_data(station_sensor = x$prov,
                      datestart = datestart,
@@ -38,7 +38,7 @@ mergeData <- function(long,lat,datestart=Sys.Date()-2,dateend=Sys.Date()+1,round
     colnames(z)[colnames(z)=="Temperatur 2m_max"] <- "LT_max"
     colnames(z)[colnames(z)=="Temperatur 2m_min"] <- "LT_min"
     colnames(z)[colnames(z)=="Windgeschwindigkeit_avg"] <- "WG_mean"
-
+    colnames(z)[colnames(z)=="Niederschlag_sum"] <- "N_sum"
     #toTakeOut <- paste0("^",glue_collapse(paste0(provSensor,"_"),"|"))
 
     #z <- z %>% select(-matches(toTakeOut))
