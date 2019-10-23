@@ -240,14 +240,14 @@ server <- function(input, output, session) {
 
       #if (input$doAvg){
 
-        aggrAvg<-c("Trockentemperatur 60cm","Feuchttemperatur 60cm",
-                   "Relative Luftfeuchtigkeit","Temperatur 2m",
-                   "Windgeschwindigkeit","Windrichtung",
-                   "Blattnaesse",
-                   "Bodenfeuchtigkeit 20cm",
-                   "Bodenfeuchtigkeit 40cm","Bodenwasserpotenzial 20cm",
-                   "Bodenwasserpotenzial 40cm","Bodentemperatur -10cm",
-                   "Bodentemperatur -30cm","Luftdruck")
+      aggrAvg<-c("Trockentemperatur 60cm","Feuchttemperatur 60cm",
+                 "Relative Luftfeuchtigkeit","Temperatur 2m",
+                 "Windgeschwindigkeit","Windrichtung",
+                 "Blattnaesse",
+                 "Bodenfeuchtigkeit 20cm",
+                 "Bodenfeuchtigkeit 40cm","Bodenwasserpotenzial 20cm",
+                 "Bodenwasserpotenzial 40cm","Bodentemperatur -10cm",
+                 "Bodentemperatur -30cm","Luftdruck")
 
       #}else {
 
@@ -257,8 +257,8 @@ server <- function(input, output, session) {
 
       #if (input$doSum){
 
-        aggrSum<-c("Niederschlag",
-                   "Beregnung")
+      aggrSum<-c("Niederschlag",
+                 "Beregnung")
       #}else{
 
       #  aggrSum<-c()
@@ -282,11 +282,11 @@ server <- function(input, output, session) {
                  "Bodentemperatur -10cm",
                  "Bodentemperatur -30cm")
 
-     # }else{
+      # }else{
 
       #  aggrMax<-c()
 
-     # }
+      # }
 
       # x<-as.list(c(
       #
@@ -436,9 +436,10 @@ server <- function(input, output, session) {
 
 
     point <- cbind(LONG=long,LAT=lat)
-    point <- SpatialPoints(point,proj4string = CRS("+init=epsg:4326"))
-
-    fallsin<- !is.na(point %over% mask )[1]#[,"Landuse"]
+    #point <- SpatialPoints(point,proj4string = CRS("+init=epsg:4326"))
+    point <- st_sfc(st_point(point),crs = 4326)
+    #fallsin<- !is.na(point %over% mask )[1]#[,"Landuse"]
+    fallsin<-length(st_intersects(point,mask_sf)[[1]])!=0
     if(fallsin){
       db <- mergeData(long = long,lat = lat,
                       datestart = datestart,
@@ -447,7 +448,7 @@ server <- function(input, output, session) {
                       sbrSensor=sbrSensor,
                       password = password,user = user,host = host)
 
-      slope=raster::extract(slopeFilt, point)
+      slope=raster::extract(slopeFilt, as(point,"Spatial"))
 
       et <- ET(data = db,crop = "tall",slope=slope)
 
@@ -553,9 +554,10 @@ server <- function(input, output, session) {
     irrig=as.numeric(irrDm)
 
     point <- cbind(LONG=long,LAT=lat)
-    point <- SpatialPoints(point,proj4string = CRS("+init=epsg:4326"))
-
-    fallsin<- !is.na(point %over% mask )[1]#[,"Landuse"]
+    #point <- SpatialPoints(point,proj4string = CRS("+init=epsg:4326"))
+    point <- st_sfc(st_point(point),crs = 4326)
+    #fallsin<- !is.na(point %over% mask )[1]#[,"Landuse"]
+    fallsin<-length(st_intersects(point,mask_sf)[[1]])!=0
     if(fallsin){
 
 
@@ -565,7 +567,7 @@ server <- function(input, output, session) {
                       provSensor = provSensor,
                       password = password,user = user,host = host)
 
-      slope=raster::extract(slopeFilt, point)
+      slope=raster::extract(slopeFilt, as(point,"Spatial"))
 
       et <- ET(data = db,crop = "tall",slope=slope)
 
