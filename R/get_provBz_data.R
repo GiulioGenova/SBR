@@ -11,7 +11,7 @@
 #' @importFrom tidyr gather unite spread
 #' @importFrom dplyr bind_rows bind_cols mutate select summarise group_by ungroup filter full_join
 #' @importFrom magrittr %>%
-#' @importFrom MonalisR downloadMeteo
+#' @importFrom MonalisR downloadMeteo2
 #' @importFrom pbapply pblapply
 
 #remotes::install_gitlab(repo = "earth_observation_public/MonalisR",host = "gitlab.inf.unibz.it")
@@ -23,20 +23,20 @@ get_provBz_data<-function(station_sensor,datestart=Sys.Date()-1,dateend=Sys.Date
 
   dateend=as_date(dateend)+1
 
-  tryCatch({
+ # tryCatch({
   #n<-nstations
   #datestart <- as_date(datestart)
   #dateend <- as_date(dateend)
   download<-function(station,datestart,dateend,
-                     sensors=unique(get_provBz_sensors()$Sensor),
+                     sensors=unique(get_provBz_sensors()$TYPE),
                      round="hour",spread=FALSE,
                      notScode=FALSE){
-    tryCatch({
+    #tryCatch({
 
     download_sensor<-function(sensor,station,datestart,dateend,
                               round="hour",spread=FALSE,
                               notScode=FALSE){
-       tryCatch({
+       #tryCatch({
 
       #incProgress(amount = 1/n,message = "Downloading... (SCODE-Sensor):",
       #            detail = paste(station,sensor,sep=" - ") )
@@ -118,10 +118,10 @@ get_provBz_data<-function(station_sensor,datestart=Sys.Date()-1,dateend=Sys.Date
       data<-resample_provBz_data(df=data,round=round,spread=spread)
 
 
-       }, error = function(e){NULL})
+       #}, error = function(e){NULL})
     }
 
-    db<-lapply(station_sensor[which(station_sensor$SCODE==station),]$Sensor, download_sensor,station = station,datestart = datestart,
+    db<-lapply(station_sensor[which(station_sensor$SCODE==station),]$TYPE, download_sensor,station = station,datestart = datestart,
                dateend = dateend,round=round,spread=spread,
                notScode=notScode)
 
@@ -132,7 +132,7 @@ get_provBz_data<-function(station_sensor,datestart=Sys.Date()-1,dateend=Sys.Date
       db_all
     }
 
-     }, error = function(e){NULL})
+    # }, error = function(e){NULL})
   }
 
   db<-pblapply(unique(station_sensor$SCODE), download,datestart = datestart,dateend = dateend,
@@ -171,5 +171,5 @@ get_provBz_data<-function(station_sensor,datestart=Sys.Date()-1,dateend=Sys.Date
   }
 
   db_all
-  }, error = function(e){NULL})#
+  #}, error = function(e){NULL})#
 }

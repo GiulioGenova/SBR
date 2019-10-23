@@ -1,13 +1,9 @@
 #' Get closest province of Bozen and SBR stations
 #'
 #' @export
-#' @importFrom MonalisR getMeteoStat
-#' @importFrom rgeos gDistance
-#' @importFrom sp spTransform SpatialPoints CRS
-#' @importFrom dplyr bind_rows
-#' @importFrom dplyr filter
-#' @importFrom dplyr left_join
-#' @import spdplyr
+#' @importFrom MonalisR getMeteoInfo
+#' @importFrom sf st_crs st_transform st_sfc st_point st_as_sf st_distance st_drop_geometry
+#' @importFrom dplyr bind_rows filter left_join distinct
 #'
 
 
@@ -25,83 +21,80 @@ getClosestStations<-function(long=NULL,lat=NULL,idSBR=NULL,provSensor=NULL){
     long=name_file[which(name_file$id==idSBR),]$lon
   }
 
-  sp <- getMeteoStat(format = "spatial")
-  crsProv <- sp@proj4string
+  sp <- MonalisR::getMeteoInfo(format = "spatial") %>% st_transform(32632)# %>% dplyr::distinct(SCODE,.keep_all = T)
+  #sp = as(sp,"Spatial")# from now on sp is used for spatial analysis. TO DO update code to use sf only.
+  #crsProv <- sp@proj4string
+  crsProv<-st_crs(sp)
 
-
-  crsSbr<-names_file_sp@proj4string
+  #crsSbr<-names_file_sp@proj4string
 
   point <- cbind(LONG=long,LAT=lat)
-  point <- SpatialPoints(point,proj4string = CRS("+init=epsg:4326"))
-
-  pointProv <- spTransform(point, CRS = crsProv)
-
+  #point <- SpatialPoints(point,proj4string = CRS("+init=epsg:4326"))
+  point <- st_sfc(st_point(point),crs = 4326)
+  pointProv <- st_transform(point,crsProv)#spTransform(point, CRS = crsProv)
+  pointSbr <- pointProv#spTransform(point, CRS = crsProv)
+  names_file_sp_sf <- #spTransform(names_file_sp,CRS = crsProv) %>%
+    names_file_sp_sf %>% st_transform(crsProv) %>% #%>% st_as_sf()
+    filter(id %in% c(3,
+                     7,
+                     9,
+                     12,
+                     14,
+                     17,
+                     #30,
+                     37,
+                     39,
+                     52,
+                     70,
+                     84,
+                     103,
+                     105,
+                     106,
+                     125,
+                     169,
+                     171,
+                     172,
+                     174,
+                     176))
 
   if(is.null(provSensor)){
-    provSensor=get_provBz_sensors()$Sensor %>% unique
+    provSensor=get_provBz_sensors()$TYPE %>% unique
   }
 
-  if(is.null(idSBR)){
 
-    pointSbr <- spTransform(point, CRS = crsProv)
-    names_file_sp <- spTransform(names_file_sp,CRS = crsProv) %>%
-      filter(id %in% c(3,
-                       7,
-                       9,
-                       12,
-                       14,
-                       17,
-                       #30,
-                       37,
-                       39,
-                       52,
-                       70,
-                       84,
-                       103,
-                       105,
-                       106,
-                       125,
-                       169,
-                       171,
-                       172,
-                       174,
-                       176))
+  #distSbr <- gDistance(spgeom1 = pointSbr,spgeom2 = names_file_sp,byid = T)
+  distSbr <- st_distance(x = pointSbr,y = names_file_sp_sf)
+  minDist<- min(distSbr)
 
-    distSbr <- gDistance(spgeom1 = pointSbr,spgeom2 = names_file_sp,byid = T)
+  minDistId <- which(distSbr==min(distSbr))
 
-    minDist<- min(distSbr)
+  #SbrClosest<-names_file_sp@data[minDistId,"id"]
+  SbrClosest<-names_file_sp_sf[[minDistId,"id"]]
 
-    minDistId <- which(distSbr==min(distSbr))
-
-    SbrClosest<-names_file_sp@data[minDistId,"id"]
-
-  }else{
-
-    SbrClosest<-idSBR
-  }
 
   provDistances <- lapply(provSensor,
                           function(provSensor,point,sp,crs){
+                            #provSensor = "LT"
+                            #se <- get_provBz_sensors() %>% filter(TYPE == provSensor,!is.na(VALUE)) %>% select(TYPE)
+                            #sp <- left_join(sp,se)
 
-                            se <- get_provBz_sensors() %>% filter(Sensor == provSensor,!is.na(VALUE))
-                            sp <- left_join(sp,se)
+                            #sp <- sp %>% filter(!is.na(TYPE))# for some reason filter with Sensro== sensor is not working
+                            sp <- sp %>% filter(TYPE == provSensor,!is.na(VALUE))
 
-                            sp <- sp %>% filter(!is.na(Sensor))# for some reason filter with Sensro== sensor is not working
-
-
-                            dist <- gDistance(spgeom1 = point,spgeom2 = sp,byid = T)
-
+                            #dist <- gDistance(spgeom1 = point,spgeom2 = sp,byid = T)
+                            dist <- st_distance(x = point,y = sp)
                             minDist<- min(dist)
 
                             minDistId <- which(dist==min(dist))
 
-                            sp@data[minDistId,c("SCODE","Sensor")]
+                            #sp@data[minDistId,c("SCODE","TYPE")]
+                            sp[minDistId,c("SCODE","TYPE")] %>% st_drop_geometry()
                           },
 
                           point=pointProv,sp = sp,crs = crsProv)
 
-  provClosest <- bind_rows(provDistances)
-  print(provClosest)
+  provClosest <- bind_rows(provDistances) %>% distinct()
+
   ret <- list(sbr=SbrClosest,prov=provClosest)
 
   return(ret)

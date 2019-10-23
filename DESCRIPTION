@@ -50,5 +50,7 @@ Imports:
     shinydashboard,
     shinycssloaders,
     plotly,
-	timevis
+    data.table,
+	  timevis,
+	  sf
 LinkingTo: Rcpp
