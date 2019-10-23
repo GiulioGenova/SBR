@@ -58,7 +58,7 @@ RUN sudo R -e "install.packages(c('devtools','remotes','pbapply','httr','jsonlit
 # install SBR package
 
 RUN R -e "devtools::install_github('GiulioGenova/timevis')"
-RUN R -e "devtools::install_github('GiulioGenova/SBR', ref='onlyopendata')"
+RUN R -e "devtools::install_github('GiulioGenova/SBR', ref='onlyopendata',force=TRUE)"
 
 
 # copy the app to the image
