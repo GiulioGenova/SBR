@@ -185,14 +185,25 @@ ui <- dashboardPage(
                     # numericInput("slope", "Steigung [%]:",
                     #              0,min = 0,max = 35
                     # ),
-
-                    radioButtons("soil", "Bodenart:",
-                                 c("Schwer" = "heavy",
-                                   "Mittel"= "medium",
-                                   "Leicht" = "light"),
-                                 selected = "medium",
-                                 inline = T)
-
+                    fluidRow(
+                      column(width = 6,
+                             radioButtons("soil", "Bodenart:",
+                                          c("Schwer" = "heavy",
+                                            "Mittel"= "medium",
+                                            "Leicht" = "light"),
+                                          selected = "medium",
+                                          inline = T)
+                      )
+                      ,
+                      column(width = 6,
+                             radioButtons("dataSource", "Datenquelle:",
+                                          c(
+                                            "Beratungsring"= "sbr",
+                                            "Provinz" = "prov"),
+                                          selected = "sbr",
+                                          inline = T)
+                      )
+                    )
                   ),
                   box(
                     width = 12,

@@ -379,6 +379,20 @@ server <- function(input, output, session) {
 
   })
 
+  datSource<-reactiveValues(provSensor=NULL,sbrSensor=NULL)
+
+  observe({
+    if(input$dataSource=="prov"){
+      datSource$provSensor = c("GS","N","WG","LT","LF")
+      datSource$sbrSensor = NULL
+    }else if(input$dataSource=="sbr"){
+      datSource$provSensor = c("GS")
+      datSource$sbrSensor = c("Temperatur 2m_min", "Temperatur 2m_max",
+                              "Relative Luftfeuchtigkeit_min", "Relative Luftfeuchtigkeit_max",
+                              "Windgeschwindigkeit_avg","Niederschlag_sum")
+    }
+  })
+
   observe({
 
     lat <- as.numeric(latLong$lat)
@@ -433,12 +447,13 @@ server <- function(input, output, session) {
     #point <- SpatialPoints(point,proj4string = CRS("+init=epsg:4326"))
     point <- st_sfc(st_point(point),crs = 4326)
     #fallsin<- !is.na(point %over% mask )[1]#[,"Landuse"]
-    fallsin<-length(st_intersects(point,mask_sf)[[1]])!=0
+    fallsin<-length(st_intersects(point,st_as_sf(mask))[[1]])!=0
     if(fallsin){
       db <- mergeData(long = long,lat = lat,
                       datestart = datestart,
                       #dateend = Sys.Date()+1,
-                      provSensor = provSensor,
+                      provSensor = datSource$provSensor,
+                      sbrSensor = datSource$sbrSensor,
                       password = password,user = user,host = host)
 
       slope=raster::extract(slopeFilt, as(point,"Spatial"))
@@ -550,14 +565,15 @@ server <- function(input, output, session) {
     #point <- SpatialPoints(point,proj4string = CRS("+init=epsg:4326"))
     point <- st_sfc(st_point(point),crs = 4326)
     #fallsin<- !is.na(point %over% mask )[1]#[,"Landuse"]
-    fallsin<-length(st_intersects(point,mask_sf)[[1]])!=0
+    fallsin<-length(st_intersects(point,st_as_sf(mask))[[1]])!=0
     if(fallsin){
 
 
       db <- mergeData(long = long,lat = lat,
                       datestart = datestart,
                       dateend = today+5,
-                      provSensor = provSensor,
+                      provSensor = datSource$provSensor,
+                      sbrSensor = datSource$sbrSensor,
                       password = password,user = user,host = host)
 
       slope=raster::extract(slopeFilt, as(point,"Spatial"))

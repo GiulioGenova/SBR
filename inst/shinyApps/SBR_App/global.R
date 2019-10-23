@@ -54,7 +54,7 @@ Host <- "95.171.35.104"
 
 # irrigApple
 round="hour"
-provSensor=c("N","GS")#,"WG"
+#provSensor=c("N","GS")#,"WG"
 #long=11.457978
 #lat=46.657158
 
