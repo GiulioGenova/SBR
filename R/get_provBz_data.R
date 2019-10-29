@@ -11,7 +11,7 @@
 #' @importFrom tidyr gather unite spread
 #' @importFrom dplyr bind_rows bind_cols mutate select summarise group_by ungroup filter full_join
 #' @importFrom magrittr %>%
-#' @importFrom MonalisR downloadMeteo2
+#' @importFrom MonalisR downloadMeteo
 #' @importFrom pbapply pblapply
 
 #remotes::install_gitlab(repo = "earth_observation_public/MonalisR",host = "gitlab.inf.unibz.it")
@@ -41,7 +41,7 @@ get_provBz_data<-function(station_sensor,datestart=Sys.Date()-1,dateend=Sys.Date
       #incProgress(amount = 1/n,message = "Downloading... (SCODE-Sensor):",
       #            detail = paste(station,sensor,sep=" - ") )
 
-      data<-downloadMeteo(station_code = station,sensor_code = sensor,
+      data<-MonalisR::downloadMeteo(station_code = station,sensor_code = sensor,
                           datestart = datestart,dateend = dateend)
 
       data<-as.data.frame(data)
