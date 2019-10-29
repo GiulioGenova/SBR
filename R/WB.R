@@ -1,11 +1,17 @@
-#' Computes computes water balace from evapotranspiration and precipitation data coming from et function
-#' and getForecast function
+#' Computes computes water balace from evapotranspiration and precipitation data coming from ET function,
+#' mergeOldAndForecast function and getForecast function
 #'
 #' @export
-#' @importFrom dplyr row_number
+#' @importFrom dplyr row_number mutate
 #' @importFrom Rcpp sourceCpp
 #' @useDynLib SBR
-#' @param startwb is the initial precipitation
+#' @param data a table output of SBR::ET or SBR::mergeOldAndForecast or SBR::getForecast functions
+#' @param taw the total available water. Default 50
+#' @param lmitWarning fraction of the taw below which the app suggests to irrigate. Default 0.8
+#' @param p fraction of the taw defining the raw (readly available water)
+#' @param startwb is the initial water balance. Default value is NULL which yields taw*p
+#' @param irrig vector with irrigation. Same lenght as rows of data
+#'
 
 WB <- function(data,taw=50,lmitWarning=0.8,p=0.5,startwb= NULL,irrig=0){#,slope=0
 
