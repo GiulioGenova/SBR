@@ -47,7 +47,15 @@ ET <- function(data,
 
 
   db<- data %>%
-    mutate(Year=year(TimeStamp),Month=month(TimeStamp),Day=day(TimeStamp),Rs=(Rs*cnvrt))
+    mutate(Year=year(TimeStamp),Month=month(TimeStamp),Day=day(TimeStamp),Rs=(Rs*cnvrt),
+           DOY=yday(TimeStamp),
+           Kc = ifelse(DOY == DOY.ini.A, Kc.ini.A,
+                       ifelse(DOY %in% DOY.ini.A:DOY.ini.B,(Kc.ini.B-Kc.ini.A)/(DOY.ini.B-DOY.ini.A)*(DOY-DOY.ini.A)+Kc.ini.A,
+                              ifelse(DOY %in% DOY.ini.B:DOY.dev,(Kc.dev-Kc.ini.B)/(DOY.dev-DOY.ini.B)*(DOY-DOY.ini.B)+Kc.ini.B,
+                                     ifelse(DOY %in% DOY.dev:DOY.mid, (Kc.mid-Kc.dev)/(DOY.mid-DOY.dev)*(DOY-DOY.dev)+Kc.dev,
+                                            ifelse(DOY %in% DOY.mid:DOY.late, Kc.mid,
+                                                   ifelse(DOY %in% DOY.late:DOY.harv,(Kc.late-Kc.mid)/(DOY.harv-DOY.late)*(DOY-DOY.late)+Kc.mid, 0)))))),
+           Kc_corr=ifelse(DOY %in% DOY.mid:DOY.late,Kc+(0.04*(u2-2)-0.004*(RHmin-45))*(tree_height/3)^0.3 ,Kc))
 
   tryCatch({
     et_real_tot_in<-ReadInputs(varnames = c("RHmin","RHmax", "u2","Tmin","Tmax","Rs"),
@@ -92,27 +100,26 @@ ET <- function(data,
 
     #df<-df %>% select(TimeStamp,id)
     df_ET<-bind_cols(db,ET0=as.numeric(et0_real$ET.Daily))
+
+    df_ETc<-df_ET %>% mutate(
+      ETc=ET0*Kc,
+      ETc_corr=ET0*Kc_corr
+    )
+
   }else {
     db <- db %>%
       mutate(doy=yday(TimeStamp))
 
-    df_ET<-left_join(db,etAvg) %>%
-      mutate(ET0=ET) %>%
+    df_ETc<-left_join(db,etAvg) %>%
+      mutate(ETc = ET,
+             ETc_corr = ET,
+             ET0 = ET/Kc) %>%
       select(-ET,-doy)
   }
 
-  df_ETc<-df_ET %>% mutate(DOY=yday(TimeStamp),
-                           Kc = ifelse(DOY == DOY.ini.A, Kc.ini.A,
-                                       ifelse(DOY %in% DOY.ini.A:DOY.ini.B,(Kc.ini.B-Kc.ini.A)/(DOY.ini.B-DOY.ini.A)*(DOY-DOY.ini.A)+Kc.ini.A,
-                                              ifelse(DOY %in% DOY.ini.B:DOY.dev,(Kc.dev-Kc.ini.B)/(DOY.dev-DOY.ini.B)*(DOY-DOY.ini.B)+Kc.ini.B,
-                                                     ifelse(DOY %in% DOY.dev:DOY.mid, (Kc.mid-Kc.dev)/(DOY.mid-DOY.dev)*(DOY-DOY.dev)+Kc.dev,
-                                                            ifelse(DOY %in% DOY.mid:DOY.late, Kc.mid,
-                                                                   ifelse(DOY %in% DOY.late:DOY.harv,(Kc.late-Kc.mid)/(DOY.harv-DOY.late)*(DOY-DOY.late)+Kc.mid, 0)))))),
-                           Kc_corr=ifelse(DOY %in% DOY.mid:DOY.late,Kc+(0.04*(u2-2)-0.004*(RHmin-45))*(tree_height/3)^0.3 ,Kc),
-                           ETc=ET0*Kc,
-                           ETc_corr=ET0*Kc_corr
 
-  )
+
+
 
   # if(any(is.na(df_ETc$ETc))){
   #   df_ETc<-left_join(df_ETc,etAvg,by=c("DOY"="doy")) %>%
