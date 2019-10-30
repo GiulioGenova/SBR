@@ -31,7 +31,7 @@ WB <- function(data,taw=50,lmitWarning=0.8,p=0.5,startwb= NULL,irrig=0){#,slope=
 
     data <- data %>%
       mutate(
-        #N_sum=ifelse(row_number()==1,startwb,N_sum),
+        N_sum=ifelse(is.na(N_sum),0,N_sum),
         irrig=ifelse(row_number()==1,irrig-startwb,0),
         #ETcMinusN_sum=ifelse(row_number()==1,start, ETc-N_sum),
 
