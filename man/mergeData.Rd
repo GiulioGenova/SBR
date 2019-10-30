@@ -9,10 +9,26 @@ mergeData(long = NULL, lat = NULL, idSBR = NULL,
   round = "day", provSensor = c("GS", "N"),
   sbrSensor = c("Temperatur 2m_min", "Temperatur 2m_max",
   "Relative Luftfeuchtigkeit_min", "Relative Luftfeuchtigkeit_max",
-  "Windgeschwindigkeit_avg"), password, user, host)
+  "Windgeschwindigkeit_avg"), mergeBoth = FALSE, password, user, host)
 }
 \arguments{
+\item{long}{long input forgetClosestStations}
+
+\item{lat}{lat input for getClosestStations}
+
+\item{idSBR}{id of the SBR station input for getClosestStations}
+
+\item{datestart}{starting date for download}
+
+\item{dateend}{ending date for download}
+
+\item{round}{rounding for resample. Default "day"}
+
+\item{provSensor}{province sencors to dowload}
+
 \item{sbrSensor}{if only data from the province of bozen is supplied se to NULL}
+
+\item{mergeBoth}{if this is true all the measurements from SBR and province are downloaded and the mean is computed. Default FALSE. If true provSensor and sbrSensor are ingnored.}
 }
 \description{
 Merge data of a location - using closest province of Bozen and SBR stations -
