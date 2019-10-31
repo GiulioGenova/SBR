@@ -80,6 +80,15 @@ ET <- function(data,
       Elev=NULL
     }
 
+    if(!is.null(db$id) & is.null(latitude)){
+
+      id=unique(db$id)
+      latitude <- names_file[which(names_file$id==id),"lat"]
+
+    }else{
+      latitude=NULL
+    }
+
     if(is.null(Elev)){
       Elev <- 300
     }

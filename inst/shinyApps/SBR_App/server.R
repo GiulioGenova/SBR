@@ -450,7 +450,7 @@ server <- function(input, output, session) {
 
       slope=raster::extract(slopeFilt, as(point,"Spatial"))
 
-      et <- ET(data = db,crop = "tall",slope=slope)
+      et <- ET(data = db,crop = "tall",slope=slope,latitude=lat)
 
       wb <- mergeOldAndForecast(data = et,long = long,lat = lat,slope=slope)
 
@@ -569,7 +569,7 @@ server <- function(input, output, session) {
 
       slope=raster::extract(slopeFilt, as(point,"Spatial"))
 
-      et <- ET(data = db,crop = "tall",slope=slope)
+      et <- ET(data = db,crop = "tall",slope=slope,latitude=lat)
 
       #df <- mergeOldAndForecast(data = et,long = long,lat = lat)
 
