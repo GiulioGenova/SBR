@@ -418,31 +418,6 @@ server <- function(input, output, session) {
     #long=11.857978
     #lat=46.657158
 
-
-    irr<- input$irr
-    soil<- input$soil
-
-    if(soil=="heavy"){
-      TAW=85
-    }else if(soil=="medium"){
-      TAW=75
-    }else if(soil=="light"){
-      TAW=65
-    }
-
-    # irrig used to be based on two categories ("normal" and "light")
-    # and computed based on the TAW. the client asked for a numerical
-    # input (in mm)
-
-    # if(irr=="norm"){
-    #   startwb=TAW
-    # }else if(irr=="light"){
-    #   startwb=TAW*0.35
-    # }
-
-    irrig=as.numeric(irr)
-
-
     point <- cbind(LONG=long,LAT=lat)
     #point <- SpatialPoints(point,proj4string = CRS("+init=epsg:4326"))
     point <- st_sfc(st_point(point),crs = 4326)
@@ -462,35 +437,47 @@ server <- function(input, output, session) {
 
       wb <- mergeOldAndForecast(data = et,long = long,lat = lat,slope=slope)
 
-      wb <- WB(wb,taw = TAW,irrig = irrig)
-
-      #wb <- wb %>% filter(TimeStamp > today)
     } else {
 
       wb<-NULL
     }
   })
 
+  dbWb <- reactive({
+
+    req(db())
+
+    irr<- input$irr
+    soil<- input$soil
+
+    # irrig used to be based on two categories ("normal" and "light")
+    # and computed based on the TAW. the client asked for a numerical
+    # input (in mm)
+
+    irrig=as.numeric(irr)
+
+    if(soil=="heavy"){
+      TAW=85
+    }else if(soil=="medium"){
+      TAW=75
+    }else if(soil=="light"){
+      TAW=65
+    }
+
+    wb <- WB(db(),taw = TAW,irrig = irrig)
+
+  })
 
 
-
-  # output$irrigAdvise <- renderPlot({
-  #   req(db())
-  #
-  #   db <- db()
-  #
-  #   plotIrrigAdvice(db,T)
-  #
-  # })
   output$nodata <-reactive({
     return(is.null(db()))
   })
 
 
   output$irrigAdvise <- renderTimevis({
-    req(db())
+    req(dbWb())
 
-    db <- db()
+    db <- dbWb()
 
     plotIrrigAdvice2(db,T)
 
@@ -533,33 +520,9 @@ server <- function(input, output, session) {
     datestart <- input$dateDm
     #datestart <- "2018-11-01"
 
-
-
-
-
     lat <- latLongDm$lat
     long <- latLongDm$long
     today <- input$today
-
-
-    irrDm<- input$irrDm
-    soilDm<- input$soilDm
-
-    if(soilDm=="heavy"){
-      TAW=85
-    }else if(soilDm=="medium"){
-      TAW=75
-    }else if(soilDm=="light"){
-      TAW=65
-    }
-
-    # if(irrDm=="norm"){
-    #   startwb=TAW
-    # }else if(irrDm=="light"){
-    #   startwb=TAW*0.35
-    # }
-
-    irrig=as.numeric(irrDm)
 
     point <- cbind(LONG=long,LAT=lat)
     #point <- SpatialPoints(point,proj4string = CRS("+init=epsg:4326"))
@@ -582,7 +545,7 @@ server <- function(input, output, session) {
 
       #df <- mergeOldAndForecast(data = et,long = long,lat = lat)
 
-      wb <- WB(et,taw = TAW,irrig = irrig)
+      #wb <- WB(et,taw = TAW,irrig = irrig)
 
       #wb <- wb %>% filter(TimeStamp > today)
     } else {
@@ -591,16 +554,25 @@ server <- function(input, output, session) {
     }
   })
 
+  dbDmWb <- reactive({
 
+    req(dbDm())
 
-  # output$irrigAdviseDm <- renderPlot({
-  #   req(dbDm())
-  #
-  #   db <- dbDm()
-  #
-  #   plotIrrigAdvice2(db,F)
-  #
-  # })
+    irrDm<- input$irrDm
+    soilDm<- input$soilDm
+    irrig=as.numeric(irrDm)
+
+    if(soilDm=="heavy"){
+      TAW=85
+    }else if(soilDm=="medium"){
+      TAW=75
+    }else if(soilDm=="light"){
+      TAW=65
+    }
+
+    wb <- WB(dbDm(),taw = TAW,irrig = irrig)
+
+  })
 
   output$nodataDm <-reactive({
     return(is.null(dbDm()))
@@ -608,9 +580,9 @@ server <- function(input, output, session) {
 
 
   output$irrigAdviseDm <- renderTimevis({
-    req(dbDm())
+    req(dbDmWb())
 
-    db <- dbDm()
+    db <- dbDmWb()
 
     plotIrrigAdvice2(db,T)
 
