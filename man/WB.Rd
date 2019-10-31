@@ -19,7 +19,7 @@ WB(data, taw = 50, lmitWarning = 0.8, p = 0.5, startwb = NULL,
 
 \item{startwb}{is the initial water balance. Default value is NULL which yields taw*p}
 
-\item{irrig}{vector with irrigation. Same lenght as rows of data}
+\item{irrig}{vector with irrigation. Same lenght as rows of data or one number for the starting irrigation (first day of the time series)}
 }
 \description{
 Computes computes water balace from evapotranspiration and precipitation data coming from ET function,

@@ -1,10 +1,9 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 // [[Rcpp::export]]
-NumericVector ks(NumericVector n, NumericVector e, NumericVector irrig , double taw, double p, NumericVector k) {
+NumericVector ks(NumericVector n, NumericVector e, NumericVector irrig , double taw, double p, NumericVector k,double acc) {
   NumericVector ksout(e.size());
   double raw = taw*p;
-  double acc = 0;
   double ks = 0;
   for (int i=0; i < n.size(); ++i) {
     //acc = acc + e[i] - n[i];
