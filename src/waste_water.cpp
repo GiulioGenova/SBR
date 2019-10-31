@@ -1,10 +1,9 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 // [[Rcpp::export]]
-NumericVector waste_water_adj(NumericVector n, NumericVector e, NumericVector irrig, double taw, double p, NumericVector k) {
+NumericVector waste_water_adj(NumericVector n, NumericVector e, NumericVector irrig, double taw, double p, NumericVector k,double acc) {
   NumericVector waste_water(e.size());
   double raw = taw*p;
-  double acc = 0;
   double ks = 0;
   double waste = 0;
   double need = 0;

@@ -6,21 +6,22 @@
 using namespace Rcpp;
 
 // cumsumBounded
-NumericVector cumsumBounded(NumericVector x, double low, double high);
-RcppExport SEXP _SBR_cumsumBounded(SEXP xSEXP, SEXP lowSEXP, SEXP highSEXP) {
+NumericVector cumsumBounded(NumericVector x, double low, double high, double acc);
+RcppExport SEXP _SBR_cumsumBounded(SEXP xSEXP, SEXP lowSEXP, SEXP highSEXP, SEXP accSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
     Rcpp::traits::input_parameter< double >::type low(lowSEXP);
     Rcpp::traits::input_parameter< double >::type high(highSEXP);
-    rcpp_result_gen = Rcpp::wrap(cumsumBounded(x, low, high));
+    Rcpp::traits::input_parameter< double >::type acc(accSEXP);
+    rcpp_result_gen = Rcpp::wrap(cumsumBounded(x, low, high, acc));
     return rcpp_result_gen;
 END_RCPP
 }
 // etcadj
-NumericVector etcadj(NumericVector n, NumericVector e, NumericVector irrig, double taw, double p, NumericVector k);
-RcppExport SEXP _SBR_etcadj(SEXP nSEXP, SEXP eSEXP, SEXP irrigSEXP, SEXP tawSEXP, SEXP pSEXP, SEXP kSEXP) {
+NumericVector etcadj(NumericVector n, NumericVector e, NumericVector irrig, double taw, double p, NumericVector k, double acc);
+RcppExport SEXP _SBR_etcadj(SEXP nSEXP, SEXP eSEXP, SEXP irrigSEXP, SEXP tawSEXP, SEXP pSEXP, SEXP kSEXP, SEXP accSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -30,13 +31,14 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type taw(tawSEXP);
     Rcpp::traits::input_parameter< double >::type p(pSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type k(kSEXP);
-    rcpp_result_gen = Rcpp::wrap(etcadj(n, e, irrig, taw, p, k));
+    Rcpp::traits::input_parameter< double >::type acc(accSEXP);
+    rcpp_result_gen = Rcpp::wrap(etcadj(n, e, irrig, taw, p, k, acc));
     return rcpp_result_gen;
 END_RCPP
 }
 // ks
-NumericVector ks(NumericVector n, NumericVector e, NumericVector irrig, double taw, double p, NumericVector k);
-RcppExport SEXP _SBR_ks(SEXP nSEXP, SEXP eSEXP, SEXP irrigSEXP, SEXP tawSEXP, SEXP pSEXP, SEXP kSEXP) {
+NumericVector ks(NumericVector n, NumericVector e, NumericVector irrig, double taw, double p, NumericVector k, double acc);
+RcppExport SEXP _SBR_ks(SEXP nSEXP, SEXP eSEXP, SEXP irrigSEXP, SEXP tawSEXP, SEXP pSEXP, SEXP kSEXP, SEXP accSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -46,13 +48,14 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type taw(tawSEXP);
     Rcpp::traits::input_parameter< double >::type p(pSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type k(kSEXP);
-    rcpp_result_gen = Rcpp::wrap(ks(n, e, irrig, taw, p, k));
+    Rcpp::traits::input_parameter< double >::type acc(accSEXP);
+    rcpp_result_gen = Rcpp::wrap(ks(n, e, irrig, taw, p, k, acc));
     return rcpp_result_gen;
 END_RCPP
 }
 // waste_water_adj
-NumericVector waste_water_adj(NumericVector n, NumericVector e, NumericVector irrig, double taw, double p, NumericVector k);
-RcppExport SEXP _SBR_waste_water_adj(SEXP nSEXP, SEXP eSEXP, SEXP irrigSEXP, SEXP tawSEXP, SEXP pSEXP, SEXP kSEXP) {
+NumericVector waste_water_adj(NumericVector n, NumericVector e, NumericVector irrig, double taw, double p, NumericVector k, double acc);
+RcppExport SEXP _SBR_waste_water_adj(SEXP nSEXP, SEXP eSEXP, SEXP irrigSEXP, SEXP tawSEXP, SEXP pSEXP, SEXP kSEXP, SEXP accSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -62,13 +65,14 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type taw(tawSEXP);
     Rcpp::traits::input_parameter< double >::type p(pSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type k(kSEXP);
-    rcpp_result_gen = Rcpp::wrap(waste_water_adj(n, e, irrig, taw, p, k));
+    Rcpp::traits::input_parameter< double >::type acc(accSEXP);
+    rcpp_result_gen = Rcpp::wrap(waste_water_adj(n, e, irrig, taw, p, k, acc));
     return rcpp_result_gen;
 END_RCPP
 }
 // wbadj
-NumericVector wbadj(NumericVector n, NumericVector e, NumericVector irrig, double taw, double p, NumericVector k);
-RcppExport SEXP _SBR_wbadj(SEXP nSEXP, SEXP eSEXP, SEXP irrigSEXP, SEXP tawSEXP, SEXP pSEXP, SEXP kSEXP) {
+NumericVector wbadj(NumericVector n, NumericVector e, NumericVector irrig, double taw, double p, NumericVector k, double acc);
+RcppExport SEXP _SBR_wbadj(SEXP nSEXP, SEXP eSEXP, SEXP irrigSEXP, SEXP tawSEXP, SEXP pSEXP, SEXP kSEXP, SEXP accSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -78,17 +82,18 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type taw(tawSEXP);
     Rcpp::traits::input_parameter< double >::type p(pSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type k(kSEXP);
-    rcpp_result_gen = Rcpp::wrap(wbadj(n, e, irrig, taw, p, k));
+    Rcpp::traits::input_parameter< double >::type acc(accSEXP);
+    rcpp_result_gen = Rcpp::wrap(wbadj(n, e, irrig, taw, p, k, acc));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_SBR_cumsumBounded", (DL_FUNC) &_SBR_cumsumBounded, 3},
-    {"_SBR_etcadj", (DL_FUNC) &_SBR_etcadj, 6},
-    {"_SBR_ks", (DL_FUNC) &_SBR_ks, 6},
-    {"_SBR_waste_water_adj", (DL_FUNC) &_SBR_waste_water_adj, 6},
-    {"_SBR_wbadj", (DL_FUNC) &_SBR_wbadj, 6},
+    {"_SBR_cumsumBounded", (DL_FUNC) &_SBR_cumsumBounded, 4},
+    {"_SBR_etcadj", (DL_FUNC) &_SBR_etcadj, 7},
+    {"_SBR_ks", (DL_FUNC) &_SBR_ks, 7},
+    {"_SBR_waste_water_adj", (DL_FUNC) &_SBR_waste_water_adj, 7},
+    {"_SBR_wbadj", (DL_FUNC) &_SBR_wbadj, 7},
     {NULL, NULL, 0}
 };
 
