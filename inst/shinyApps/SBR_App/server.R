@@ -379,17 +379,25 @@ server <- function(input, output, session) {
 
   })
 
-  datSource<-reactiveValues(provSensor=NULL,sbrSensor=NULL)
+  datSource<-reactiveValues(provSensor=NULL,sbrSensor=NULL,mergeBoth=NULL)
 
   observe({
     if(input$dataSource=="prov"){
       datSource$provSensor = c("GS","N","WG","LT","LF")
       datSource$sbrSensor = NULL
+      datSource$mergeBoth = FALSE
     }else if(input$dataSource=="sbr"){
       datSource$provSensor = c("GS")
       datSource$sbrSensor = c("Temperatur 2m_min", "Temperatur 2m_max",
                               "Relative Luftfeuchtigkeit_min", "Relative Luftfeuchtigkeit_max",
                               "Windgeschwindigkeit_avg","Niederschlag_sum")
+      datSource$mergeBoth = FALSE
+    }else {
+      datSource$provSensor = c("GS","N","WG","LT","LF")
+      datSource$sbrSensor = c("Temperatur 2m_min", "Temperatur 2m_max",
+                              "Relative Luftfeuchtigkeit_min", "Relative Luftfeuchtigkeit_max",
+                              "Windgeschwindigkeit_avg","Niederschlag_sum")
+      datSource$mergeBoth = TRUE
     }
   })
 
@@ -429,6 +437,7 @@ server <- function(input, output, session) {
                       #dateend = Sys.Date()+1,
                       provSensor = datSource$provSensor,
                       sbrSensor = datSource$sbrSensor,
+                      mergeBoth = datSource$mergeBoth,
                       password = password,user = user,host = host)
 
       slope=raster::extract(slopeFilt, as(point,"Spatial"))
@@ -500,6 +509,28 @@ server <- function(input, output, session) {
 
   })
 
+  datSourceDm<-reactiveValues(provSensor=NULL,sbrSensor=NULL,mergeBoth=NULL)
+
+  observe({
+    if(input$dataSourceDm=="prov"){
+      datSourceDm$provSensor = c("GS","N","WG","LT","LF")
+      datSourceDm$sbrSensor = NULL
+      datSourceDm$mergeBoth = FALSE
+    }else if(input$dataSourceDm=="sbr"){
+      datSourceDm$provSensor = c("GS")
+      datSourceDm$sbrSensor = c("Temperatur 2m_min", "Temperatur 2m_max",
+                              "Relative Luftfeuchtigkeit_min", "Relative Luftfeuchtigkeit_max",
+                              "Windgeschwindigkeit_avg","Niederschlag_sum")
+      datSourceDm$mergeBoth = FALSE
+    }else {
+      datSourceDm$provSensor = c("GS","N","WG","LT","LF")
+      datSourceDm$sbrSensor = c("Temperatur 2m_min", "Temperatur 2m_max",
+                              "Relative Luftfeuchtigkeit_min", "Relative Luftfeuchtigkeit_max",
+                              "Windgeschwindigkeit_avg","Niederschlag_sum")
+      datSourceDm$mergeBoth = TRUE
+    }
+  })
+
   observe({
 
     lat <- as.numeric(latLongDm$lat)
@@ -535,8 +566,9 @@ server <- function(input, output, session) {
       db <- mergeData(long = long,lat = lat,
                       datestart = datestart,
                       dateend = today+5,
-                      provSensor = datSource$provSensor,
-                      sbrSensor = datSource$sbrSensor,
+                      provSensor = datSourceDm$provSensor,
+                      sbrSensor = datSourceDm$sbrSensor,
+                      mergeBoth = datSourceDm$mergeBoth,
                       password = password,user = user,host = host)
 
       slope=raster::extract(slopeFilt, as(point,"Spatial"))

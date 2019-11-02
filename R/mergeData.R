@@ -24,7 +24,7 @@ mergeData <- function(long=NULL,lat=NULL,idSBR=NULL,datestart=Sys.Date()-2,datee
 
   if(mergeBoth){
 
-    x<-getClosestStations(long = long,lat = lat,idSBR=idSBR,provSensor=c("GS","N","WG","LT","LF"))
+    x<-getClosestStations(long = long,lat = lat,idSBR=idSBR,provSensor=provSensor)
     y<-get_provBz_data(station_sensor = x$prov,
                        datestart = datestart,
                        dateend = dateend,

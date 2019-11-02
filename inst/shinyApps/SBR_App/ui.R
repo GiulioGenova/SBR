@@ -178,30 +178,34 @@ ui <- dashboardPage(
                     #              inline = T),
                   ),
                   box(
-                    width = 6,
 
-                    numericInput("irr", "Bewässerte Menge [mm]:",value = 50,min = 0,max=300),
-
-                    # numericInput("slope", "Steigung [%]:",
-                    #              0,min = 0,max = 35
-                    # ),
                     fluidRow(
-                      column(width = 6,
+                      column(
+                        width = 4,
+                        numericInput("irr", "Bewässerte Menge [mm]:",
+                                     value = 50,min = 0,max=300)
+
+                        # numericInput("slope", "Steigung [%]:",
+                        #              0,min = 0,max = 35
+                        # ),
+                      ),
+                      column(width = 4,
                              radioButtons("soil", "Bodenart:",
                                           c("Schwer" = "heavy",
                                             "Mittel"= "medium",
                                             "Leicht" = "light"),
                                           selected = "medium",
-                                          inline = T)
+                                          inline = F)
                       )
                       ,
-                      column(width = 6,
+                      column(width = 4,
                              radioButtons("dataSource", "Datenquelle:",
                                           c(
                                             "Beratungsring"= "sbr",
-                                            "Provinz" = "prov"),
+                                            "Provinz" = "prov",
+                                            "Beide" = "beide"),
                                           selected = "sbr",
-                                          inline = T)
+                                          inline = F)
                       )
                     )
                   ),
@@ -274,17 +278,32 @@ ui <- dashboardPage(
                        )
                        ,
                        box(
-                         width = 6,
-
-                         numericInput("irrDm", "Bewässerte Menge [mm]:",value = 50,min = 0,max=300),
-
-                         radioButtons("soilDm", "Bodenart:",
-                                      c("Schwer" = "heavy",
-                                        "Mittel"= "medium",
-                                        "Leicht" = "light"),
-                                      selected = "medium",
-                                      inline = T)
-
+                         fluidRow(
+                           column(
+                             width=4,
+                             numericInput("irrDm", "Bewässerte Menge [mm]:",
+                                          value = 50,min = 0,max=300)
+                           ),
+                           column(
+                             width=4,
+                             radioButtons("soilDm", "Bodenart:",
+                                          c("Schwer" = "heavy",
+                                            "Mittel"= "medium",
+                                            "Leicht" = "light"),
+                                          selected = "medium",
+                                          inline = F)
+                           ),
+                           column(
+                             width = 4,
+                             radioButtons("dataSourceDm", "Datenquelle:",
+                                          c(
+                                            "Beratungsring"= "sbr",
+                                            "Provinz" = "prov",
+                                            "Beide" = "beide"),
+                                          selected = "sbr",
+                                          inline = F)
+                           )
+                         )
                        ),
 
                        box(
