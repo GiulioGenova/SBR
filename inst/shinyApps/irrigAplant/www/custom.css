@@ -1,0 +1,66 @@
+.leaflet-container {
+  cursor: default !important;
+}
+
+.leaflet-container:active {
+  cursor: grab !important;
+}
+
+p {
+
+    margin: 0 15px;
+
+}
+
+.form-group {
+
+    margin-bottom: 15px;
+    margin-left: 15px;
+
+}
+#box1 {
+  height: calc(100vh - 280px) !important;
+  min-height: 350px !important;
+}
+#mapIrrig{
+  height: 100% !important;
+  width: 100% !important;
+}
+#box2 {
+  height: calc(100vh - 85px) !important;
+  min-height: 350px !important;
+}
+#map2 {height: 100% !important;}
+/*#box_plot {
+  height: 90vh !important;
+  min-height: 920px !important;
+  max-height: 1000px !important;
+}
+#plotall {
+  height: 85vh !important;
+  min-height: 870px !important;
+  max-height: 965px !important;
+}
+#plotAll {
+  margin-top: 200px;
+}*/
+#boxDm {
+  height: calc(100vh - 85px) !important;
+  min-height: 350px !important;
+}
+#mapIrrigDm{
+  height: 100% !important;
+  width: 100% !important;
+}
+#controlsParent{
+  z-index: 10000;
+  background-color: rgb(0,255,0,0);
+  border: 3px rgb(0,255,0,0);
+}
+
+#controls{
+  z-index: 10000;
+  background-color: rgb(0,255,0,0);
+  border: 3px rgb(0,255,0,0);
+}
+
