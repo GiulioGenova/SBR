@@ -1,13 +1,14 @@
 
 ui <- dashboardPage(
   skin = "blue",
-  dashboardHeader(title = "SBR App - Demo"),
+  dashboardHeader(title = "SBR App"),
   dashboardSidebar(
     sidebarMenu(
       menuItem("irrigAplant", tabName = "irrigApple", icon = icon("bar-chart-o")),
       menuItem("irrigAplant Demo", tabName = "irrigAppleDm", icon = icon("bar-chart-o")),
       menuItem("Data Browser", tabName = "Data", icon = icon("bar-chart-o")),
-      menuItem("Station map", tabName = "map", icon = icon("info-circle"))
+      menuItem("Station map", tabName = "map", icon = icon("info-circle")),
+      menuItem("Tabelle ET", tabName = "table_wb", icon = icon("bar-chart-o"))
 
     )),
   dashboardBody(
@@ -118,41 +119,6 @@ ui <- dashboardPage(
                                                    width = "200px", height = "200px")
                                  )
                 ),
-                # column(
-                #   width = 3,
-                #   box(
-                #     width = 12,
-                #     p(h4("Geben Sie unten den letzten Tag an, den Sie bewässert haben.") ),
-                #     p(h4("Klicken Sie dann in der Karte auf Ihr Feld, um einen Bewässerungshinweis zu erhalten")),
-                #     dateInput("date",label = "Letzter Bewässerungszeitpunkt",
-                #               min = Sys.Date()-90,max = Sys.Date(),language = "de"),
-                #
-                #     # irrig used to be based on two categories ("normal" and "light")
-                #     # and computed based on the TAW. the client asked for a numerical
-                #     # input (in mm)
-                #
-                #     # radioButtons("irr", "Irrigation type:",
-                #     #              c("Normal" = "norm",
-                #     #                "Light" = "light"),
-                #     #              selected = "norm",
-                #     #              inline = T),
-                #
-                #     numericInput("irr", "Bewässerte Menge [mm]:",value = 50,min = 0,max=300),
-                #
-                #     # numericInput("slope", "Steigung [%]:",
-                #     #              0,min = 0,max = 35
-                #     # ),
-                #
-                #     radioButtons("soil", "Bodenart:",
-                #                  c("Schwer" = "heavy",
-                #                    "Mittel"= "medium",
-                #                    "Leicht" = "light"),
-                #                  selected = "medium",
-                #                  inline = T)
-                #
-                #   )
-                # )
-                # ,
                 column(
                   width = 12,
                   # box(
@@ -327,6 +293,69 @@ ui <- dashboardPage(
                 )
               )
 
+      ),
+      tabItem(tabName = "table_wb",
+              fluidRow(
+                conditionalPanel(id = "controlsParent",
+                                 condition="($('html').hasClass('shiny-busy'))",
+                                 absolutePanel(id = "controls", class = "panel panel-default", fixed = TRUE,
+                                               draggable = TRUE,top = 25, left = "auto", right = 0, bottom = "auto",
+                                               img(src="annaffiatoio.gif",#spinner3.gif
+                                                   width = "200px", height = "200px")
+                                 )
+                ),
+                box(
+                  h3("Dieses Tool erstellt eine Tabelle mit Niederschlag und Verdunstung"),
+                  fluidRow(
+
+                    column(width=6,
+                           selectInput(inputId = "wbtabMt",label = "Wähle einen Monat",
+                                       choices = c(3,4,5,6,7,8,9),selected =
+
+                                         if(month(Sys.Date())-1 <= 9 & month(Sys.Date())-1 >= 3){
+
+                                           month(Sys.Date())-1
+
+                                         }else{
+
+                                           9
+
+                                         }
+
+                           )
+                    ),
+                    column(width=6,
+                           selectInput(inputId = "wbtabYr",label = "Wähle ein Jahr",
+                                       choices = seq(2014, 2035, by=1),selected =
+
+                                         if(month(Sys.Date())-1 <= 12 & month(Sys.Date())-1 >= 3){
+
+                                           year(Sys.Date())
+
+                                         }else{
+
+                                           year(Sys.Date())-1
+
+                                         }
+
+                           )
+                    )
+                  )
+                  ,
+
+                  selectInput("stationsTableWB",label = "Wählen Sie einen oder mehrere Sender aus",
+                              choices = station_list,
+                              selected = c(3,7,9,12,14,17,37,39,#30,52,103,105,169,
+                                           70,84,106,125,171, 172,174,176),
+                              multiple = T
+                  ),
+                  actionButton('buildTable_wb', h4('Erstellen Sie die Tabelle')),
+                  conditionalPanel(condition = "output.tablebuilt",
+                                   downloadButton('downloadTable_wb', h4('Laden Sie die Tabelle herunter'))
+                  )
+
+                )
+              )
       )
     )
   )

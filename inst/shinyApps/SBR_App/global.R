@@ -47,6 +47,7 @@ library(MonalisR)
 # irrigApple end
 library(SBR)
 library(timevis)
+library(purrr)
 
 Logged = FALSE
 
@@ -88,6 +89,13 @@ ST40color<-'#74561E'#"#006BA6"'blue'
 STline<-"dash"
 RHline<-"solid"
 AirTline<-"soild"
+
+
+station_list=list(3,7,9,12,14,17,37,39,52,103,105,169,
+                  70,84,106,125,171, 172,174,176)
+
+names(station_list) <- name_file[name_file$id%in%c(3,7,9,12,14,17,37,39,52,103,105,169,
+                                                   70,84,106,125,171, 172,174,176),"name"]
 
 
 if(.Platform$OS.type=="windows"){

@@ -86,8 +86,7 @@ server <- function(input, output, session) {
   })
 
 
-  ##############################################################################
-  # data browser
+  # data browser ---------------------------
 
   output$map<-renderLeaflet({
 
@@ -363,8 +362,7 @@ server <- function(input, output, session) {
     }
   )
 
-  #############################################################################
-  # irrigApple
+  # irrigApple-----------------------------
 
   latLong<-reactiveValues(lat=NULL,long=NULL)
 
@@ -497,8 +495,8 @@ server <- function(input, output, session) {
   })
   # irrigApple end
 
-  #############################################################################
-  # irrigAppleDemo
+  # irrigAppleDemo---------------------------
+
   latLongDm<-reactiveValues(lat=NULL,long=NULL)
 
   observe({
@@ -519,14 +517,14 @@ server <- function(input, output, session) {
     }else if(input$dataSourceDm=="sbr"){
       datSourceDm$provSensor = c("GS")
       datSourceDm$sbrSensor = c("Temperatur 2m_min", "Temperatur 2m_max",
-                              "Relative Luftfeuchtigkeit_min", "Relative Luftfeuchtigkeit_max",
-                              "Windgeschwindigkeit_avg","Niederschlag_sum")
+                                "Relative Luftfeuchtigkeit_min", "Relative Luftfeuchtigkeit_max",
+                                "Windgeschwindigkeit_avg","Niederschlag_sum")
       datSourceDm$mergeBoth = FALSE
     }else {
       datSourceDm$provSensor = c("GS","N","WG","LT","LF")
       datSourceDm$sbrSensor = c("Temperatur 2m_min", "Temperatur 2m_max",
-                              "Relative Luftfeuchtigkeit_min", "Relative Luftfeuchtigkeit_max",
-                              "Windgeschwindigkeit_avg","Niederschlag_sum")
+                                "Relative Luftfeuchtigkeit_min", "Relative Luftfeuchtigkeit_max",
+                                "Windgeschwindigkeit_avg","Niederschlag_sum")
       datSourceDm$mergeBoth = TRUE
     }
   })
@@ -626,6 +624,74 @@ server <- function(input, output, session) {
   })
   # irrigAppleDemo end
 
+  # table wb ---------------------------
+
+
+  wbTableIn = reactiveValues(trgtM = NULL,datestart = NULL,dateend = NULL,
+                             table_wb = NULL)
+
+  observe({
+    req(input$wbtabYr)
+    req(input$wbtabMt)
+
+    year=input$wbtabYr
+    month=input$wbtabMt
+
+    wbTableIn$trgtM = as_date(paste0(year,"-",month,"-01"))
+    wbTableIn$datestart=as_date(paste0(year,"-03-01"))
+    wbTableIn$dateend=as.character(ceiling_date(wbTableIn$trgtM, "month")-1)
+
+  })
+
+
+ observeEvent(input$buildTable_wb,{#reactive({
+
+    provSensor=c("GS")
+    sbrSensor=c("Temperatur 2m_min","Temperatur 2m_max",
+                "Relative Luftfeuchtigkeit_min","Relative Luftfeuchtigkeit_max",
+                "Windgeschwindigkeit_avg","Niederschlag_sum"
+    )
+
+    mergeBoth=FALSE
+
+    crop = "tall"
+    taw = 50
+    irrig = 50
+
+    params=unique(expand.grid(idSBR=as.numeric(input$stationsTableWB),datestart=wbTableIn$datestart))
+    params$dateend=wbTableIn$dateend
+    params$datestart=as.character(params$datestart)
+    params=as.list(params)
+
+
+    df=pmap(params,water_balance_by_station,
+            provSensor=provSensor,sbrSensor=sbrSensor,mergeBoth=mergeBoth,
+            password=password,user=user,host=host,
+            crop=crop,taw = taw,irrig=irrig,trgtM=wbTableIn$trgtM)
+
+    wbTableIn$table_wb = df
+
+  })
+
+ output$tablebuilt <-reactive({
+   return(!is.null(wbTableIn$table_wb))
+ })
+
+  output$downloadTable_wb <- downloadHandler(
+    filename = function() {
+
+      paste0(month(wbTableIn$trgtM,label = T,locale = "German"),"_wb.xlsx")
+
+    },
+    content = function(con) {
+
+      createAndFormatXlsx(wbTableIn$table_wb,
+                          filepath = con,
+                          trgtM=wbTableIn$trgtM)
+
+    }
+  )
+  # output options ---------------------
   #outputOptions(output, "irrigAdvise", suspendWhenHidden = FALSE)
   outputOptions(output, "plotAll", suspendWhenHidden = FALSE)
   outputOptions(output, 'rightstatsens', suspendWhenHidden=FALSE)
@@ -635,4 +701,5 @@ server <- function(input, output, session) {
   })
   outputOptions(output, 'nodata', suspendWhenHidden=FALSE)
   outputOptions(output, 'nodataDm', suspendWhenHidden=FALSE)
+  outputOptions(output, 'tablebuilt', suspendWhenHidden=FALSE)
 }
