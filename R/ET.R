@@ -70,9 +70,9 @@ ET <- function(data,
 
   if(!is.null(et_real_tot_in)){
 
-    if(!is.null(db$id) & is.null(Elev)){
+    if(!is.null(as.numeric(na.omit(unique(db$id)))) & is.null(Elev)){
 
-      id=unique(db$id)
+      id=as.numeric(na.omit(unique(db$id)))
       Elev <- names_file[which(names_file$id==id),"alt"]
 
 
@@ -80,9 +80,9 @@ ET <- function(data,
       Elev=NULL
     }
 
-    if(!is.null(db$id) & is.null(latitude)){
+    if(!is.null(as.numeric(na.omit(unique(db$id)))) & is.null(latitude)){
 
-      id=unique(db$id)
+      id=as.numeric(na.omit(unique(db$id)))
       latitude <- names_file[which(names_file$id==id),"lat"]
 
     }else{
