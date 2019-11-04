@@ -4,7 +4,7 @@
 \alias{mergeOldAndForecast}
 \title{merge et and precipitation data from wheater forecast and dayly measured et data}
 \usage{
-mergeOldAndForecast(data, long, lat, slope = NULL)
+mergeOldAndForecast(data, long, lat, slope = NULL, ...)
 }
 \description{
 merge et and precipitation data from wheater forecast and dayly measured et data
