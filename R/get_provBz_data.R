@@ -45,7 +45,9 @@ get_provBz_data<-function(station_sensor,datestart=Sys.Date()-1,dateend=Sys.Date
                           datestart = datestart,dateend = dateend)
 
       data<-as.data.frame(data)
-
+      if(any(data$Sensor=="LF")){
+        data[data$Sensor=="LF","Value"]=ifelse(data[data$Sensor=="LF","Value"]>100,100,
+                                               data[data$Sensor=="LF","Value"])}
       colnames(data)[colnames(data)=="Station"] <- "SCODE"
 
       resample_provBz_data<-function(df,round="hour",spread=FALSE){
