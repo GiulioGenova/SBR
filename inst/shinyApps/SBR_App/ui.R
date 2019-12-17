@@ -305,11 +305,11 @@ ui <- dashboardPage(
                                  )
                 ),
                 box(
-                  h3("Dieses Tool erstellt eine Tabelle mit Niederschlag und Verdunstung"),
+                  h3("Monatstabelle für Niederschlag und Verdunstung"),
                   fluidRow(
 
                     column(width=6,
-                           selectInput(inputId = "wbtabMt",label = "Wähle einen Monat",
+                           selectInput(inputId = "wbtabMt",label = "Monat",
                                        choices = c(3,4,5,6,7,8,9),selected =
 
                                          if(month(Sys.Date())-1 <= 9 & month(Sys.Date())-1 >= 3){
@@ -325,7 +325,7 @@ ui <- dashboardPage(
                            )
                     ),
                     column(width=6,
-                           selectInput(inputId = "wbtabYr",label = "Wähle ein Jahr",
+                           selectInput(inputId = "wbtabYr",label = "Jahr",
                                        choices = seq(2014, 2035, by=1),selected =
 
                                          if(month(Sys.Date())-1 <= 12 & month(Sys.Date())-1 >= 3){
@@ -343,15 +343,15 @@ ui <- dashboardPage(
                   )
                   ,
 
-                  selectInput("stationsTableWB",label = "Wählen Sie einen oder mehrere Sender aus",
+                  selectInput("stationsTableWB",label = "Wählen Sie eine oder mehrere Wetterstationen aus",
                               choices = station_list,
                               selected = c(3,7,9,12,14,17,37,39,#30,52,103,105,169,
                                            70,84,106,125,171, 172,174,176),
                               multiple = T
                   ),
-                  actionButton('buildTable_wb', h4('Erstellen Sie die Tabelle')),
+                  actionButton('buildTable_wb', h4('Tabelle erstellen')),
                   conditionalPanel(condition = "output.tablebuilt",
-                                   downloadButton('downloadTable_wb', h4('Laden Sie die Tabelle herunter'))
+                                   downloadButton('downloadTable_wb', h4('Tabelle herunterladen'))
                   )
 
                 )
